@@ -13,7 +13,7 @@ namespace _999AD
     {
         #region DECLARATIONS
         static Texture2D background;
-        static Rectangle rectangle; //area framed in the camera
+        public static Rectangle rectangle; //area framed in the camera
         static int roomWidth;
         static int roomHeight;
         static float scale; //zoom in if >1, zoom out if <1
@@ -21,11 +21,6 @@ namespace _999AD
         static Vector2 pointLocked=Vector2.Zero; //point followed by the camera
         static Rectangle screenRectangle = new Rectangle(0, 0, Game1.screenWidth, Game1.screenHeight);
         static Vector2 screenCenter = new Vector2(Game1.screenWidth / 2, Game1.screenHeight / 2);
-        public static bool shaking =false;
-        static int maxOffsetY =2; //amplitude of the rumble
-        static int offsetY =-2; //current offset
-        static float timeBetweenOffsets =0.1f; //tells how ofter the offset is changed in sign (smaller time->faster rumble)
-        static float offsetElapsedTime = 0f; //time elapsed since the last change in offsetY
         #endregion
         #region CONSTRUCTORS
         public static void Inizialize(Texture2D _background, RoomsManager.Rooms _room, float _scale=1)
@@ -78,17 +73,7 @@ namespace _999AD
                                  (int)(rect.Width * scale),
                                  (int)(rect.Height * scale));
         }
-        static void NextOffset(GameTime gameTime)
-        {
-            float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            offsetElapsedTime += elapsedTime;
-            if (offsetElapsedTime >= timeBetweenOffsets)
-            {
-                offsetY *= -1;
-                offsetElapsedTime = 0;
-            }
-        }
-        public static void Update(GameTime gameTime)
+        public static void Update(GameTime gameTime, int maxOffsetY)
         {
             if (lockOnPlayer)
             {
@@ -107,11 +92,6 @@ namespace _999AD
                 rectangle.Y = (int)MathHelper.Clamp(pointLocked.Y - Game1.screenHeight / (2 * scale),
                                                         maxOffsetY,
                                                         roomHeight - Game1.screenHeight / scale - maxOffsetY);
-            }
-            if (shaking)
-            {
-                rectangle.Y += offsetY;
-                NextOffset(gameTime);
             }
         }
         public static void Draw(SpriteBatch spriteBatch)

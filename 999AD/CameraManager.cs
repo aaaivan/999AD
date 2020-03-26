@@ -12,6 +12,11 @@ namespace _999AD
     static class CameraManager
     {
         static List<Texture2D> backgrounds = new List<Texture2D>();
+        static bool shaking = false;
+        static int maxOffsetY = 2; //amplitude of the rumble
+        static int offsetY = -2; //current offset
+        static float timeBetweenOffsets = 0.1f; //tells how ofter the offset is changed in sign (smaller time->faster rumble)
+        static float offsetElapsedTime = 0f; //time elapsed since the last change in offsetY
         static float shakingTime;
         static float elapsedShakingTime;
         public static void Inizialize(Texture2D[] _backgrounds)
@@ -30,14 +35,29 @@ namespace _999AD
         {
             shakingTime = _shakingTime;
             elapsedShakingTime = 0f;
-            Camera.shaking = true;
+            shaking = true;
+        }
+        static void NextOffset(GameTime gameTime)
+        {
+            float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            offsetElapsedTime += elapsedTime;
+            if (offsetElapsedTime >= timeBetweenOffsets)
+            {
+                offsetY *= -1;
+                offsetElapsedTime = 0;
+            }
         }
         public static void Update(GameTime gameTime)
         {
             elapsedShakingTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (elapsedShakingTime >= shakingTime)
-                Camera.shaking = false;
-            Camera.Update(gameTime);
+                shaking = false;
+            Camera.Update(gameTime, maxOffsetY);
+            if (shaking)
+            {
+                Camera.rectangle.Y += offsetY;
+                NextOffset(gameTime);
+            }
         }
     }
 }
