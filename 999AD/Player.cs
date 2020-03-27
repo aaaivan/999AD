@@ -37,6 +37,7 @@ namespace _999AD
         }
         #endregion
         #region PROPERTIES
+        //return the senter of the player's rectangle
         public static Point Center
         {
             get { return rectangle.Center; }
@@ -44,6 +45,11 @@ namespace _999AD
         #endregion
         #region METHODS
         public static void Update(GameTime gameTime)
+        {
+            Move(gameTime);
+        }
+        //check input for movement
+        static void Move(GameTime gameTime)
         {
             double elapsedTime = gameTime.ElapsedGameTime.TotalSeconds;
             if (Game1.currentKeyboard.IsKeyDown(Keys.A))
@@ -58,18 +64,6 @@ namespace _999AD
                 rectangle.X += (int)(speed * elapsedTime);
                 isFacingRight = true;
             }
-            if (Game1.currentKeyboard.IsKeyDown(Keys.S))
-                rectangle.Y += (int)(speed * elapsedTime);
-        }
-        static void Move(GameTime gameTime)
-        {
-            float elapsedTime = gameTime.ElapsedGameTime.Seconds;
-            if (Game1.currentKeyboard.IsKeyDown(Keys.A))
-                rectangle.X -= (int)(speed * elapsedTime);
-            if (Game1.currentKeyboard.IsKeyDown(Keys.W))
-                rectangle.Y -= (int)(speed * elapsedTime);
-            if (Game1.currentKeyboard.IsKeyDown(Keys.D))
-                rectangle.X += (int)(speed * elapsedTime);
             if (Game1.currentKeyboard.IsKeyDown(Keys.S))
                 rectangle.Y += (int)(speed * elapsedTime);
         }

@@ -11,32 +11,37 @@ namespace _999AD
 {
     class Map
     {
-
-        int roomHeightTiles;
-        int roomWidthTiles;
-        Tile[,] array;
+        #region DECLRATIONS
+        public readonly int roomHeightTiles; //room width in tiles
+        public readonly int roomWidthTiles; //room height in tiles
+        public Tile[,] array; //array of all the tiles forming the room
+        #endregion
+        #region CONSTRACTOR
         public Map(int _roomHeightTiles, int _roomWidthTiles)
         {
             roomWidthTiles = _roomWidthTiles;
             roomHeightTiles = _roomHeightTiles;
-            array = new Tile[roomHeightTiles, roomWidthTiles];
-            for (int row=0; row< roomHeightTiles; row++)
+            array = new Tile[roomHeightTiles, roomWidthTiles]; //array of tiles
+            for (int row=0; row< roomHeightTiles; row++) //fill the array with empty tiles
             {
                 for (int col = 0; col < roomWidthTiles; col++)
-                    array[row, col] = new Tile(new Rectangle(col * MapsManager.TileSize,
-                        row * MapsManager.TileSize,
-                        MapsManager.TileSize,
-                        MapsManager.TileSize));
+                    array[row, col] = new Tile(new Rectangle(col * Tile.TileSize,
+                        row * Tile.TileSize,
+                        Tile.TileSize,
+                        Tile.TileSize));
             }
         }
+        #endregion
         #region PROPERTIES
+        //room height in pixels
         public int RoomHeightPx
         {
-            get { return roomHeightTiles * MapsManager.TileSize; }
+            get { return roomHeightTiles * Tile.TileSize; }
         }
+        //room width in pixels
         public int RoomWidthtPx
         {
-            get { return roomWidthTiles*MapsManager.TileSize; }
+            get { return roomWidthTiles* Tile.TileSize; }
         }
         #endregion
         #region METHODS

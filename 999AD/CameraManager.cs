@@ -11,14 +11,17 @@ namespace _999AD
 {
     static class CameraManager
     {
+        #region DECLARATIONS
         static List<Texture2D> backgrounds = new List<Texture2D>();
         static bool shaking = false;
         static int maxOffsetY = 2; //amplitude of the rumble
         static int offsetY = -2; //current offset
         static float timeBetweenOffsets = 0.1f; //tells how ofter the offset is changed in sign (smaller time->faster rumble)
         static float offsetElapsedTime = 0f; //time elapsed since the last change in offsetY
-        static float shakingTime;
-        static float elapsedShakingTime;
+        static float shakingTime; //tells for how many second the framing will shake
+        static float elapsedShakingTime; //time elapsed since when the camera started shaking
+        #endregion
+        #region CONSTRUCTOR
         public static void Inizialize(Texture2D[] _backgrounds)
         {
             for (int i=0; i<(int)RoomsManager.Rooms.total; i++)
@@ -27,16 +30,21 @@ namespace _999AD
             }
             SwitchCamera(RoomsManager.Rooms.room1);
         }
+        #endregion
+        #region METHODS
+        //move camera to another room
         public static void SwitchCamera(RoomsManager.Rooms _room, int scale=1)
         {
             Camera.Inizialize(backgrounds[(int)_room], _room, scale);
         }
+        //makes the camera shake for the time (in seconds) passed to the fnction as parameter
         public static void shakeForTime(float _shakingTime)
         {
             shakingTime = _shakingTime;
             elapsedShakingTime = 0f;
             shaking = true;
         }
+        //move the camera up/down while shaking
         static void NextOffset(GameTime gameTime)
         {
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -59,5 +67,6 @@ namespace _999AD
                 NextOffset(gameTime);
             }
         }
+        #endregion
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-//test1
+
 namespace _999AD
 {
     /// <summary>
@@ -36,7 +36,7 @@ namespace _999AD
             // TODO: Add your initialization logic here
             graphics.PreferredBackBufferWidth = screenWidth;
             graphics.PreferredBackBufferHeight = screenHeight;
-            graphics.IsFullScreen = true;
+            //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
             previusKeyboard = Keyboard.GetState();
             

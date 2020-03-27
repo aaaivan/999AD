@@ -7,34 +7,31 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-//test
 namespace _999AD
 {
     static class MapsManager
     {
-        static int tileSize;
-        public static Texture2D spritesheet;
-        public static List<Rectangle> sourceRectangles = new List<Rectangle>();
+        #region DECLARATIONS
         public static List<Map> maps = new List<Map>();
+        #endregion
+        #region CONSTRUCTOR
         public static void Inizialize(int _tileSize, Texture2D _spritesheet)
         {
-            tileSize = _tileSize;
-            spritesheet = _spritesheet;
-            for (int i=0; i<(int)Tile.TileType.total; i++)
-                sourceRectangles.Add(new Rectangle(((i % (int)Tile.TileType.total) * tileSize),
-                    (i / (int)Tile.TileType.total),
-                    tileSize,
-                    tileSize));
+            Tile.Inizialize(_tileSize, _spritesheet);
             loadMaps();
         }
-        public static int TileSize
-        {
-            get { return tileSize; }
-        }
+        #endregion
+        #region METHODS
+        //fill the list maps with the maps for all the rooms
         static void loadMaps()
         {
             maps.Add(new Map(20, 60));
             maps.Add(new Map(20, 30));
+            for (int i = 0; i < maps[0].roomWidthTiles; i++)
+                maps[0].array[maps[0].roomHeightTiles - 1, i].tileType = Tile.TileType.solid;
+            for (int i = 0; i < maps[1].roomWidthTiles; i++)
+                maps[1].array[maps[1].roomHeightTiles - 1, i].tileType = Tile.TileType.solid;
         }
+        #endregion
     }
 }

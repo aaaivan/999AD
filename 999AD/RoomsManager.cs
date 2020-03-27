@@ -11,11 +11,15 @@ namespace _999AD
 {
     static class RoomsManager
     {
+        #region DECLARATIONS
         public enum Rooms
         {
             room1, room2, total
         }
         static Rooms currentRoom = Rooms.room1;
+        #endregion
+        #region METHODS
+        //state machine managing the movement between rooms
         static void switchRoom()
         {
             if (currentRoom==Rooms.room1)
@@ -61,5 +65,6 @@ namespace _999AD
                     break;
             }
         }
+        #endregion
     }
 }
