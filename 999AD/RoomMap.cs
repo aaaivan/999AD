@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace _999AD
 {
-    class Map
+    class RoomMap
     {
         #region DECLRATIONS
         public readonly int roomHeightTiles; //room width in tiles
@@ -17,7 +17,7 @@ namespace _999AD
         public Tile[,] array; //array of all the tiles forming the room
         #endregion
         #region CONSTRACTOR
-        public Map(int _roomHeightTiles, int _roomWidthTiles)
+        public RoomMap(int _roomHeightTiles, int _roomWidthTiles)
         {
             roomWidthTiles = _roomWidthTiles;
             roomHeightTiles = _roomHeightTiles;
@@ -47,9 +47,9 @@ namespace _999AD
         #region METHODS
         public void Draw(SpriteBatch spriteBatch)
         {
-            for (int row = 0; row < roomHeightTiles; row++)
+            for (int row = Camera.rectangle.Y/Tile.TileSize; row <= (Camera.rectangle.Bottom-1) / Tile.TileSize; row++)
             {
-                for (int col = 0; col < roomWidthTiles; col++)
+                for (int col = Camera.rectangle.X/Tile.TileSize; col <= (Camera.rectangle.Right-1) / Tile.TileSize; col++)
                     array[row, col].Draw(spriteBatch);
             }
         }

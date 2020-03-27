@@ -45,25 +45,12 @@ namespace _999AD
         public static void Update(GameTime gameTime)
         {
             switchRoom();
-            /*switch (currentRoom)
-            {
-                case Rooms.room1:
-                
-            }*/
+            PlatformsManager.platformsRoomManagers[(int)currentRoom].Update(gameTime);
         }
         public static void Draw(SpriteBatch spriteBatch)
         {
-            switch (currentRoom)
-            {
-                case Rooms.room1:
-                    MapsManager.maps[(int)Rooms.room1].Draw(spriteBatch);
-                    break;
-                case Rooms.room2:
-                    MapsManager.maps[(int)Rooms.room2].Draw(spriteBatch);
-                    break;
-                default:
-                    break;
-            }
+            MapsManager.maps[(int)currentRoom].Draw(spriteBatch);
+            PlatformsManager.platformsRoomManagers[(int)currentRoom].Draw(spriteBatch);
         }
         #endregion
     }
