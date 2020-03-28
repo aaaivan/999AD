@@ -55,10 +55,10 @@ namespace _999AD
 
             // TODO: use this.Content to load your game content here
             MapsManager.Inizialize(32, Content.Load<Texture2D>("tiles"));
-            CameraManager.Inizialize(new Texture2D[] {Content.Load<Texture2D>("room1"),
-                                                    Content.Load<Texture2D>("room2")});
+            CameraManager.Inizialize(new Texture2D[(int)RoomsManager.Rooms.total] {Content.Load<Texture2D>("room1"),
+                                                                                   Content.Load<Texture2D>("room2")});
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"),
-                new Rectangle[] { new Rectangle(0, 0, 100, 10), new Rectangle(0, 10, 100, 20), new Rectangle(0, 30, 100, 30) },
+                new Rectangle[(int)PlatformsManager.PlatformTextureType.total] { new Rectangle(0, 0, 100, 10), new Rectangle(0, 10, 100, 20), new Rectangle(0, 30, 100, 30) },
                 new MovingPlatform[(int)RoomsManager.Rooms.total][] { new MovingPlatform[] { new MovingPlatform(PlatformsManager.PlatformTextureType.texture3, new Vector2(800, 200), new Vector2(900, 500), 100, 30, 0.3f, 1) },
                                                                       new MovingPlatform[] { } },
                 new RotatingPlatform[(int)RoomsManager.Rooms.total][]{ new RotatingPlatform[] {new RotatingPlatform(PlatformsManager.PlatformTextureType.texture1, new Point(400, 400), 60, 100, 10, 3) },
@@ -92,7 +92,6 @@ namespace _999AD
             // TODO: Add your update logic here
             RoomsManager.Update(gameTime);
             CameraManager.Update(gameTime);
-
             Player.Update(gameTime);
 
             previusKeyboard = currentKeyboard;

@@ -15,14 +15,14 @@ namespace _999AD
         PlatformsManager.PlatformTextureType textureType;
         Vector2 startingPoint;
         Vector2 endingPoint;
-        int width;
-        int height;
-        float relativeProgression;
-        float normalizedSpeed;
-        float restingTime;
+        int width; //width of the platform
+        int height; //height of the platform
+        float relativeProgression; //0->platform is at the starting point, 1->platform is at the ending point, else platform is somewhere in between
+        float normalizedSpeed; //fraction of th etotal distance travelled every second
+        float restingTime; //indicates for how many seconds the platform rests at th estarting and ending points
         float elapsedRestingTime=0;
         Rectangle rectangle;
-        bool active;
+        bool active; //if false the platform does not move
         #endregion
         #region COSTRUCTOR
         public MovingPlatform(PlatformsManager.PlatformTextureType _textureType, Vector2 _startingPoint,
@@ -42,6 +42,12 @@ namespace _999AD
                                     (int)MathHelper.Lerp(startingPoint.Y, endingPoint.Y, relativeProgression),
                                     width,
                                     height);
+        }
+        #endregion
+        #region PROPERTIES
+        public Rectangle Rectangle
+        {
+            get { return rectangle; }
         }
         #endregion
         #region METHODS

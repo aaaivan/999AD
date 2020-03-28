@@ -12,8 +12,8 @@ namespace _999AD
     class PlatformsRoomManager
     {
         #region DECLARATIONS
-        List<MovingPlatform> movingPlatforms = new List<MovingPlatform>();
-        List<RotatingPlatform> rotatingPlatforms = new List<RotatingPlatform>();
+        List<MovingPlatform> movingPlatforms = new List<MovingPlatform>(); //moving platform in a certain room
+        List<RotatingPlatform> rotatingPlatforms = new List<RotatingPlatform>(); //rotating platforms in a certain room
         #endregion
         #region CONSTRUCTOR
         public PlatformsRoomManager(MovingPlatform[] _movingPlatforms, RotatingPlatform[] _rotatingPlatforms)
@@ -35,11 +35,16 @@ namespace _999AD
         public void Draw(SpriteBatch spriteBatch)
         {
             foreach (MovingPlatform platform in movingPlatforms)
-                platform.Draw(spriteBatch);
+            {
+                if (platform.Rectangle.Intersects(Camera.rectangle))
+                    platform.Draw(spriteBatch);
+            }
             foreach (RotatingPlatform platform in rotatingPlatforms)
-                platform.Draw(spriteBatch);
+            {
+                if (platform.Rectangle.Intersects(Camera.rectangle))
+                    platform.Draw(spriteBatch);
+            }
         }
         #endregion
-
     }
 }

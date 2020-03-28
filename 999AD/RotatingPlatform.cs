@@ -13,14 +13,14 @@ namespace _999AD
     {
         #region DECLARATIONS
         PlatformsManager.PlatformTextureType textureType;
-        Point center;
+        Point center; //point around which th eplatform rotates
         int radius;
-        int width;
-        int height;
+        int width; //width of the platform
+        int height; //height of the platform
         float angleRadiants;
-        float angularSpeed; //clockwise positive speed
+        float angularSpeed; //radiants per second. positive->clockwise
         Rectangle rectangle;
-        bool active;
+        bool active; //if false the platform does not move
         #endregion
         #region CONSTRUCTOR
         public RotatingPlatform(PlatformsManager.PlatformTextureType _textureType, Point _center, int _radius,
@@ -38,6 +38,7 @@ namespace _999AD
         }
         #endregion
         #region PROPERTIES
+        //move the platform's rectangle given its new center
         Vector2 RectangleCenter
         {
             set
@@ -45,6 +46,10 @@ namespace _999AD
                 rectangle.X = (int)(value.X - width / 2);
                 rectangle.Y = (int)(value.Y - height / 2);
             }
+        }
+        public Rectangle Rectangle
+        {
+            get { return rectangle; }
         }
         #endregion
         #region METHODS

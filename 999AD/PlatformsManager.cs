@@ -15,9 +15,9 @@ namespace _999AD
         {
             texture1, texture2, texture3, total
         }
-        public static Texture2D spritesheet;
+        public static Texture2D spritesheet; //textures of all the platforms
         public static List<Rectangle> sourceRectangles = new List<Rectangle>();
-        public static List<PlatformsRoomManager> platformsRoomManagers = new List<PlatformsRoomManager>();
+        public static List<PlatformsRoomManager> platformsRoomManagers = new List<PlatformsRoomManager>(); //list of platform managers
         public static void Inizialize(Texture2D _spritesheet, Rectangle[] _sourceRectangles,
             MovingPlatform[][] _movingPlatformInEachRoom, RotatingPlatform[][] _rotatingPlatformsInEachRoom)
         {
