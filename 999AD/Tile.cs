@@ -52,6 +52,12 @@ namespace _999AD
         }
         #endregion
         #region METHODS
+        public bool isSolid()
+        {
+            if (tileType == TileType.solid || tileType == TileType.solidEmpty)
+                return true;
+            return false;
+        }
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(spritesheet,

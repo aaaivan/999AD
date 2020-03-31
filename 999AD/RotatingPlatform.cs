@@ -13,7 +13,7 @@ namespace _999AD
     {
         #region DECLARATIONS
         PlatformsManager.PlatformTextureType textureType;
-        Point center; //point around which th eplatform rotates
+        Point center; //point around which the platform rotates
         int radius;
         int width; //width of the platform
         int height; //height of the platform
@@ -45,6 +45,16 @@ namespace _999AD
             {
                 rectangle.X = (int)(value.X - width / 2);
                 rectangle.Y = (int)(value.Y - height / 2);
+            }
+        }
+        public Vector2 InstantSpeed
+        {
+            get
+            {
+                if (active)
+                    return new Vector2(angularSpeed *radius* (float)Math.Cos(angleRadiants), angularSpeed * radius * (float)Math.Sin(angleRadiants));
+                else
+                    return new Vector2(0, 0);
             }
         }
         public Rectangle Rectangle

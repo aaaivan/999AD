@@ -12,8 +12,8 @@ namespace _999AD
     class PlatformsRoomManager
     {
         #region DECLARATIONS
-        List<MovingPlatform> movingPlatforms = new List<MovingPlatform>(); //moving platform in a certain room
-        List<RotatingPlatform> rotatingPlatforms = new List<RotatingPlatform>(); //rotating platforms in a certain room
+        public List<MovingPlatform> movingPlatforms = new List<MovingPlatform>(); //moving platform in a certain room
+        public List<RotatingPlatform> rotatingPlatforms = new List<RotatingPlatform>(); //rotating platforms in a certain room
         #endregion
         #region CONSTRUCTOR
         public PlatformsRoomManager(MovingPlatform[] _movingPlatforms, RotatingPlatform[] _rotatingPlatforms)

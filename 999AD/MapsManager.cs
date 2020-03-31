@@ -29,6 +29,10 @@ namespace _999AD
             maps.Add(new RoomMap(20, 30));
             for (int i = 0; i < maps[0].roomWidthTiles; i++)
                 maps[0].array[maps[0].roomHeightTiles - 1, i].tileType = Tile.TileType.solid;
+            for (int i = 0; i < maps[0].roomHeightTiles-10; i++)
+                maps[0].array[i, 10].tileType = Tile.TileType.solid;
+            for (int i = 0; i < maps[0].roomHeightTiles; i++)
+                maps[0].array[i, 0].tileType = Tile.TileType.solid;
             for (int i = 0; i < maps[1].roomWidthTiles; i++)
                 maps[1].array[maps[1].roomHeightTiles - 1, i].tileType = Tile.TileType.solid;
         }

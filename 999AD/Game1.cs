@@ -1,6 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace _999AD
 {
@@ -39,8 +44,9 @@ namespace _999AD
             graphics.PreferredBackBufferHeight = screenHeight;
             //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
+            Gravity.Inizialize(800, 10, 10);
             previusKeyboard = Keyboard.GetState();
-            
+
             base.Initialize();
         }
 
@@ -61,10 +67,10 @@ namespace _999AD
                 new Rectangle[(int)PlatformsManager.PlatformTextureType.total] { new Rectangle(0, 0, 100, 10), new Rectangle(0, 10, 100, 20), new Rectangle(0, 30, 100, 30) },
                 new MovingPlatform[(int)RoomsManager.Rooms.total][] { new MovingPlatform[] { new MovingPlatform(PlatformsManager.PlatformTextureType.texture3, new Vector2(800, 200), new Vector2(900, 500), 100, 30, 0.3f, 1) },
                                                                       new MovingPlatform[] { } },
-                new RotatingPlatform[(int)RoomsManager.Rooms.total][]{ new RotatingPlatform[] {new RotatingPlatform(PlatformsManager.PlatformTextureType.texture1, new Point(400, 400), 60, 100, 10, 3) },
+                new RotatingPlatform[(int)RoomsManager.Rooms.total][]{ new RotatingPlatform[] {new RotatingPlatform(PlatformsManager.PlatformTextureType.texture1, new Point(600, 400), 60, 100, 10, 2) },
                                                                        new RotatingPlatform[] {new RotatingPlatform(PlatformsManager.PlatformTextureType.texture1, new Point(400, 400), 60, 100, 10, 3) ,
                                                                                                new RotatingPlatform(PlatformsManager.PlatformTextureType.texture3, new Point(400, 400), 60, 100, 30, 3,180)}});
-            Player.Inizialize(Content.Load <Texture2D>("player"), new Rectangle(0, 0, 48, 64), 500f);
+            Player.Inizialize(Content.Load <Texture2D>("player"), new Vector2(50,0), 48,64, 300f);
             
             //sprite = Content.Load<SpriteFont>("file");
         }
