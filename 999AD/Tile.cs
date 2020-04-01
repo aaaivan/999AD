@@ -60,6 +60,8 @@ namespace _999AD
         }
         public void Draw(SpriteBatch spriteBatch)
         {
+            if (tileType == TileType.empty || tileType == TileType.solidEmpty)
+                return;
             spriteBatch.Draw(spritesheet,
                 Camera.DrawRectangle(rectangle),
                 sourceRectangles[(int)(tileType)],
