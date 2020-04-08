@@ -13,17 +13,18 @@ namespace _999AD
     {
         #region DECLARATIONS
         PlatformsManager.PlatformTextureType textureType;
-        Point center; //point around which th eplatform rotates
+        Vector2 center; //point around which the platform rotates
         int radius;
-        int width; //width of the platform
-        int height; //height of the platform
+        public readonly int width; //width of the platform
+        public readonly int height; //height of the platform
+        Vector2 platformCenterPosition;
+        Vector2 platformCenterPreviousPosition=Vector2.Zero;
         float angleRadiants;
         float angularSpeed; //radiants per second. positive->clockwise
-        Rectangle rectangle;
         bool active; //if false the platform does not move
         #endregion
         #region CONSTRUCTOR
-        public RotatingPlatform(PlatformsManager.PlatformTextureType _textureType, Point _center, int _radius,
+        public RotatingPlatform(PlatformsManager.PlatformTextureType _textureType, Vector2 _center, int _radius,
             int _width, int _height, float _angularSpeed, float _startingAngleDegrees=0, bool _active=true)
         {
             textureType = _textureType;
@@ -34,22 +35,23 @@ namespace _999AD
             angleRadiants = _startingAngleDegrees / 180 * MathHelper.Pi;
             angularSpeed = _angularSpeed;
             active = _active;
-            rectangle = new Rectangle(center.X - width / 2, center.Y - radius - height / 2, width, height);
+            platformCenterPosition = new Vector2(center.X + radius * (float)Math.Sin(angleRadiants),
+                center.Y + radius * (float)Math.Cos(angleRadiants));
         }
         #endregion
         #region PROPERTIES
         //move the platform's rectangle given its new center
-        Vector2 RectangleCenter
+        public Vector2 Position
         {
-            set
-            {
-                rectangle.X = (int)(value.X - width / 2);
-                rectangle.Y = (int)(value.Y - height / 2);
-            }
+            get { return new Vector2(platformCenterPosition.X-0.5f*width, platformCenterPosition.Y - 0.5f * height); }
+        }
+        public Vector2 Shift
+        {
+            get { return platformCenterPosition - platformCenterPreviousPosition; }
         }
         public Rectangle Rectangle
         {
-            get { return rectangle; }
+            get { return new Rectangle((int)(platformCenterPosition.X-0.5*width), (int)(platformCenterPosition.Y - 0.5 * height), width, height); }
         }
         #endregion
         #region METHODS
@@ -57,19 +59,20 @@ namespace _999AD
         {
             if(active)
             {
+                platformCenterPreviousPosition = platformCenterPosition;
                 float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 angleRadiants += angularSpeed * elapsedTime;
                 if (angleRadiants >= MathHelper.Pi * 2)
                     angleRadiants -= MathHelper.Pi * 2;
                 else if (angleRadiants<0)
                     angleRadiants += MathHelper.Pi * 2;
-                RectangleCenter = new Vector2(center.X + radius * (float)Math.Sin(angleRadiants),
-                                            center.Y + radius * (float)Math.Cos(angleRadiants));
+                platformCenterPosition.X = center.X + radius * (float)Math.Sin(angleRadiants);
+                platformCenterPosition.Y = center.Y - radius * (float)Math.Cos(angleRadiants);
             }
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(PlatformsManager.spritesheet, Camera.DrawRectangle(rectangle),
+            spriteBatch.Draw(PlatformsManager.spritesheet, Camera.DrawRectangle(Rectangle),
                 PlatformsManager.sourceRectangles[(int)textureType], Color.White);
         }
         #endregion

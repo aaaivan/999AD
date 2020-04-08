@@ -15,13 +15,13 @@ namespace _999AD
         PlatformsManager.PlatformTextureType textureType;
         Vector2 startingPoint;
         Vector2 endingPoint;
-        int width; //width of the platform
-        int height; //height of the platform
+        public readonly int width; //width of the platform
+        public readonly int height; //height of the platform
         float relativeProgression; //0->platform is at the starting point, 1->platform is at the ending point, else platform is somewhere in between
+        float previousRelativeProgression=0;
         float normalizedSpeed; //fraction of th etotal distance travelled every second
         float restingTime; //indicates for how many seconds the platform rests at th estarting and ending points
         float elapsedRestingTime=0;
-        Rectangle rectangle;
         bool active; //if false the platform does not move
         #endregion
         #region COSTRUCTOR
@@ -38,16 +38,33 @@ namespace _999AD
             restingTime = _restingTime;
             relativeProgression = _relativeProgression;
             active = _active;
-            rectangle = new Rectangle((int)MathHelper.Lerp(startingPoint.X, endingPoint.X, relativeProgression),
-                                    (int)MathHelper.Lerp(startingPoint.Y, endingPoint.Y, relativeProgression),
-                                    width,
-                                    height);
         }
         #endregion
         #region PROPERTIES
+        public Vector2 Position
+        {
+            get
+            {
+                return new Vector2(MathHelper.Lerp(startingPoint.X, endingPoint.X, relativeProgression),
+                    MathHelper.Lerp(startingPoint.Y, endingPoint.Y, relativeProgression));
+            }
+        }
+        public Vector2 Shift
+        {
+            get
+            {
+                return Position- new Vector2(MathHelper.Lerp(startingPoint.X, endingPoint.X, previousRelativeProgression),
+                                             MathHelper.Lerp(startingPoint.Y, endingPoint.Y, previousRelativeProgression));
+            }
+        }
         public Rectangle Rectangle
         {
-            get { return rectangle; }
+            get
+            { return new Rectangle((int)MathHelper.Lerp(startingPoint.X, endingPoint.X, relativeProgression),
+                                    (int)MathHelper.Lerp(startingPoint.Y, endingPoint.Y, relativeProgression),
+                                    width,
+                                    height);
+            }
         }
         #endregion
         #region METHODS
@@ -55,6 +72,7 @@ namespace _999AD
         {
             if (active)
             {
+                previousRelativeProgression = relativeProgression;
                 float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (elapsedRestingTime < restingTime)
                 {
@@ -74,13 +92,11 @@ namespace _999AD
                     normalizedSpeed *= -1;
                     elapsedRestingTime = 0;
                 }
-                rectangle.X = (int)MathHelper.Lerp(startingPoint.X, endingPoint.X, relativeProgression);
-                rectangle.Y = (int)MathHelper.Lerp(startingPoint.Y, endingPoint.Y, relativeProgression);
             }
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(PlatformsManager.spritesheet, Camera.DrawRectangle(rectangle),
+            spriteBatch.Draw(PlatformsManager.spritesheet, Camera.DrawRectangle(Rectangle),
                 PlatformsManager.sourceRectangles[(int)textureType], Color.White);
         }
         #endregion

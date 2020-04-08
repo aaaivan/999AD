@@ -18,27 +18,33 @@ namespace _999AD
         }
         static Rooms currentRoom = Rooms.room1;
         #endregion
+        #region PROPERTIES
+        public static Rooms CurrentRoom
+        {
+            get { return currentRoom; }
+        }
+        #endregion
         #region METHODS
         //state machine managing the movement between rooms
         static void switchRoom()
         {
             if (currentRoom==Rooms.room1)
             {
-                if (Player.rectangle.X> MapsManager.maps[(int)Rooms.room1].RoomWidthtPx)
+                if (Player.position.X> MapsManager.maps[(int)Rooms.room1].RoomWidthtPx)
                 {
                     currentRoom = Rooms.room2;
                     CameraManager.SwitchCamera(Rooms.room2);
-                    Player.rectangle.X = 0;
+                    Player.position.X = 0;
                     CameraManager.shakeForTime(5f);
                 }
             }
             else if (currentRoom == Rooms.room2)
             {
-                if (Player.rectangle.Right <= 0)
+                if (Player.position.X + Player.width <= 0)
                 {
                     currentRoom = Rooms.room1;
                     CameraManager.SwitchCamera(Rooms.room1);
-                    Player.rectangle.X = MapsManager.maps[(int)Rooms.room1].RoomWidthtPx - Player.rectangle.Width;
+                    Player.position.X = MapsManager.maps[(int)Rooms.room1].RoomWidthtPx - Player.width;
                 }
             }
         }

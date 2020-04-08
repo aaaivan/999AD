@@ -52,8 +52,16 @@ namespace _999AD
         }
         #endregion
         #region METHODS
+        public bool isSolid()
+        {
+            if (tileType == TileType.solid || tileType == TileType.solidEmpty)
+                return true;
+            return false;
+        }
         public void Draw(SpriteBatch spriteBatch)
         {
+            if (tileType == TileType.empty || tileType == TileType.solidEmpty)
+                return;
             spriteBatch.Draw(spritesheet,
                 Camera.DrawRectangle(rectangle),
                 sourceRectangles[(int)(tileType)],
