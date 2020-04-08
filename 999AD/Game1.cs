@@ -44,7 +44,7 @@ namespace _999AD
             graphics.PreferredBackBufferHeight = screenHeight;
             //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
-            Gravity.Inizialize(1500, 10, 10);
+            Gravity.Inizialize(2000);
             previousKeyboard = Keyboard.GetState();
 
             base.Initialize();
