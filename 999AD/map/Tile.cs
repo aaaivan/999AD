@@ -21,8 +21,14 @@ namespace _999AD
         static List<Rectangle> sourceRectangles = new List<Rectangle>(); //filled by MapsManager
         public TileType tileType;
         Rectangle rectangle;
+        Vector2 position;
         #endregion
         #region CONSTRUCTORS
+        public Tile(Vector2 _position)
+        {
+            tileType = TileType.empty;
+            position = _position;
+        }
         public Tile(Rectangle _rectangle, TileType _tileType)
         {
             tileType = _tileType;
@@ -62,10 +68,11 @@ namespace _999AD
         {
             if (tileType == TileType.empty || tileType == TileType.solidEmpty)
                 return;
-            spriteBatch.Draw(spritesheet,
+            /*spriteBatch.Draw(spritesheet,
                 Camera.DrawRectangle(rectangle),
                 sourceRectangles[(int)(tileType)],
-                Color.White);
+                Color.White);*/
+            spriteBatch.Draw(spritesheet,Camera.DrawVector(position), sourceRectangles[(int)tileType], Color.White, 0, Vector2.Zero, Camera.Scale, SpriteEffects.None, 0);
         }
         #endregion
     }

@@ -19,8 +19,8 @@ namespace _999AD
         static float scale; //zoom in if >1, zoom out if <1
         static bool lockOnPlayer=true; //if false, the camera will follow "pointLocked"
         static Vector2 pointLocked=Vector2.Zero; //point followed by the camera
-        static Rectangle screenRectangle = new Rectangle(0, 0, Game1.screenWidth, Game1.screenHeight);
-        static Vector2 screenCenter = new Vector2(Game1.screenWidth / 2, Game1.screenHeight / 2);
+        static readonly Rectangle screenRectangle = new Rectangle(0, 0, Game1.screenWidth, Game1.screenHeight);
+        static readonly Vector2 screenCenter = new Vector2(Game1.screenWidth / 2, Game1.screenHeight / 2);
         #endregion
         #region CONSTRUCTORS
         public static void Inizialize(Texture2D _background, RoomsManager.Rooms _room, float _scale=1)
@@ -63,15 +63,23 @@ namespace _999AD
         //convert a rectangle from game world to screen coordinates for drawing
         public static Rectangle DrawRectangle(Rectangle rect)
         {
-            if (scale==1f)
+            if (scale == 1f)
                 return new Rectangle(rect.X - rectangle.X,
                                     rect.Y - rectangle.Y,
                                     rect.Width,
                                     rect.Height);
-            return new Rectangle((int)(screenCenter.X+(rect.X-FramingCenter.X)*scale),
+            return new Rectangle((int)(screenCenter.X + (rect.X - FramingCenter.X) * scale),
                                  (int)(screenCenter.Y + (rect.Y - FramingCenter.Y) * scale),
                                  (int)(rect.Width * scale),
                                  (int)(rect.Height * scale));
+        }
+        public static Vector2 DrawVector(Vector2 rect)
+        {
+            if (scale == 1f)
+                return new Vector2(rect.X - rectangle.X,
+                                    rect.Y - rectangle.Y);
+            return new Vector2((screenCenter.X + (rect.X - FramingCenter.X) * scale),
+                                 (screenCenter.Y + (rect.Y - FramingCenter.Y) * scale));
         }
         public static void Update(GameTime gameTime, int maxOffsetY)
         {

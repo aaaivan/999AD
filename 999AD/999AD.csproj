@@ -42,23 +42,23 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Animation.cs" />
-    <Compile Include="Camera.cs" />
-    <Compile Include="CameraManager.cs" />
+    <Compile Include="camera\Camera.cs" />
+    <Compile Include="camera\CameraManager.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Gravity.cs" />
-    <Compile Include="Projectile.cs" />
-    <Compile Include="ProjectilesManager.cs" />
-    <Compile Include="RoomMap.cs" />
-    <Compile Include="MapsManager.cs" />
-    <Compile Include="MovingPlatform.cs" />
-    <Compile Include="PlatformsManager.cs" />
-    <Compile Include="PlatformsRoomManager.cs" />
+    <Compile Include="projectile\Projectile.cs" />
+    <Compile Include="projectile\ProjectilesManager.cs" />
+    <Compile Include="map\RoomMap.cs" />
+    <Compile Include="map\MapsManager.cs" />
+    <Compile Include="platforms\MovingPlatform.cs" />
+    <Compile Include="platforms\PlatformsManager.cs" />
+    <Compile Include="platforms\PlatformsRoomManager.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoomsManager.cs" />
-    <Compile Include="RotatingPlatform.cs" />
-    <Compile Include="Tile.cs" />
+    <Compile Include="platforms\RotatingPlatform.cs" />
+    <Compile Include="map\Tile.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
