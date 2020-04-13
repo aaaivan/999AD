@@ -70,7 +70,8 @@ namespace _999AD
                 new RotatingPlatform[(int)RoomsManager.Rooms.total][]{ new RotatingPlatform[] {new RotatingPlatform(PlatformsManager.PlatformTextureType.texture1, new Vector2(600, 400), 100, 200, 20, 2) },
                                                                        new RotatingPlatform[] {new RotatingPlatform(PlatformsManager.PlatformTextureType.texture1, new Vector2(400, 400), 60, 100, 10, 3) ,
                                                                                                new RotatingPlatform(PlatformsManager.PlatformTextureType.texture3, new Vector2(400, 400), 60, 100, 30, 3,180)}});
-            Player.Inizialize(Content.Load <Texture2D>("player"), new Vector2(50,0), 48,64, 300f);
+            ProjectilesManager.Inizialize(Content.Load<Texture2D>("projectile"));
+            Player.Inizialize(Content.Load <Texture2D>("player"), new Vector2(20,0));
             
             //sprite = Content.Load<SpriteFont>("file");
         }
@@ -95,10 +96,12 @@ namespace _999AD
                 Exit();
 
             currentKeyboard = Keyboard.GetState();
+            float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             // TODO: Add your update logic here
             RoomsManager.Update(gameTime);
             CameraManager.Update(gameTime);
             Player.Update(gameTime);
+            ProjectilesManager.Update(elapsedTime);
 
             previousKeyboard = currentKeyboard;
             base.Update(gameTime);
@@ -117,7 +120,9 @@ namespace _999AD
             //spriteBatch.DrawString(sprite, screenHeight + " " + screenWidth, new Vector2(100, 100), Color.White);
             Camera.Draw(spriteBatch);
             RoomsManager.Draw(spriteBatch);
+            ProjectilesManager.Draw(spriteBatch);
             Player.Draw(spriteBatch);
+
             spriteBatch.End();
             base.Draw(gameTime);
         }

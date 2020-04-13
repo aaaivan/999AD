@@ -11,43 +11,45 @@ namespace _999AD
 {
     static class Player
     {
+        enum AnimationTypes
+        {
+            idle, walk, jump, fall, attack, push, interact, total
+        }
         #region DECLARATIONS
         static Texture2D spritesheet;
-        static Animation idle, walk, jump, fall, attack, push, interact;
-        static Animation currentAnimation;
+        static List<Animation> animations= new List<Animation>();
+        static AnimationTypes currentAnimation;
         public static Vector2 position;
-        public static int height;
-        public static int width; 
-        static Vector2 velocity= new Vector2(0,0);
+        public static readonly int height= 64;
+        public static readonly int width= 48;
+        static Vector2 velocity= Vector2.Zero;
         static bool isFacingRight=true;
-        static float walkingSpeed; //movement speed
-        static float jumpingSpeed= -800; //improve this later... move to inizialize
-        static float maxWallJumpXSpeed = 1000; //improve this later... move to inizialize
+        public static readonly float walkingSpeed= 300; //movement speed
+        public static readonly float jumpingSpeed= -800; //jumping initial vertical spped
+        public static readonly float maxWallJumpXSpeed = 1000; //wall jump initial horizontal speed
         static float wallJumpXSpeed = 0;
         static bool isTouchingTheGround=false;
         static bool isOnTheWall= false;
         static bool isOnMovingPlatform = false;
         static bool canDoubleJump = true;
-        static float maxTimeStuckOnwal = 0.2f; //improve this later... move to inizialize
+        public static readonly float maxTimeStuckOnwal = 0.2f;
         static float elapsedTimeStuckOnWall=0f;
+        public static readonly Vector2 projectileInitialVelocity = new Vector2(500, -300);
         #endregion
         #region CONSTRUCTOR
-        public static void Inizialize(Texture2D _spritesheet, Vector2 _position, int _width, int _height, float _walkingSpeed)
+        public static void Inizialize(Texture2D _spritesheet, Vector2 _position)
         {
             spritesheet = _spritesheet;
             position = _position;
-            width = _width;
-            height = _height;
             //fill following assignments with sprite info
-            idle = new Animation(spritesheet, new Rectangle(0, 0, 96, 128), 96, 128, 1, 1f, true);
-            walk = new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true);
-            jump = new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, false, true);
-            fall = new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true);
-            attack = new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true);
-            push = new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true);
-            interact = new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, false);
-            currentAnimation = idle;
-            walkingSpeed = _walkingSpeed;
+            animations.Add(new Animation(spritesheet, new Rectangle(0, 0, 96*3, 128), 96, 128, 3, 0.3f, true));
+            animations.Add( new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
+            animations.Add(new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, false, true));
+            animations.Add(new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
+            animations.Add(new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
+            animations.Add(new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
+            animations.Add(new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, false));
+            currentAnimation = AnimationTypes.idle;
         }
         #endregion
         #region PROPERTIES
@@ -56,9 +58,18 @@ namespace _999AD
         {
             get { return new Rectangle((int)position.X, (int)position.Y, width, height); }
         }
-        public static Point Center
+        public static Vector2 Center
         {
-            get { return Rectangle.Center; }
+            get { return new Vector2(position.X+width/2f, position.Y + height / 2f); }
+        }
+        static Vector2 ProjectileInitialVelocity
+        {
+            get
+            {
+                return ( new Vector2((isFacingRight ? projectileInitialVelocity.X : -projectileInitialVelocity.X)+velocity.X,
+                                    projectileInitialVelocity.Y+ 0.5f*velocity.Y)
+                        );
+            }
         }
         #endregion
         #region METHODS
@@ -66,6 +77,7 @@ namespace _999AD
         {
             getPlayerInput();
             Move((float)gameTime.ElapsedGameTime.TotalSeconds);
+            animations[(int)currentAnimation].Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             velocity.X =0;
         }
         //check input for movement
@@ -103,6 +115,10 @@ namespace _999AD
             {
                 velocity.X -= walkingSpeed;
                 isFacingRight = false;
+            }
+            if (Game1.currentKeyboard.IsKeyDown(Keys.Space) && !Game1.previousKeyboard.IsKeyDown(Keys.Space))
+            {
+                ProjectilesManager.Shoot(isFacingRight ? (position + new Vector2(width, 0)) : position, ProjectileInitialVelocity);
             }
         }
         static void Move(float elapsedTime)
@@ -274,7 +290,7 @@ namespace _999AD
         }
         public static void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(spritesheet, Camera.DrawRectangle(Rectangle), currentAnimation.Frame, Color.White, 0f, Vector2.Zero,
+            spriteBatch.Draw(spritesheet, Camera.DrawRectangle(Rectangle), animations[(int)currentAnimation].Frame, Color.White, 0f, Vector2.Zero,
                 isFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
         }
         #endregion

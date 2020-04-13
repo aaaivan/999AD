@@ -20,7 +20,7 @@ namespace _999AD
         List<Rectangle> sourceRectangles= new List<Rectangle>();
         int currentFrame=0;
         float timePerFrame;
-        float elapsedTime = 0;
+        float elapsedFrameTime = 0;
         bool loop; //false if the animation should only be played once
         bool keepLastFrameWhenInactive; //if true, the last frame is displayed when the animation ends 
         bool active= true; //becomes false when the animations ends
@@ -54,14 +54,14 @@ namespace _999AD
         }
         #endregion
         #region METHODS
-        public void Update(GameTime gameTime)
+        public void Update(float elapsedTime)
         {
             if (!active)
                 return;
-            elapsedTime += (float)gameTime.ElapsedGameTime.Seconds;
-            if (elapsedTime >= timePerFrame)
+            elapsedFrameTime += elapsedTime;
+            if (elapsedFrameTime >= timePerFrame)
             {
-                elapsedTime = 0f;
+                elapsedFrameTime = 0f;
                 currentFrame = (currentFrame + 1) % totalFrames;
                 if (!loop && currentFrame == 0)
                 {
