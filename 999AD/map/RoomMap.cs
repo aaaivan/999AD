@@ -25,10 +25,8 @@ namespace _999AD
             for (int row=0; row< roomHeightTiles; row++) //fill the array with empty tiles
             {
                 for (int col = 0; col < roomWidthTiles; col++)
-                    array[row, col] = new Tile(new Rectangle(col * Tile.TileSize,
-                        row * Tile.TileSize,
-                        Tile.TileSize,
-                        Tile.TileSize));
+                    array[row, col] = new Tile(new Vector2(col * Tile.TileSize,
+                        row * Tile.TileSize));
             }
         }
         #endregion
