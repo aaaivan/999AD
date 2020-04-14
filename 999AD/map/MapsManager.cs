@@ -12,7 +12,7 @@ namespace _999AD
     static class MapsManager
     {
         #region DECLARATIONS
-        public static List<RoomMap> maps = new List<RoomMap>();
+        public static RoomMap[] maps = new RoomMap[(int)RoomsManager.Rooms.total];
         #endregion
         #region CONSTRUCTOR
         public static void Inizialize(Texture2D _spritesheet)
@@ -25,8 +25,8 @@ namespace _999AD
         //fill the list maps with the maps for all the rooms
         static void loadMaps()
         {
-            maps.Add(new RoomMap(20, 60));
-            maps.Add(new RoomMap(20, 30));
+            maps[0]=new RoomMap(20, 60);
+            maps[1]=new RoomMap(20, 30);
             for (int i = 0; i < maps[0].roomWidthTiles; i++)
                 maps[0].array[maps[0].roomHeightTiles - 1, i].tileType = Tile.TileType.solid;
             for (int i = 0; i < maps[0].roomHeightTiles-10; i++)
