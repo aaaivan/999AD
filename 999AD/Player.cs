@@ -42,7 +42,7 @@ namespace _999AD
             spritesheet = _spritesheet;
             position = _position;
             //fill following assignments with sprite info
-            animations.Add(new Animation(spritesheet, new Rectangle(0, 0, 96*3, 128), 96, 128, 3, 0.3f, true));
+            animations.Add(new Animation(spritesheet, new Rectangle(0, 0, 48*3, 64), 48, 64, 3, 0.3f, true));
             animations.Add( new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
             animations.Add(new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, false, true));
             animations.Add(new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
@@ -95,10 +95,11 @@ namespace _999AD
                 {
                     velocity.Y = jumpingSpeed*0.7f;
                     elapsedTimeStuckOnWall = 0;
-                    if (Game1.previousKeyboard.IsKeyDown(Keys.A))
+                    if (!isFacingRight)
                         wallJumpXSpeed= maxWallJumpXSpeed;
-                    if (Game1.previousKeyboard.IsKeyDown(Keys.D))
+                    else
                         wallJumpXSpeed= -maxWallJumpXSpeed;
+                    isFacingRight = !isFacingRight;
                 }
                 else if (canDoubleJump)
                 {
@@ -123,18 +124,40 @@ namespace _999AD
         }
         static void Move(float elapsedTime)
         {
-            Rectangle rectangle = Rectangle;
+            int topRow = (int)MathHelper.Clamp(position.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
+            int btmRow = (int)MathHelper.Clamp((position.Y + height - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
+            int leftCol = (int)MathHelper.Clamp(position.X / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
+            int rightCol = (int)MathHelper.Clamp((position.X + width - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
+            if (isOnTheWall)
+            {
+                isOnTheWall = false;
+                if (isFacingRight)
+                {
+                    for (int row = topRow; row <= btmRow; row++)
+                    {
+                        if (MapsManager.maps[(int)RoomsManager.CurrentRoom].array[row, rightCol + 1].isSolid())
+                            isOnTheWall = true;
+                    }
+                }
+                else
+                {
+                    for (int row = topRow; row <= btmRow; row++)
+                    {
+                        if (MapsManager.maps[(int)RoomsManager.CurrentRoom].array[row, leftCol - 1].isSolid())
+                            isOnTheWall = true;
+                    }
+                }
+            }
             #region MOVE HORIZONTALLY
             velocity.X += wallJumpXSpeed;
             position.X += velocity.X * elapsedTime;
             wallJumpXSpeed *= 0.92f;
             #endregion
             #region CHECK COLLISION WITH SOLID TILES
-            int topRow = MathHelper.Clamp(rectangle.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
-            int btmRow = MathHelper.Clamp((rectangle.Bottom - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
-            int leftCol = MathHelper.Clamp(rectangle.X / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
-            int rightCol = MathHelper.Clamp((rectangle.Right - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
-            isOnTheWall = false;
+            topRow = (int)MathHelper.Clamp(position.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
+            btmRow = (int)MathHelper.Clamp((position.Y+height - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
+            leftCol = (int)MathHelper.Clamp(position.X / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
+            rightCol = (int)MathHelper.Clamp((position.X + width - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
             //check right-hand side
             if (velocity.X > 0)
             {
@@ -191,13 +214,14 @@ namespace _999AD
                     if (velocity.Y > 1000) //IMPROVE
                         velocity.Y = 1000; //IMPROVE
                 }
+                float previousYposition = position.Y;
                 position.Y += velocity.Y * elapsedTime;
                 #endregion
                 #region CHECK COLLISIONS WITH TILES AND MOVING PLATFORMS
-                topRow = MathHelper.Clamp(rectangle.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
-                btmRow = MathHelper.Clamp((rectangle.Bottom - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
-                leftCol = MathHelper.Clamp(rectangle.X / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
-                rightCol = MathHelper.Clamp((rectangle.Right - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
+                topRow = (int)MathHelper.Clamp(position.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
+                btmRow = (int)MathHelper.Clamp((position.Y + height - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
+                leftCol = (int)MathHelper.Clamp(position.X / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
+                rightCol = (int)MathHelper.Clamp((position.X + width - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
                 //check bottom
                 if (velocity.Y > 0)
                 {
@@ -215,14 +239,13 @@ namespace _999AD
                             break;
                         }
                     }
-                    for (int i = 0; i < PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].rotatingPlatforms.Length; i++)
+                    for (int i = 0; i < PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length; i++)
                     {
-                        MovingPlatform p = PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].rotatingPlatforms[i];
-                        if (p.Rectangle.Intersects(rectangle) &&
-                            p.Rectangle.Bottom >= rectangle.Bottom)
+                        MovingPlatform p = PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[i];
+                        if (p.Rectangle.Intersects(Rectangle) && previousYposition+height<p.Position.Y-p.Shift.Y)
                         {
                             isOnMovingPlatform = true;
-                            position.Y = p.Position.Y-height;
+                            position.Y = p.Position.Y-height+1;
                             velocity.Y = 0;
                             wallJumpXSpeed = 0;
                             PlatformsManager.platformIndex = i;
@@ -249,10 +272,10 @@ namespace _999AD
                 }
                 #endregion
             }
-            else
+            else //(inOnMovingPlatform==true)
             {
                 #region MOVE WITH PLATFORM
-                MovingPlatform p = PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].rotatingPlatforms[PlatformsManager.platformIndex];
+                MovingPlatform p = PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[PlatformsManager.platformIndex];
                 position += p.Shift;
                 if (position.X - p.Position.X <= -width || position.X - p.Position.X >= p.width)
                     isOnMovingPlatform = false;

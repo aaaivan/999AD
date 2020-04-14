@@ -28,7 +28,7 @@ namespace _999AD
             {
                 backgrounds.Add(_backgrounds[i]);
             }
-            SwitchCamera(RoomsManager.Rooms.room1, 0.5f);
+            SwitchCamera(RoomsManager.Rooms.room1);
         }
         #endregion
         #region METHODS

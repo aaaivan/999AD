@@ -12,23 +12,23 @@ namespace _999AD
     class PlatformsRoomManager
     {
         #region DECLARATIONS
-        public MovingPlatform[] rotatingPlatforms; //rotating platforms in a certain room
+        public MovingPlatform[] movingPlatforms; //rotating platforms in a certain room
         #endregion
         #region CONSTRUCTOR
         public PlatformsRoomManager(MovingPlatform[] _rotatingPlatforms)
         {
-            rotatingPlatforms = _rotatingPlatforms;
+            movingPlatforms = _rotatingPlatforms;
         }
         #endregion
         #region METHODS
         public void Update(GameTime gameTime)
         {
-            foreach (MovingPlatform platform in rotatingPlatforms)
+            foreach (MovingPlatform platform in movingPlatforms)
                 platform.Update(gameTime);
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (MovingPlatform platform in rotatingPlatforms)
+            foreach (MovingPlatform platform in movingPlatforms)
             {
                 if (platform.Rectangle.Intersects(Camera.rectangle))
                     platform.Draw(spriteBatch);

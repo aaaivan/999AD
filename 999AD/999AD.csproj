@@ -56,7 +56,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoomsManager.cs" />
-    <Compile Include="platforms\RotatingPlatform.cs" />
+    <Compile Include="platforms\MovingPlatform.cs" />
     <Compile Include="map\Tile.cs" />
   </ItemGroup>
   <ItemGroup>
