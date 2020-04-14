@@ -50,7 +50,6 @@
     <Compile Include="projectile\ProjectilesManager.cs" />
     <Compile Include="map\RoomMap.cs" />
     <Compile Include="map\MapsManager.cs" />
-    <Compile Include="platforms\MovingPlatform.cs" />
     <Compile Include="platforms\PlatformsManager.cs" />
     <Compile Include="platforms\PlatformsRoomManager.cs" />
     <Compile Include="Player.cs" />

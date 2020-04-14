@@ -15,9 +15,9 @@ namespace _999AD
         public static List<RoomMap> maps = new List<RoomMap>();
         #endregion
         #region CONSTRUCTOR
-        public static void Inizialize(int _tileSize, Texture2D _spritesheet)
+        public static void Inizialize(Texture2D _spritesheet)
         {
-            Tile.Inizialize(_tileSize, _spritesheet);
+            Tile.LoadTextures( _spritesheet);
             loadMaps();
         }
         #endregion

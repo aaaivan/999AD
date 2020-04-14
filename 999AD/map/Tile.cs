@@ -16,11 +16,10 @@ namespace _999AD
         {
             empty, solidEmpty, solid, total
         }
-        static int tileSize; //set by MapsManager
+        public static readonly int tileSize=32;
         static Texture2D spritesheet; //set by MapsManager
-        static List<Rectangle> sourceRectangles = new List<Rectangle>(); //filled by MapsManager
+        static List<Rectangle> sourceRectangles = new List<Rectangle>(); //filled by the Inizialize() function, which is called by MapsManager
         public TileType tileType;
-        Rectangle rectangle;
         Vector2 position;
         #endregion
         #region CONSTRUCTORS
@@ -29,32 +28,19 @@ namespace _999AD
             tileType = TileType.empty;
             position = _position;
         }
-        public Tile(Rectangle _rectangle, TileType _tileType)
+        public Tile(Vector2 _position, TileType _tileType)
         {
             tileType = _tileType;
-            rectangle = _rectangle;
+            position = _position;
         }
-        public Tile(Rectangle _rectangle)
+        public static void LoadTextures(Texture2D _spritesheet)
         {
-            tileType = TileType.empty;
-            rectangle = _rectangle;
-        }
-        public static void Inizialize(int _tileSize, Texture2D _spritesheet)
-        {
-            tileSize = _tileSize;
             spritesheet = _spritesheet;
             for (int i = 0; i < (int)TileType.total; i++)
                 sourceRectangles.Add(new Rectangle(((i % (spritesheet.Width/tileSize)) * tileSize),
                     i / (spritesheet.Width / tileSize) * tileSize,
                     tileSize,
                     tileSize));
-        }
-        #endregion
-        #region PROPERTIES
-        //return the tile size
-        public static int TileSize
-        {
-            get { return tileSize; }
         }
         #endregion
         #region METHODS
@@ -68,11 +54,7 @@ namespace _999AD
         {
             if (tileType == TileType.empty || tileType == TileType.solidEmpty)
                 return;
-            /*spriteBatch.Draw(spritesheet,
-                Camera.DrawRectangle(rectangle),
-                sourceRectangles[(int)(tileType)],
-                Color.White);*/
-            spriteBatch.Draw(spritesheet,Camera.DrawVector(position), sourceRectangles[(int)tileType], Color.White, 0, Vector2.Zero, Camera.Scale, SpriteEffects.None, 0);
+            spriteBatch.Draw(spritesheet,Camera.RelativeVector(position), sourceRectangles[(int)tileType], Color.White);
         }
         #endregion
     }

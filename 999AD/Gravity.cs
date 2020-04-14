@@ -25,10 +25,10 @@ namespace _999AD
             Rectangle rectangle = new Rectangle((int)position.X, (int)position.Y, width, height);
             #region MOVE HORIZONTALLY
             position.X += velocity.X * elapsedTime;
-            int topRow = MathHelper.Clamp(rectangle.Y / Tile.TileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
-            int btmRow = MathHelper.Clamp((rectangle.Bottom - 1) / Tile.TileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
-            int leftCol = MathHelper.Clamp(rectangle.X / Tile.TileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
-            int rightCol = MathHelper.Clamp((rectangle.Right - 1) / Tile.TileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
+            int topRow = MathHelper.Clamp(rectangle.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
+            int btmRow = MathHelper.Clamp((rectangle.Bottom - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
+            int leftCol = MathHelper.Clamp(rectangle.X / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
+            int rightCol = MathHelper.Clamp((rectangle.Right - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
             //check right-hand side
             if (velocity.X > 0)
             {
@@ -59,10 +59,10 @@ namespace _999AD
             if (velocity.Y > maxYVelocity)
                 velocity.Y = maxYVelocity;
             position.Y += velocity.Y * elapsedTime;
-            topRow = MathHelper.Clamp(rectangle.Y / Tile.TileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
-            btmRow = MathHelper.Clamp((rectangle.Bottom - 1) / Tile.TileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
-            leftCol = MathHelper.Clamp(rectangle.X / Tile.TileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
-            rightCol = MathHelper.Clamp((rectangle.Right - 1) / Tile.TileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
+            topRow = MathHelper.Clamp(rectangle.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
+            btmRow = MathHelper.Clamp((rectangle.Bottom - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
+            leftCol = MathHelper.Clamp(rectangle.X / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
+            rightCol = MathHelper.Clamp((rectangle.Right - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
             //check bottom
             if (velocity.Y > 0)
             {
@@ -74,19 +74,9 @@ namespace _999AD
                         return;
                     }
                 }
-                for (int i = 0; i < PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].rotatingPlatforms.Count; i++)
+                for (int i = 0; i < PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].rotatingPlatforms.Length; i++)
                 {
-                    RotatingPlatform p = PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].rotatingPlatforms[i];
-                    if (p.Rectangle.Intersects(rectangle) &&
-                        p.Rectangle.Bottom >= rectangle.Bottom)
-                    {
-                        active = false;
-                        return;
-                    }
-                }
-                for (int i = 0; i < PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Count; i++)
-                {
-                    MovingPlatform p = PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[i];
+                    MovingPlatform p = PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].rotatingPlatforms[i];
                     if (p.Rectangle.Intersects(rectangle) &&
                         p.Rectangle.Bottom >= rectangle.Bottom)
                     {
