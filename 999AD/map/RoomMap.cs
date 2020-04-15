@@ -25,8 +25,8 @@ namespace _999AD
             for (int row=0; row< roomHeightTiles; row++) //fill the array with empty tiles
             {
                 for (int col = 0; col < roomWidthTiles; col++)
-                    array[row, col] = new Tile(new Vector2(col * Tile.TileSize,
-                        row * Tile.TileSize));
+                    array[row, col] = new Tile(new Vector2(col * Tile.tileSize,
+                        row * Tile.tileSize));
             }
         }
         #endregion
@@ -34,20 +34,20 @@ namespace _999AD
         //room height in pixels
         public int RoomHeightPx
         {
-            get { return roomHeightTiles * Tile.TileSize; }
+            get { return roomHeightTiles * Tile.tileSize; }
         }
         //room width in pixels
         public int RoomWidthtPx
         {
-            get { return roomWidthTiles* Tile.TileSize; }
+            get { return roomWidthTiles* Tile.tileSize; }
         }
         #endregion
         #region METHODS
         public void Draw(SpriteBatch spriteBatch)
         {
-            for (int row = Camera.rectangle.Y/Tile.TileSize; row <= (Camera.rectangle.Bottom-1) / Tile.TileSize; row++)
+            for (int row = Camera.rectangle.Y/Tile.tileSize; row <= (Camera.rectangle.Bottom-1) / Tile.tileSize; row++)
             {
-                for (int col = Camera.rectangle.X/Tile.TileSize; col <= (Camera.rectangle.Right-1) / Tile.TileSize; col++)
+                for (int col = Camera.rectangle.X/Tile.tileSize; col <= (Camera.rectangle.Right-1) / Tile.tileSize; col++)
                     array[row, col].Draw(spriteBatch);
             }
         }

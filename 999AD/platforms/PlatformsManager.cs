@@ -11,27 +11,29 @@ namespace _999AD
 {
     static class PlatformsManager
     {
-        public enum PlatformTextureType
+        public static PlatformsRoomManager[] platformsRoomManagers; //list of platform managers for each room
+        public static int platformIndex; //index of the platform ridden by the player
+        public static void Inizialize(Texture2D _spritesheet)
         {
-            texture1, texture2, texture3, total
-        }
-        public enum MotionType
-        {
-            backAndForth, rotating, total
-        }
-        public static Texture2D spritesheet; //textures of all the platforms
-        public static List<Rectangle> sourceRectangles = new List<Rectangle>();
-        public static List<PlatformsRoomManager> platformsRoomManagers = new List<PlatformsRoomManager>(); //list of platform managers
-        public static MotionType motionType; //type of the platform ridden by the player 
-        public static int platformIndex; //index of th eplatform ridden by the player
-        public static void Inizialize(Texture2D _spritesheet, Rectangle[] _sourceRectangles,
-            MovingPlatform[][] _movingPlatformInEachRoom, RotatingPlatform[][] _rotatingPlatformsInEachRoom)
-        {
-            spritesheet = _spritesheet;
-            for (int i = 0; i < (int)PlatformTextureType.total; i++)
-                sourceRectangles.Add(_sourceRectangles[i]);
-            for (int i = 0; i < (int)RoomsManager.Rooms.total; i++)
-                platformsRoomManagers.Add(new PlatformsRoomManager(_movingPlatformInEachRoom[i], _rotatingPlatformsInEachRoom[i]));
+            MovingPlatform.loadTextures(_spritesheet);
+            platformsRoomManagers = new PlatformsRoomManager[(int)RoomsManager.Rooms.total]
+            {
+                new PlatformsRoomManager //room1
+                (
+                    new MovingPlatform[]
+                    {
+                        new MovingPlatform(MovingPlatform.TextureType.texture2, 50, new Vector2(100, 50), new Vector2(600, 100), 3, 100),
+                        new MovingPlatform(MovingPlatform.TextureType.texture3, 50, new Vector2(800,400), Vector2.Zero, 3,0)
+                    }
+                ),
+                new PlatformsRoomManager //room2
+                (
+                    new MovingPlatform[]
+                    {
+                        new MovingPlatform(MovingPlatform.TextureType.texture3, 0, new Vector2(80, 500), new Vector2(80, 600), 1, 500)
+                    }
+                )
+            };
         }
     }
 }

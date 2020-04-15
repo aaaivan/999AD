@@ -20,15 +20,15 @@ namespace _999AD
             gravityAcceleration = _gravityAcceleration;
         }
         #endregion
-        public static void MoveDestructableObject(ref Vector2 velocity, ref Vector2 position, int width, int height, ref bool active, float elapsedTime, float maxYVelocity=500)
+        #region METHODS
+        public static void MoveDestructableObject(ref Vector2 velocity, ref Vector2 position, int width, int height, ref bool active, float elapsedTime, float maxYVelocity=2000)
         {
-            Rectangle rectangle = new Rectangle((int)position.X, (int)position.Y, width, height);
             #region MOVE HORIZONTALLY
             position.X += velocity.X * elapsedTime;
-            int topRow = MathHelper.Clamp(rectangle.Y / Tile.TileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
-            int btmRow = MathHelper.Clamp((rectangle.Bottom - 1) / Tile.TileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
-            int leftCol = MathHelper.Clamp(rectangle.X / Tile.TileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
-            int rightCol = MathHelper.Clamp((rectangle.Right - 1) / Tile.TileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
+            int topRow = (int)MathHelper.Clamp(position.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
+            int btmRow = (int)MathHelper.Clamp((position.Y + height - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
+            int leftCol = (int)MathHelper.Clamp(position.X / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
+            int rightCol = (int)MathHelper.Clamp((position.X + width - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
             //check right-hand side
             if (velocity.X > 0)
             {
@@ -36,6 +36,7 @@ namespace _999AD
                 {
                     if (MapsManager.maps[(int)RoomsManager.CurrentRoom].array[row, rightCol].isSolid())
                     {
+                        position.X = rightCol * Tile.tileSize - width;
                         active = false;
                         return;
                     }
@@ -48,6 +49,7 @@ namespace _999AD
                 {
                     if (MapsManager.maps[(int)RoomsManager.CurrentRoom].array[row, leftCol].isSolid())
                     {
+                        position.X = (leftCol + 1) * Tile.tileSize;
                         active = false;
                         return;
                     }
@@ -59,10 +61,10 @@ namespace _999AD
             if (velocity.Y > maxYVelocity)
                 velocity.Y = maxYVelocity;
             position.Y += velocity.Y * elapsedTime;
-            topRow = MathHelper.Clamp(rectangle.Y / Tile.TileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
-            btmRow = MathHelper.Clamp((rectangle.Bottom - 1) / Tile.TileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
-            leftCol = MathHelper.Clamp(rectangle.X / Tile.TileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
-            rightCol = MathHelper.Clamp((rectangle.Right - 1) / Tile.TileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
+            topRow = (int)MathHelper.Clamp(position.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
+            btmRow = (int)MathHelper.Clamp((position.Y + height - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
+            leftCol = (int)MathHelper.Clamp(position.X / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
+            rightCol = (int)MathHelper.Clamp((position.X + width - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
             //check bottom
             if (velocity.Y > 0)
             {
@@ -70,26 +72,7 @@ namespace _999AD
                 {
                     if (MapsManager.maps[(int)RoomsManager.CurrentRoom].array[btmRow, col].isSolid())
                     {
-                        active = false;
-                        return;
-                    }
-                }
-                for (int i = 0; i < PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].rotatingPlatforms.Count; i++)
-                {
-                    RotatingPlatform p = PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].rotatingPlatforms[i];
-                    if (p.Rectangle.Intersects(rectangle) &&
-                        p.Rectangle.Bottom >= rectangle.Bottom)
-                    {
-                        active = false;
-                        return;
-                    }
-                }
-                for (int i = 0; i < PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Count; i++)
-                {
-                    MovingPlatform p = PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[i];
-                    if (p.Rectangle.Intersects(rectangle) &&
-                        p.Rectangle.Bottom >= rectangle.Bottom)
-                    {
+                        position.Y = btmRow * Tile.tileSize - height;
                         active = false;
                         return;
                     }
@@ -102,6 +85,7 @@ namespace _999AD
                 {
                     if (MapsManager.maps[(int)RoomsManager.CurrentRoom].array[topRow, col].isSolid())
                     {
+                        position.Y = (topRow + 1) * Tile.tileSize;
                         active = false;
                         return;
                     }
@@ -109,5 +93,6 @@ namespace _999AD
             }
             #endregion
         }
+        #endregion
     }
 }
