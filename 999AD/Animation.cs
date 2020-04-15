@@ -17,7 +17,7 @@ namespace _999AD
         int frameWidth;
         int frameHeight;
         int totalFrames; //number of frames for the animation
-        List<Rectangle> sourceRectangles= new List<Rectangle>();
+        Rectangle[] sourceRectangles;
         int currentFrame=0;
         float timePerFrame;
         float elapsedFrameTime = 0;
@@ -38,9 +38,10 @@ namespace _999AD
             timePerFrame = _timePerFrame;
             loop = _loop;
             keepLastFrameWhenInactive = _keepLastFrameWhenInactive;
+            sourceRectangles = new Rectangle[totalFrames];
             for (int i=0; i<totalFrames; i++)
             {
-                sourceRectangles.Add(new Rectangle(framesLocationOnSpritesheet.X+ frameWidth * (i % (framesLocationOnSpritesheet.Width / frameWidth)),
+                sourceRectangles[i]=(new Rectangle(framesLocationOnSpritesheet.X+ frameWidth * (i % (framesLocationOnSpritesheet.Width / frameWidth)),
                                                    framesLocationOnSpritesheet.Y+ frameHeight * (i / (framesLocationOnSpritesheet.Width / frameWidth)),
                                                     frameWidth,
                                                     frameHeight));

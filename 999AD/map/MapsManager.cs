@@ -35,6 +35,8 @@ namespace _999AD
                 maps[0].array[i, 0].tileType = Tile.TileType.solid;
             for (int i = 0; i < maps[1].roomWidthTiles; i++)
                 maps[1].array[maps[1].roomHeightTiles - 1, i].tileType = Tile.TileType.solid;
+            for (int i = maps[1].roomHeightTiles - 1; i > 15; i--)
+                maps[1].array[i, 4].tileType = Tile.TileType.solid;
         }
         #endregion
     }

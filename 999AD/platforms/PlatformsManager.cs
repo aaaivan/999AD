@@ -30,7 +30,7 @@ namespace _999AD
                 (
                     new MovingPlatform[]
                     {
-                        new MovingPlatform(MovingPlatform.TextureType.texture3, 20, new Vector2(100, 50), new Vector2(100, 100), 1, 0)
+                        new MovingPlatform(MovingPlatform.TextureType.texture3, 0, new Vector2(80, 500), new Vector2(80, 600), 1, 500)
                     }
                 )
             };

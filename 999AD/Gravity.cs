@@ -20,6 +20,7 @@ namespace _999AD
             gravityAcceleration = _gravityAcceleration;
         }
         #endregion
+        #region METHODS
         public static void MoveDestructableObject(ref Vector2 velocity, ref Vector2 position, int width, int height, ref bool active, float elapsedTime, float maxYVelocity=2000)
         {
             #region MOVE HORIZONTALLY
@@ -92,5 +93,6 @@ namespace _999AD
             }
             #endregion
         }
+        #endregion
     }
 }

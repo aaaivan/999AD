@@ -12,7 +12,7 @@ namespace _999AD
     static class CameraManager
     {
         #region DECLARATIONS
-        static List<Texture2D> backgrounds = new List<Texture2D>();
+        static Texture2D[] backgrounds = new Texture2D[(int)RoomsManager.Rooms.total];
         static bool shaking = false;
         static int maxOffsetY = 2; //amplitude of the rumble
         static int offsetY = -2; //current offset
@@ -24,10 +24,7 @@ namespace _999AD
         #region CONSTRUCTOR
         public static void Inizialize(Texture2D[] _backgrounds)
         {
-            for (int i=0; i<(int)RoomsManager.Rooms.total; i++)
-            {
-                backgrounds.Add(_backgrounds[i]);
-            }
+            backgrounds = _backgrounds;
             SwitchCamera(RoomsManager.Rooms.room1);
         }
         #endregion
