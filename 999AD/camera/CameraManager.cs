@@ -30,13 +30,9 @@ namespace _999AD
         #endregion
         #region METHODS
         //move camera to another room
-        public static void SwitchCamera(RoomsManager.Rooms room, float scale=1f)
+        public static void SwitchCamera(RoomsManager.Rooms room)
         {
-            float minScale = Math.Max((float)(Game1.screenHeight+1) / MapsManager.maps[(int)room].RoomHeightPx,
-                (float)(Game1.screenWidth+1) / MapsManager.maps[(int)room].RoomWidthtPx);
-            if (scale < minScale)
-                scale = minScale;
-            Camera.Inizialize(backgrounds[(int)room], room, scale);
+            Camera.Inizialize(backgrounds[(int)room], room);
         }
         //makes the camera shake for the time (in seconds) passed to the fnction as parameter
         public static void shakeForTime(float _shakingTime)

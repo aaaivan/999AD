@@ -46,6 +46,7 @@
     <Compile Include="camera\CameraManager.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Gravity.cs" />
+    <Compile Include="map\LevelEditor.cs" />
     <Compile Include="projectile\Projectile.cs" />
     <Compile Include="projectile\ProjectilesManager.cs" />
     <Compile Include="map\RoomMap.cs" />

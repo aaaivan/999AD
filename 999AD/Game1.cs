@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿#define LEVEL_EDITOR
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -16,9 +18,13 @@ namespace _999AD
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        
-        //SpriteFont sprite;
-
+#if LEVEL_EDITOR
+        public readonly static bool levelEditorMode = true;
+        LevelEditor levelEditor;
+        public static MouseState mouseState;
+#else
+        public readonly static bool levelEditorMode = true;
+#endif
         public static KeyboardState previousKeyboard;
         public static KeyboardState currentKeyboard;
         public static int screenWidth=960; //resolution
@@ -40,10 +46,15 @@ namespace _999AD
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            this.IsMouseVisible = true;
             graphics.PreferredBackBufferWidth = screenWidth;
             graphics.PreferredBackBufferHeight = screenHeight;
             //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
+#if LEVEL_EDITOR
+            screenHeight -= 40; //resolution
+            mouseState = Mouse.GetState();
+#endif
             Gravity.Inizialize(2000);
             previousKeyboard = Keyboard.GetState();
 
@@ -72,8 +83,9 @@ namespace _999AD
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
             ProjectilesManager.Inizialize(Content.Load<Texture2D>("projectile"));
             Player.Inizialize(Content.Load <Texture2D>("player"), new Vector2(20,0));
-            
-            //sprite = Content.Load<SpriteFont>("file");
+#if LEVEL_EDITOR
+            levelEditor = new LevelEditor(Content.Load<SpriteFont>("arial32"), Content.Load<SpriteFont>("arial16"), Content.Load<Texture2D>("whiteTile"));
+#endif
         }
 
         /// <summary>
@@ -102,7 +114,10 @@ namespace _999AD
             CameraManager.Update(gameTime);
             Player.Update(gameTime);
             ProjectilesManager.Update(elapsedTime);
-
+#if LEVEL_EDITOR
+            mouseState = Mouse.GetState();
+            levelEditor.Update(mouseState);
+#endif
             previousKeyboard = currentKeyboard;
             base.Update(gameTime);
         }
@@ -117,12 +132,14 @@ namespace _999AD
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            //spriteBatch.DrawString(sprite, screenHeight + " " + screenWidth, new Vector2(100, 100), Color.White);
+#if LEVEL_EDITOR
+            levelEditor.Draw(spriteBatch);
+#else
             Camera.Draw(spriteBatch);
             RoomsManager.Draw(spriteBatch);
             ProjectilesManager.Draw(spriteBatch);
             Player.Draw(spriteBatch);
-
+#endif
             spriteBatch.End();
             base.Draw(gameTime);
         }
