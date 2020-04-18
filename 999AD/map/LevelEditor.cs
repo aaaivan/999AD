@@ -14,7 +14,7 @@ namespace _999AD
         int currentTileType=0;
         int hoveredTileType = 0;
         int currentRoomNumber = 0;
-        string message="LEVEL EDITOR MODE\nClick on a tile to change it to the selected type.\nPress 'M' to access the menu.\n\nEnter to begin.";
+        string message= "LEVEL EDITOR MODE\nLeft click on a tile to change it to the selected type.\nRight click on a tile to remove it.\nPress 'M' to access the menu.\n\nEnter to begin.";
         int userInput=0;
         bool start = true;
         bool menu = false;
@@ -170,6 +170,7 @@ namespace _999AD
                 else if (changeTile && Game1.currentKeyboard.IsKeyDown(Keys.Enter))
                 {
                     currentTileType = userInput < (int)Tile.TileType.total ? userInput : ((int)Tile.TileType.total - 1);
+                    userInput = 0;
                     menu = false;
                     changeRoom = false;
                     changeTile = false;
@@ -192,26 +193,26 @@ namespace _999AD
                     Camera.pointLocked.X -= 3;
                 int tileRow = 0;
                 int tileCol = 0;
-                Point mouseLocation = new Point(
-                    MathHelper.Clamp(mouseState.X, 0, Game1.screenWidth-1),
-                    MathHelper.Clamp(mouseState.Y, 0, Game1.screenHeight-1)
-                    );
-                tileCol = (mouseLocation.X + Camera.rectangle.X) / Tile.tileSize;
-                tileRow = (mouseLocation.Y + Camera.rectangle.Y) / Tile.tileSize;
-                tileCol = MathHelper.Clamp(tileCol, 0, MapsManager.maps[currentRoomNumber].roomWidthTiles - 1);
-                tileRow = MathHelper.Clamp(tileRow, 0, MapsManager.maps[currentRoomNumber].roomHeightTiles - 1);
-                hoveredTileType = (int)MapsManager.maps[currentRoomNumber].array[tileRow, tileCol].tileType;
-                if (mouseState.LeftButton==ButtonState.Pressed)
+                if (mouseState.X >= 0 && mouseState.X < Game1.screenWidth &&
+                    mouseState.Y >= 0 && mouseState.Y < Game1.screenHeight)
                 {
-                    MapsManager.maps[currentRoomNumber].array[tileRow, tileCol].tileType = (Tile.TileType)currentTileType;
-                }
-                if (mouseState.RightButton == ButtonState.Pressed)
-                {
-                    MapsManager.maps[currentRoomNumber].array[tileRow, tileCol].tileType = (Tile.TileType)0;
+                    tileCol = (mouseState.X + Camera.rectangle.X) / Tile.tileSize;
+                    tileRow = (mouseState.Y + Camera.rectangle.Y) / Tile.tileSize;
+                    tileCol = MathHelper.Clamp(tileCol, 0, MapsManager.maps[currentRoomNumber].roomWidthTiles - 1);
+                    tileRow = MathHelper.Clamp(tileRow, 0, MapsManager.maps[currentRoomNumber].roomHeightTiles - 1);
+                    hoveredTileType = (int)MapsManager.maps[currentRoomNumber].array[tileRow, tileCol].tileType;
+                    if (mouseState.LeftButton == ButtonState.Pressed)
+                    {
+                        MapsManager.maps[currentRoomNumber].array[tileRow, tileCol].tileType = (Tile.TileType)currentTileType;
+                    }
+                    if (mouseState.RightButton == ButtonState.Pressed)
+                    {
+                        MapsManager.maps[currentRoomNumber].array[tileRow, tileCol].tileType = (Tile.TileType)0;
+                    }
+                    tilePositionInfo = "Tile hovered: row " + tileRow + ", col " + tileCol + "\n Type: " + hoveredTileType + "(" + (Tile.TileType)hoveredTileType + ")";
                 }
                 roomInfo = "Current room: " + currentRoomNumber + "(" + (RoomsManager.Rooms)currentRoomNumber + ")";
                 tileTypeInfo = "Tile selected: " + currentTileType + "("+(Tile.TileType)currentTileType+")";
-                tilePositionInfo = "Tile hovered: row "+tileRow+", col "+tileCol+"\n Type: " + hoveredTileType + "(" + (Tile.TileType)hoveredTileType + ")";
             }
         }
         public void Draw(SpriteBatch spriteBatch)
