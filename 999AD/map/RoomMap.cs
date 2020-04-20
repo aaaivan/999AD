@@ -22,7 +22,7 @@ namespace _999AD
             roomWidthTiles = _roomWidthTiles;
             roomHeightTiles = _roomHeightTiles;
             array = new Tile[roomHeightTiles, roomWidthTiles]; //array of tiles
-            for (int row=0; row< roomHeightTiles; row++) //fill the array with empty tiles
+            for (int row = 0; row < roomHeightTiles; row++) //fill the array with empty tiles
             {
                 for (int col = 0; col < roomWidthTiles; col++)
                     array[row, col] = new Tile(new Vector2(col * Tile.tileSize,

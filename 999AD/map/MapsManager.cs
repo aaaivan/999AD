@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,18 +26,45 @@ namespace _999AD
         //fill the list maps with the maps for all the rooms
         static void loadMaps()
         {
-            maps[0]=new RoomMap(20, 60);
-            maps[1]=new RoomMap(20, 30);
-            for (int i = 0; i < maps[0].roomWidthTiles; i++)
-                maps[0].array[maps[0].roomHeightTiles - 1, i].tileType = Tile.TileType.solid;
-            for (int i = 0; i < maps[0].roomHeightTiles-5; i++)
-                maps[0].array[i, 5].tileType = Tile.TileType.solid;
-            for (int i = 0; i < maps[0].roomHeightTiles; i++)
-                maps[0].array[i, 0].tileType = Tile.TileType.solid;
-            for (int i = 0; i < maps[1].roomWidthTiles; i++)
-                maps[1].array[maps[1].roomHeightTiles - 1, i].tileType = Tile.TileType.solid;
-            for (int i = maps[1].roomHeightTiles - 1; i > 15; i--)
-                maps[1].array[i, 4].tileType = Tile.TileType.solid;
+            for (int room=0; room< (int)RoomsManager.Rooms.total; room++)
+            {
+                string line = "";
+                List<List<int>> tileMap = new List<List<int>>();
+                string[] row;
+                try
+                {
+                    StreamReader inputStream = new StreamReader("mapRoom_" + room + ".txt");
+                    using (inputStream)
+                    {
+                        line = inputStream.ReadLine();
+                        int count = 0;
+                        while (line != null)
+                        {
+                            tileMap.Add(new List<int>());
+                            row = line.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                            foreach (string tile in row)
+                            {
+                                tileMap[count].Add(int.Parse(tile));
+                            }
+                            line = inputStream.ReadLine();
+                            count++;
+                        }
+                        maps[room] = new RoomMap(tileMap.Count, tileMap[0].Count);
+                        for (int i = 0; i < tileMap.Count; i++)
+                        {
+                            for (int j = 0; j < tileMap[0].Count; j++)
+                            {
+                                if (tileMap[i][j]!=0)
+                                    maps[room].array[i, j].tileType = (Tile.TileType)tileMap[i][j];
+                            }
+                        }
+                    }
+                }
+                catch (IOException)
+                {
+                    maps[room] = new RoomMap(20, 60);
+                }
+            }
         }
         #endregion
     }

@@ -22,6 +22,9 @@ namespace _999AD
         public readonly static bool levelEditorMode = true;
         LevelEditor levelEditor;
         public static MouseState mouseState;
+        public static MouseState previousMouseState;
+        public static int tilesPerRow=5;
+        public static int infoBoxHeightPx = 40;
 #else
         public readonly static bool levelEditorMode = true;
 #endif
@@ -52,8 +55,10 @@ namespace _999AD
             //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 #if LEVEL_EDITOR
-            screenHeight -= 40; //resolution
+            screenHeight -= infoBoxHeightPx;
+            screenWidth -= Tile.tileSize * tilesPerRow;
             mouseState = Mouse.GetState();
+            previousMouseState = mouseState;
 #endif
             Gravity.Inizialize(2000);
             previousKeyboard = Keyboard.GetState();
@@ -84,7 +89,7 @@ namespace _999AD
             ProjectilesManager.Inizialize(Content.Load<Texture2D>("projectile"));
             Player.Inizialize(Content.Load <Texture2D>("player"), new Vector2(20,0));
 #if LEVEL_EDITOR
-            levelEditor = new LevelEditor(Content.Load<SpriteFont>("arial32"), Content.Load<SpriteFont>("arial16"), Content.Load<Texture2D>("whiteTile"));
+            levelEditor = new LevelEditor(Content.Load<SpriteFont>("arial32"), Content.Load<SpriteFont>("arial14"), Content.Load<Texture2D>("whiteTile"));
 #endif
         }
 
@@ -110,13 +115,16 @@ namespace _999AD
             currentKeyboard = Keyboard.GetState();
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             // TODO: Add your update logic here
+#if LEVEL_EDITOR
+            mouseState = Mouse.GetState();
+            levelEditor.Update(mouseState, previousMouseState, tilesPerRow, infoBoxHeightPx);
+            CameraManager.Update(gameTime);
+            previousMouseState = mouseState;
+#else
             RoomsManager.Update(gameTime);
             CameraManager.Update(gameTime);
             Player.Update(gameTime);
             ProjectilesManager.Update(elapsedTime);
-#if LEVEL_EDITOR
-            mouseState = Mouse.GetState();
-            levelEditor.Update(mouseState);
 #endif
             previousKeyboard = currentKeyboard;
             base.Update(gameTime);
@@ -133,7 +141,7 @@ namespace _999AD
             // TODO: Add your drawing code here
             spriteBatch.Begin();
 #if LEVEL_EDITOR
-            levelEditor.Draw(spriteBatch);
+            levelEditor.Draw(spriteBatch, tilesPerRow);
 #else
             Camera.Draw(spriteBatch);
             RoomsManager.Draw(spriteBatch);
