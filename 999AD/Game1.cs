@@ -1,4 +1,4 @@
-﻿#define LEVEL_EDITOR
+﻿//#define LEVEL_EDITOR
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,6 +18,8 @@ namespace _999AD
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        public static int screenWidth = 960; //resolution
+        public static int screenHeight = 540; //resolution
 #if LEVEL_EDITOR
         public readonly static bool levelEditorMode = true;
         LevelEditor levelEditor;
@@ -30,8 +32,6 @@ namespace _999AD
 #endif
         public static KeyboardState previousKeyboard;
         public static KeyboardState currentKeyboard;
-        public static int screenWidth=960; //resolution
-        public static int screenHeight = 540; //resolution
 
 
         public Game1()
@@ -50,16 +50,17 @@ namespace _999AD
         {
             // TODO: Add your initialization logic here
             this.IsMouseVisible = true;
-            graphics.PreferredBackBufferWidth = screenWidth;
-            graphics.PreferredBackBufferHeight = screenHeight;
-            //graphics.IsFullScreen = true;
-            graphics.ApplyChanges();
 #if LEVEL_EDITOR
-            screenHeight -= infoBoxHeightPx;
-            screenWidth -= Tile.tileSize * tilesPerRow;
             mouseState = Mouse.GetState();
             previousMouseState = mouseState;
-#endif
+            graphics.PreferredBackBufferWidth = screenWidth+ Tile.tileSize * tilesPerRow;
+            graphics.PreferredBackBufferHeight = screenHeight+ infoBoxHeightPx;
+#else
+            graphics.PreferredBackBufferWidth = screenWidth;
+            graphics.PreferredBackBufferHeight = screenHeight;
+#endif     
+            //graphics.IsFullScreen = true;
+            graphics.ApplyChanges();
             Gravity.Inizialize(2000);
             previousKeyboard = Keyboard.GetState();
 
@@ -141,7 +142,7 @@ namespace _999AD
             // TODO: Add your drawing code here
             spriteBatch.Begin();
 #if LEVEL_EDITOR
-            levelEditor.Draw(spriteBatch, tilesPerRow);
+            levelEditor.Draw(spriteBatch, tilesPerRow, infoBoxHeightPx);
 #else
             Camera.Draw(spriteBatch);
             RoomsManager.Draw(spriteBatch);

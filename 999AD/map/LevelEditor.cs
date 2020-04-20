@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,11 +14,13 @@ namespace _999AD
     {
         enum MenuState
         {
-            start, none, main, rooms, tiles, view, pickRoom, pickRoomSize, pickTileIndex, selectRandomTiles
+            start, none, main, rooms, tiles, view, pickRoom, pickRoomSize, pickResizingDirection , pickTileIndex, selectRandomTiles
         }
         int currentTileType=0;
         int hoveredTileType = 0;
         int currentRoomNumber = 0;
+        int widthTiles=0;
+        int heightTiles=0;
         MenuState menu= MenuState.start;
         string message= "LEVEL EDITOR MODE\nLeft click on a tile to change it to the selected type.\nRight click on a tile to remove it.\nPress 'M' to access the menu.\n\nEnter to begin.";
         int userInputInt=0;
@@ -42,7 +45,31 @@ namespace _999AD
             CameraManager.SwitchCamera((RoomsManager.Rooms)currentRoomNumber);
         }
 
-
+        void saveMaps()
+        {
+            for (int room=0; room< (int)RoomsManager.Rooms.total; room++)
+            {
+                StreamWriter outputStream = new StreamWriter("mapRoom_" + room + ".txt");
+                try
+                {
+                    using (outputStream)
+                    {
+                        for (int row=0; row< MapsManager.maps[room].roomHeightTiles; row++)
+                        {
+                            for (int col = 0; col < MapsManager.maps[room].roomWidthTiles; col++)
+                            {
+                                outputStream.Write((int)MapsManager.maps[room].array[row, col].tileType + ",");
+                            }
+                            outputStream.WriteLine();
+                        }
+                    }
+                }
+                catch (IOException)
+                {
+                    message = "Save FAILED!\nAsk Ivan.";
+                }
+            }
+        }
         Point TileFromPointerLocation(MouseState mouseState)
         {
             int tileRow = 0;
@@ -52,6 +79,30 @@ namespace _999AD
             tileCol = MathHelper.Clamp(tileCol, 0, MapsManager.maps[currentRoomNumber].roomWidthTiles - 1);
             tileRow = MathHelper.Clamp(tileRow, 0, MapsManager.maps[currentRoomNumber].roomHeightTiles - 1);
             return new Point(tileCol, tileRow);
+        }
+        bool getDirectionalInput()
+        {
+            if (Game1.currentKeyboard.IsKeyDown(Keys.Up))
+            {
+                userInputString = "U" + "," + userInputString[2];
+                return true;
+            }
+            else if (Game1.currentKeyboard.IsKeyDown(Keys.Down))
+            {
+                userInputString = "D" + "," + userInputString[2];
+                return true;
+            }
+            if (Game1.currentKeyboard.IsKeyDown(Keys.Left))
+            {
+                userInputString = userInputString[0] + "," + "L";
+                return true;
+            }
+            else if (Game1.currentKeyboard.IsKeyDown(Keys.Right))
+            {
+                userInputString = userInputString[0] + "," + "R";
+                return true;
+            }
+            return false;
         }
         bool GetIntInput()
         {
@@ -205,7 +256,7 @@ namespace _999AD
                     {
                         menu = MenuState.none;
                         message = "";
-                        //saveMaps();
+                        saveMaps();
                     }
                     else if (Game1.currentKeyboard.IsKeyDown(Keys.Back) && !Game1.previousKeyboard.IsKeyDown(Keys.Back))
                     {
@@ -300,25 +351,59 @@ namespace _999AD
                     else if (Game1.currentKeyboard.IsKeyDown(Keys.Enter))
                     {
                         string[] arr = userInputString.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                        userInputString = "";
+                        
                         if (arr.Length != 2)
                             break;
-                        int screenW = Game1.screenWidth + tilesPerRow * Tile.tileSize;
-                        int screenH= Game1.screenHeight + infoBoxHeighPx;
-                        int widthTiles =int.Parse(arr[0]);
-                        widthTiles = MathHelper.Clamp(widthTiles,(screenW + Tile.tileSize-1)/ Tile.tileSize, 200);
-                        int heightTiles = int.Parse(arr[1]);
-                        heightTiles = MathHelper.Clamp(heightTiles, (screenH + Tile.tileSize - 1) / Tile.tileSize, 200);
+                        widthTiles =int.Parse(arr[0]);
+                        widthTiles = MathHelper.Clamp(widthTiles,(Game1.screenWidth + Tile.tileSize-1)/ Tile.tileSize, 200);
+                        heightTiles = int.Parse(arr[1]);
+                        heightTiles = MathHelper.Clamp(heightTiles, (Game1.screenHeight + Tile.tileSize - 1) / Tile.tileSize, 200);
+                        menu = MenuState.pickResizingDirection;
+                        userInputString = "U,R";
+                        message = "Use the arrows to select the edges (top/bottom and left/right)\n" +
+                            "to shift to resize the room.\n"+userInputString;
+                    }
+                    break;
+                case MenuState.pickResizingDirection:
+                    if (Game1.currentKeyboard.IsKeyDown(Keys.Back) && !Game1.previousKeyboard.IsKeyDown(Keys.Back))
+                    {
+                        menu = MenuState.main;
+                        message = "Main Menu (backspace to exit). Press:\nR-Room Options\nT-Tile options\nV-View options\nS-Save maps";
+                        userInputString = "";
+                        heightTiles = 0;
+                        widthTiles = 0;
+                    }
+                    else if (getDirectionalInput())
+                    {
+                        message = "Use the arrows to select the edges (top/bottom and left/right)\n" +
+                            "to shift to resize the room.\n" + userInputString;
+                    }
+                    else if (Game1.currentKeyboard.IsKeyDown(Keys.Enter) && !Game1.previousKeyboard.IsKeyDown(Keys.Enter))
+                    {
                         RoomMap newMap = new RoomMap(heightTiles, widthTiles);
-                        for (int row=0; row< Math.Min(MapsManager.maps[currentRoomNumber].roomHeightTiles, heightTiles); row++)
+                        int oldHeightTiles = MapsManager.maps[currentRoomNumber].roomHeightTiles;
+                        int oldWidthTiles= MapsManager.maps[currentRoomNumber].roomWidthTiles;
+                        for (int row = 0; row < Math.Min(oldHeightTiles, heightTiles); row++)
                         {
-                            for (int col = 0; col < Math.Min(MapsManager.maps[currentRoomNumber].roomWidthTiles, widthTiles); col++)
-                                newMap.array[row, col] = MapsManager.maps[currentRoomNumber].array[row, col];
+                            for (int col = 0; col < Math.Min(oldWidthTiles, widthTiles); col++)
+                            {
+                                if (userInputString == "D,R")
+                                    newMap.array[row, col].tileType = MapsManager.maps[currentRoomNumber].array[row, col].tileType;
+                                else if (userInputString == "U,R")
+                                    newMap.array[heightTiles - 1 - row, col].tileType = MapsManager.maps[currentRoomNumber].array[oldHeightTiles - 1 - row, col].tileType;
+                                else if (userInputString == "D,L")
+                                    newMap.array[row, widthTiles - 1 - col].tileType = MapsManager.maps[currentRoomNumber].array[row, oldWidthTiles - 1 - col].tileType;
+                                else if (userInputString == "U,L")
+                                    newMap.array[heightTiles - 1 - row, widthTiles - 1 - col].tileType = MapsManager.maps[currentRoomNumber].array[oldHeightTiles - 1 - row, oldWidthTiles - 1 - col].tileType;
+                            }
                         }
                         MapsManager.maps[currentRoomNumber] = newMap;
                         CameraManager.SwitchCamera((RoomsManager.Rooms)currentRoomNumber);
                         menu = MenuState.none;
                         message = "";
+                        userInputString = "";
+                        heightTiles = 0;
+                        widthTiles = 0;
                     }
                     break;
                 case MenuState.pickTileIndex:
@@ -394,13 +479,13 @@ namespace _999AD
             if (menu== MenuState.none)
             {
                 if (Game1.currentKeyboard.IsKeyDown(Keys.Up))
-                    Camera.pointLocked.Y -= 3;
+                    Camera.pointLocked.Y -= 10;
                 if (Game1.currentKeyboard.IsKeyDown(Keys.Down))
-                    Camera.pointLocked.Y += 3;
+                    Camera.pointLocked.Y += 10;
                 if (Game1.currentKeyboard.IsKeyDown(Keys.Right))
-                    Camera.pointLocked.X += 3;
+                    Camera.pointLocked.X += 10;
                 if (Game1.currentKeyboard.IsKeyDown(Keys.Left))
-                    Camera.pointLocked.X -= 3;
+                    Camera.pointLocked.X -= 10;
                 if (mouseState.X >= 0 && mouseState.X < Game1.screenWidth &&
                     mouseState.Y >= 0 && mouseState.Y < Game1.screenHeight)
                 {
@@ -428,7 +513,7 @@ namespace _999AD
                 }
                 else if (mouseState.X >= Game1.screenWidth && mouseState.X < Game1.screenWidth+Tile.tileSize*tilesPerRow)
                 {
-                    if(mouseState.LeftButton == ButtonState.Pressed)
+                    if(mouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton!=ButtonState.Pressed)
                     {
                         int newTileType = (mouseState.X - Game1.screenWidth) / Tile.tileSize + (mouseState.Y / Tile.tileSize * tilesPerRow);
                         if (newTileType< (int)Tile.TileType.total)
@@ -445,7 +530,7 @@ namespace _999AD
                     tileTypeInfo = "Tile selected: " + currentTileType + "("+(Tile.TileType)currentTileType+")";
             }
         }
-        public void Draw(SpriteBatch spriteBatch, int tilesPerRow)
+        public void Draw(SpriteBatch spriteBatch, int tilesPerRow, int infoBoxHeighPx)
         {
             if (menu== MenuState.start)
             {
@@ -468,7 +553,7 @@ namespace _999AD
                     }
                 }
             }
-            spriteBatch.Draw(whiteTexture, new Rectangle(0, Game1.screenHeight, Game1.screenWidth, 40), Color.LightGray);
+            spriteBatch.Draw(whiteTexture, new Rectangle(0, Game1.screenHeight, Game1.screenWidth,  infoBoxHeighPx), Color.LightGray);
             spriteBatch.DrawString(arial14,
                                     tileTypeInfo,
                                     new Vector2(Game1.screenWidth / 2, Game1.screenHeight + 20) - arial14.MeasureString(tileTypeInfo) / 2,
@@ -497,6 +582,7 @@ namespace _999AD
                         new Vector2(Game1.screenWidth / 2, Game1.screenHeight / 2) - arial32.MeasureString(message) / 2,
                         Color.Black);
             }
+            spriteBatch.Draw(whiteTexture, new Rectangle(Game1.screenWidth, 0, Tile.tileSize * tilesPerRow, Game1.screenHeight+ infoBoxHeighPx), Color.LightGray);
             for (int i=0; i<(int)Tile.TileType.total; i++)
             {
                 Tile.DrawAtLocation(spriteBatch, i,new Vector2(i % tilesPerRow, i / tilesPerRow) * Tile.tileSize+new Vector2(Game1.screenWidth,0));

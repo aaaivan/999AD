@@ -62,7 +62,11 @@ namespace _999AD
                 }
                 catch (IOException)
                 {
-                    maps[room] = new RoomMap(20, 60);
+                    maps[room] = new RoomMap((Game1.screenHeight+Tile.tileSize-1)/Tile.tileSize, (Game1.screenWidth + Tile.tileSize - 1) / Tile.tileSize) ;
+                }
+                catch(System.ArgumentOutOfRangeException)
+                {
+                    maps[room] = new RoomMap((Game1.screenHeight + Tile.tileSize - 1) / Tile.tileSize, (Game1.screenWidth + Tile.tileSize - 1) / Tile.tileSize);
                 }
             }
         }
