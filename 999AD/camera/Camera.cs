@@ -16,19 +16,19 @@ namespace _999AD
         public static Rectangle rectangle; //area framed in the camera
         static int roomWidth;
         static int roomHeight;
-        static bool lockOnPlayer=true; //if false, the camera will follow "pointLocked"
-        static Vector2 pointLocked=Vector2.Zero; //point followed by the camera
+        public static bool lockOnPlayer=true; //if false, the camera will follow "pointLocked"
+        public static Vector2 pointLocked=Vector2.Zero; //point followed by the camera
         static readonly Rectangle screenRectangle = new Rectangle(0, 0, Game1.screenWidth, Game1.screenHeight);
         #endregion
         #region CONSTRUCTORS
-        public static void Inizialize(Texture2D _background, RoomsManager.Rooms _room, float _scale=1)
+        public static void Inizialize(Texture2D _background, RoomsManager.Rooms _room)
         {
             background = _background;
             roomWidth = MapsManager.maps[(int)_room].RoomWidthtPx;
             roomHeight = MapsManager.maps[(int)_room].RoomHeightPx;
             rectangle = new Rectangle(0, 0, (int)(Game1.screenWidth), (int)(Game1.screenHeight));
         }
-        public static void Inizialize(Texture2D _background, RoomsManager.Rooms _room, Vector2 _pointLocked, float _scale=1)
+        public static void Inizialize(Texture2D _background, RoomsManager.Rooms _room, Vector2 _pointLocked)
         {
             background = _background;
             roomWidth = MapsManager.maps[(int)_room].RoomWidthtPx;
@@ -65,12 +65,14 @@ namespace _999AD
             }
             else
             {
-                rectangle.X = (int)MathHelper.Clamp(pointLocked.X - Game1.screenWidth / 2f,
-                                                         0,
-                                                         roomWidth - Game1.screenWidth );
-                rectangle.Y = (int)MathHelper.Clamp(pointLocked.Y - Game1.screenHeight / 2f,
-                                                        maxOffsetY,
-                                                        roomHeight - Game1.screenHeight - maxOffsetY);
+                pointLocked.X= MathHelper.Clamp(pointLocked.X,
+                                                Game1.screenWidth/2f,
+                                                roomWidth - Game1.screenWidth/2f);
+                pointLocked.Y= MathHelper.Clamp(pointLocked.Y,
+                                                Game1.screenHeight / 2f,
+                                                roomHeight - Game1.screenHeight / 2f);
+                rectangle.X = (int)(pointLocked.X - Game1.screenWidth / 2f);
+                rectangle.Y = (int)(pointLocked.Y - Game1.screenHeight / 2f);
             }
         }
         public static void Draw(SpriteBatch spriteBatch)

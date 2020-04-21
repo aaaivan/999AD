@@ -14,11 +14,11 @@ namespace _999AD
         #region DECLARATIONS
         public enum TileType
         {
-            empty, solidEmpty, solid, total
+            empty, solidEmpty, solid, grass, sand, lava, sky, water, wall, concrete, total
         }
         public static readonly int tileSize=32;
         static Texture2D spritesheet; //set by MapsManager
-        static List<Rectangle> sourceRectangles = new List<Rectangle>(); //filled by the Inizialize() function, which is called by MapsManager
+        static Rectangle[] sourceRectangles = new Rectangle[(int)TileType.total]; //filled by the Inizialize() function, which is called by MapsManager
         public TileType tileType;
         Vector2 position;
         #endregion
@@ -37,10 +37,10 @@ namespace _999AD
         {
             spritesheet = _spritesheet;
             for (int i = 0; i < (int)TileType.total; i++)
-                sourceRectangles.Add(new Rectangle(((i % (spritesheet.Width/tileSize)) * tileSize),
+                sourceRectangles[i]=new Rectangle(((i % (spritesheet.Width/tileSize)) * tileSize),
                     i / (spritesheet.Width / tileSize) * tileSize,
                     tileSize,
-                    tileSize));
+                    tileSize);
         }
         #endregion
         #region METHODS
@@ -55,6 +55,10 @@ namespace _999AD
             if (tileType == TileType.empty || tileType == TileType.solidEmpty)
                 return;
             spriteBatch.Draw(spritesheet,Camera.RelativeVector(position), sourceRectangles[(int)tileType], Color.White);
+        }
+        public static void DrawAtLocation(SpriteBatch spriteBatch, int tileType, Vector2 screenPosition)
+        {
+            spriteBatch.Draw(spritesheet, screenPosition, sourceRectangles[tileType], Color.White);
         }
         #endregion
     }

@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿#define LEVEL_EDITOR
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -16,13 +18,20 @@ namespace _999AD
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        
-        //SpriteFont sprite;
-
+        public static int screenWidth = 960; //resolution
+        public static int screenHeight = 540; //resolution
+#if LEVEL_EDITOR
+        public readonly static bool levelEditorMode = true;
+        LevelEditor levelEditor;
+        public static MouseState mouseState;
+        public static MouseState previousMouseState;
+        public static int tilesPerRow=5;
+        public static int infoBoxHeightPx = 40;
+#else
+        public readonly static bool levelEditorMode = true;
+#endif
         public static KeyboardState previousKeyboard;
         public static KeyboardState currentKeyboard;
-        public static int screenWidth=960; //resolution
-        public static int screenHeight = 540; //resolution
 
 
         public Game1()
@@ -40,8 +49,16 @@ namespace _999AD
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            this.IsMouseVisible = true;
+#if LEVEL_EDITOR
+            mouseState = Mouse.GetState();
+            previousMouseState = mouseState;
+            graphics.PreferredBackBufferWidth = screenWidth+ Tile.tileSize * tilesPerRow;
+            graphics.PreferredBackBufferHeight = screenHeight+ infoBoxHeightPx;
+#else
             graphics.PreferredBackBufferWidth = screenWidth;
             graphics.PreferredBackBufferHeight = screenHeight;
+#endif     
             //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
             Gravity.Inizialize(2000);
@@ -72,8 +89,9 @@ namespace _999AD
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
             ProjectilesManager.Inizialize(Content.Load<Texture2D>("projectile"));
             Player.Inizialize(Content.Load <Texture2D>("player"), new Vector2(20,0));
-            
-            //sprite = Content.Load<SpriteFont>("file");
+#if LEVEL_EDITOR
+            levelEditor = new LevelEditor(Content.Load<SpriteFont>("arial32"), Content.Load<SpriteFont>("arial14"), Content.Load<Texture2D>("whiteTile"));
+#endif
         }
 
         /// <summary>
@@ -98,11 +116,17 @@ namespace _999AD
             currentKeyboard = Keyboard.GetState();
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             // TODO: Add your update logic here
+#if LEVEL_EDITOR
+            mouseState = Mouse.GetState();
+            levelEditor.Update(mouseState, previousMouseState, tilesPerRow, infoBoxHeightPx);
+            CameraManager.Update(gameTime);
+            previousMouseState = mouseState;
+#else
             RoomsManager.Update(gameTime);
             CameraManager.Update(gameTime);
             Player.Update(gameTime);
             ProjectilesManager.Update(elapsedTime);
-
+#endif
             previousKeyboard = currentKeyboard;
             base.Update(gameTime);
         }
@@ -117,12 +141,14 @@ namespace _999AD
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            //spriteBatch.DrawString(sprite, screenHeight + " " + screenWidth, new Vector2(100, 100), Color.White);
+#if LEVEL_EDITOR
+            levelEditor.Draw(spriteBatch, tilesPerRow, infoBoxHeightPx);
+#else
             Camera.Draw(spriteBatch);
             RoomsManager.Draw(spriteBatch);
             ProjectilesManager.Draw(spriteBatch);
             Player.Draw(spriteBatch);
-
+#endif
             spriteBatch.End();
             base.Draw(gameTime);
         }
