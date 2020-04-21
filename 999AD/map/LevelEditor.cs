@@ -360,7 +360,7 @@ namespace _999AD
                         heightTiles = MathHelper.Clamp(heightTiles, (Game1.screenHeight + Tile.tileSize - 1) / Tile.tileSize, 200);
                         menu = MenuState.pickResizingDirection;
                         userInputString = "U,R";
-                        message = "Use the arrows to select the edges (top/bottom and left/right)\n" +
+                        message = "Use the arrows to select\nthe edges (top/bottom and left/right)\n" +
                             "to shift to resize the room.\n"+userInputString;
                     }
                     break;
@@ -375,7 +375,7 @@ namespace _999AD
                     }
                     else if (getDirectionalInput())
                     {
-                        message = "Use the arrows to select the edges (top/bottom and left/right)\n" +
+                        message = "Use the arrows to select\nthe edges (top/bottom and left/right)\n" +
                             "to shift to resize the room.\n" + userInputString;
                     }
                     else if (Game1.currentKeyboard.IsKeyDown(Keys.Enter) && !Game1.previousKeyboard.IsKeyDown(Keys.Enter))

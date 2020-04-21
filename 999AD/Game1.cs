@@ -1,4 +1,4 @@
-﻿//#define LEVEL_EDITOR
+﻿#define LEVEL_EDITOR
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
