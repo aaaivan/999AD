@@ -12,8 +12,8 @@ namespace _999AD
     static class ProjectilesManager
     {
         #region DECLARATIONS
-        static List<Projectile> projectiles= new List<Projectile>();
-        public static readonly float timeBetweenShots = 0.2f;
+        static List<Projectile> projectiles= new List<Projectile>(); //list of projectiles
+        public static readonly float timeBetweenShots = 0.2f; //minimum time between shots
         static float elapsedShotTime=0f;
         #endregion
         #region CONSTRUCTOR

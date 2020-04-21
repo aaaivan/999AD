@@ -1,4 +1,4 @@
-﻿#define LEVEL_EDITOR
+﻿//#define LEVEL_EDITOR
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -83,6 +83,7 @@ namespace _999AD
                 new Texture2D[(int)RoomsManager.Rooms.total]
                 {
                     Content.Load<Texture2D>("room1"),
+                    Content.Load<Texture2D>("room2"),
                     Content.Load<Texture2D>("room2")
                 }
             );

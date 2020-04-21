@@ -16,19 +16,19 @@ namespace _999AD
         {
             start, none, main, rooms, tiles, view, pickRoom, pickRoomSize, pickResizingDirection , pickTileIndex, selectRandomTiles
         }
-        int currentTileType=0;
-        int hoveredTileType = 0;
-        int currentRoomNumber = 0;
-        int widthTiles=0;
-        int heightTiles=0;
-        MenuState menu= MenuState.start;
+        int currentTileType=0; //tile type selected for drawing
+        int hoveredTileType = 0; //tile type hovered
+        int currentRoomNumber = 0; //index of the current room
+        int widthTiles=0; //width of the room in tiles (used as temp. variable when resizing the room)
+        int heightTiles=0; //height of the room in tiles (used as temp. variable when resizing the room)
+        MenuState menu= MenuState.start; //current location in the menu loop
         string message= "LEVEL EDITOR MODE\nLeft click on a tile to change it to the selected type.\nRight click on a tile to remove it.\nPress 'M' to access the menu.\n\nEnter to begin.";
         int userInputInt=0;
         string userInputString = "";
-        bool randomMode=false;
-        bool solidView = false;
-        bool deadlyView = false;
-        List<int> randomTiles=new List<int>();
+        bool randomMode=false; //when true, multiple tile types are drawn randomly
+        bool solidView = false; //highlight the solid tiles
+        bool deadlyView = false; //highlight the deadly tiles
+        List<int> randomTiles=new List<int>(); //list of tiles type from which to choose randomly
         string roomInfo="";
         string tileTypeInfo = "";
         string tilePositionInfo="";
@@ -36,6 +36,7 @@ namespace _999AD
         SpriteFont arial14;
         Texture2D whiteTexture;
         Random rand = new Random();
+        #region CONSTRUCTOR
         public LevelEditor(SpriteFont _arial32, SpriteFont _arial16, Texture2D _whiteTexture)
         {
             arial32 = _arial32;
@@ -44,7 +45,8 @@ namespace _999AD
             Camera.lockOnPlayer = false;
             CameraManager.SwitchCamera((RoomsManager.Rooms)currentRoomNumber);
         }
-
+        #endregion
+        //save maps to file
         void saveMaps()
         {
             for (int room=0; room< (int)RoomsManager.Rooms.total; room++)
@@ -70,6 +72,7 @@ namespace _999AD
                 }
             }
         }
+        //return the coordinates of the tile hovered by the pointer
         Point TileFromPointerLocation(MouseState mouseState)
         {
             int tileRow = 0;
@@ -80,6 +83,7 @@ namespace _999AD
             tileRow = MathHelper.Clamp(tileRow, 0, MapsManager.maps[currentRoomNumber].roomHeightTiles - 1);
             return new Point(tileCol, tileRow);
         }
+        //detect which arrow key has been pressed by the player
         bool getDirectionalInput()
         {
             if (Game1.currentKeyboard.IsKeyDown(Keys.Up))
@@ -104,6 +108,7 @@ namespace _999AD
             }
             return false;
         }
+        //detect numerical input and update userInputInt
         bool GetIntInput()
         {
             if (Game1.currentKeyboard.IsKeyDown(Keys.NumPad0) && !Game1.previousKeyboard.IsKeyDown(Keys.NumPad0))
@@ -158,6 +163,7 @@ namespace _999AD
             }
             return false;
         }
+        //detect numerical input and update userInputString
         bool GetStringInput()
         {
             if (Game1.currentKeyboard.IsKeyDown(Keys.NumPad0) && !Game1.previousKeyboard.IsKeyDown(Keys.NumPad0))
@@ -217,6 +223,7 @@ namespace _999AD
             }
             return false;
         }
+        //state machine that allows to traverse the menus
         void MenuLoop(MouseState mouseState, MouseState previousMouseState,int tilesPerRow, int infoBoxHeighPx)
         {
             switch (menu)
@@ -473,6 +480,7 @@ namespace _999AD
                     break;
             }
         }
+        //Detect click on the map and update the corresponding tile
         public void Update(MouseState mouseState, MouseState previousMouseState, int tilesPerRow, int infoBoxHeighPx)
         {
             MenuLoop(mouseState, previousMouseState, tilesPerRow, infoBoxHeighPx);

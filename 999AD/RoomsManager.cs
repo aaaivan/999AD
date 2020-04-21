@@ -14,7 +14,7 @@ namespace _999AD
         #region DECLARATIONS
         public enum Rooms
         {
-            room1, room2, total
+            room1, room2, finalBoss, total
         }
         static Rooms currentRoom = Rooms.room1;
         #endregion
@@ -48,9 +48,18 @@ namespace _999AD
                 }
             }
         }
+        //this function trigger events when a centain set of conditions is true
+        static void eventHandler()
+        {
+            switch (currentRoom)
+            {
+                
+            }
+        }
         public static void Update(GameTime gameTime)
         {
             switchRoom();
+            eventHandler();
             PlatformsManager.platformsRoomManagers[(int)currentRoom].Update(gameTime);
         }
         public static void Draw(SpriteBatch spriteBatch)

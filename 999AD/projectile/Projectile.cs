@@ -30,6 +30,7 @@ namespace _999AD
         }
         #endregion
         #region PROPERTIES
+        //return the rectangle of the projectile
         Rectangle Rectangle
         {
             get { return new Rectangle((int)position.X, (int)position.Y, width, height); }
@@ -42,12 +43,12 @@ namespace _999AD
         #region METHODS
         public void Update(float elapsedTime)
         {
-            animation.Update(elapsedTime);
-            Gravity.MoveDestructableObject(ref velocity, ref position, width, height, ref active, elapsedTime);
+            animation.Update(elapsedTime); //update the animation
+            Gravity.MoveDestructableObject(ref velocity, ref position, width, height, ref active, elapsedTime); //update the position
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(spritesheet, Camera.RelativeRectangle(Rectangle), animation.Frame, Color.White);
+            spriteBatch.Draw(spritesheet, Camera.RelativeVector(position), animation.Frame, Color.White);
         }
         #endregion
     }

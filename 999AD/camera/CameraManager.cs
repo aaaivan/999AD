@@ -34,7 +34,7 @@ namespace _999AD
         {
             Camera.Inizialize(backgrounds[(int)room], room);
         }
-        //makes the camera shake for the time (in seconds) passed to the fnction as parameter
+        //makes the camera shake for the time (in seconds) passed to the function as parameter
         public static void shakeForTime(float _shakingTime)
         {
             shakingTime = _shakingTime;

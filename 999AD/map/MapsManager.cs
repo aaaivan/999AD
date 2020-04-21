@@ -23,7 +23,7 @@ namespace _999AD
         }
         #endregion
         #region METHODS
-        //fill the list maps with the maps for all the rooms
+        //fill the list "maps" with the maps read from the corresponding text files
         static void loadMaps()
         {
             for (int room=0; room< (int)RoomsManager.Rooms.total; room++)

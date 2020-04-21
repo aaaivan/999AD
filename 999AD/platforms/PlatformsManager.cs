@@ -32,6 +32,18 @@ namespace _999AD
                     {
                         new MovingPlatform(MovingPlatform.TextureType.texture3, 0, new Vector2(80, 500), new Vector2(80, 600), 1, 500)
                     }
+                ),
+                new PlatformsRoomManager //finalBossRoom
+                (
+                    new MovingPlatform[]
+                    {
+                        new MovingPlatform(MovingPlatform.TextureType.texture3, 0, new Vector2(80, 500), new Vector2(80, 600), 1, 500),
+                        new MovingPlatform(MovingPlatform.TextureType.texture3, 0, new Vector2(80, 500), new Vector2(80, 600), 1, 500),
+                        new MovingPlatform(MovingPlatform.TextureType.texture3, 0, new Vector2(80, 500), new Vector2(80, 600), 1, 500),
+                        new MovingPlatform(MovingPlatform.TextureType.texture3, 0, new Vector2(80, 500), new Vector2(80, 600), 1, 500),
+                        new MovingPlatform(MovingPlatform.TextureType.texture3, 0, new Vector2(80, 500), new Vector2(80, 600), 1, 500),
+                        new MovingPlatform(MovingPlatform.TextureType.texture3, 0, new Vector2(80, 500), new Vector2(80, 600), 1, 500),
+                    }
                 )
             };
         }

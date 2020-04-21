@@ -28,11 +28,7 @@ namespace _999AD
             tileType = TileType.empty;
             position = _position;
         }
-        public Tile(Vector2 _position, TileType _tileType)
-        {
-            tileType = _tileType;
-            position = _position;
-        }
+        //inizialize the "spritesheet" variable and define the source rectangles
         public static void LoadTextures(Texture2D _spritesheet)
         {
             spritesheet = _spritesheet;

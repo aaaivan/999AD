@@ -12,10 +12,10 @@ namespace _999AD
     static class Camera
     {
         #region DECLARATIONS
-        static Texture2D background;
+        static Texture2D background; //the background of the room
         public static Rectangle rectangle; //area framed in the camera
-        static int roomWidth;
-        static int roomHeight;
+        static int roomWidth; //in pixels
+        static int roomHeight; //in pixels
         public static bool lockOnPlayer=true; //if false, the camera will follow "pointLocked"
         public static Vector2 pointLocked=Vector2.Zero; //point followed by the camera
         static readonly Rectangle screenRectangle = new Rectangle(0, 0, Game1.screenWidth, Game1.screenHeight);
@@ -47,6 +47,7 @@ namespace _999AD
                                  rect.Width,
                                  rect.Height);
         }
+        //Convert a Vector2 from game world to screen coordinates for drawing
         public static Vector2 RelativeVector(Vector2 vector)
         {
             return new Vector2(vector.X - rectangle.X,
@@ -54,7 +55,7 @@ namespace _999AD
         }
         public static void Update(GameTime gameTime, int maxOffsetY)
         {
-            if (lockOnPlayer)
+            if (lockOnPlayer) //follow the player if lock on player is true
             {
                 rectangle.X = (int)MathHelper.Clamp(Player.Center.X - Game1.screenWidth / 2f,
                                                          0,
@@ -63,7 +64,7 @@ namespace _999AD
                                                         maxOffsetY,
                                                         roomHeight - Game1.screenHeight - maxOffsetY);
             }
-            else
+            else //follow point locked otherwise
             {
                 pointLocked.X= MathHelper.Clamp(pointLocked.X,
                                                 Game1.screenWidth/2f,

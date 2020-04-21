@@ -53,15 +53,17 @@ namespace _999AD
         }
         #endregion
         #region PROPERTIES
-        //return the senter of the player's rectangle
+        //return the player's rectangle
         public static Rectangle Rectangle
         {
             get { return new Rectangle((int)position.X, (int)position.Y, width, height); }
         }
+        //return the center of the player's rectangle
         public static Vector2 Center
         {
             get { return new Vector2(position.X+width/2f, position.Y + height / 2f); }
         }
+        //return the initial velocity of the projectile based on the direction the player is facing
         static Vector2 ProjectileInitialVelocity
         {
             get
@@ -122,6 +124,7 @@ namespace _999AD
                 ProjectilesManager.Shoot(isFacingRight ? (position + new Vector2(width, 0)) : position, ProjectileInitialVelocity);
             }
         }
+        //move player based on his current velocity and check for collisions
         static void Move(float elapsedTime)
         {
             #region CHECK IF THE PLAYER IS ON THE WALL
@@ -159,7 +162,7 @@ namespace _999AD
             else
             {
                 velocity.X += wallJumpXSpeed;
-                wallJumpXSpeed *= 0.92f;
+                wallJumpXSpeed *= 0.92f;//improve
                 if (isOnTheWall)
                 {
                     if (elapsedTimeStuckOnWall < maxTimeStuckOnwal)
