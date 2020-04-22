@@ -66,7 +66,6 @@ namespace _999AD
 
             base.Initialize();
         }
-
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
@@ -82,16 +81,21 @@ namespace _999AD
             (
                 new Texture2D[(int)RoomsManager.Rooms.total]
                 {
-                    Content.Load<Texture2D>("room1"),
-                    Content.Load<Texture2D>("room2"),
-                    Content.Load<Texture2D>("room2")
+                    Content.Load<Texture2D>(@"backgrounds\room1"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\finalBoss")
                 }
             );
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
             ProjectilesManager.Inizialize(Content.Load<Texture2D>("projectile"));
             Player.Inizialize(Content.Load <Texture2D>("player"), new Vector2(20,0));
+            RoomsManager.Inizialize();
+            GameEvents.Inizialize();
 #if LEVEL_EDITOR
-            levelEditor = new LevelEditor(Content.Load<SpriteFont>("arial32"), Content.Load<SpriteFont>("arial14"), Content.Load<Texture2D>("whiteTile"));
+            levelEditor = new LevelEditor(Content.Load<SpriteFont>(@"fonts\arial32"),
+                                          Content.Load<SpriteFont>(@"fonts\arial14"),
+                                          Content.Load<Texture2D>("whiteTile"));
+
 #endif
         }
 
@@ -120,12 +124,14 @@ namespace _999AD
 #if LEVEL_EDITOR
             mouseState = Mouse.GetState();
             levelEditor.Update(mouseState, previousMouseState, tilesPerRow, infoBoxHeightPx);
-            CameraManager.Update(gameTime);
+            CameraManager.Update(elapsedTime);
             previousMouseState = mouseState;
+
 #else
-            RoomsManager.Update(gameTime);
-            CameraManager.Update(gameTime);
-            Player.Update(gameTime);
+            RoomsManager.Update(elapsedTime);
+            CameraManager.Update(elapsedTime);
+            MapsManager.Update(elapsedTime);
+            Player.Update(elapsedTime);
             ProjectilesManager.Update(elapsedTime);
 #endif
             previousKeyboard = currentKeyboard;
@@ -144,6 +150,7 @@ namespace _999AD
             spriteBatch.Begin();
 #if LEVEL_EDITOR
             levelEditor.Draw(spriteBatch, tilesPerRow, infoBoxHeightPx);
+
 #else
             Camera.Draw(spriteBatch);
             RoomsManager.Draw(spriteBatch);

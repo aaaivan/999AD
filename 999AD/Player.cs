@@ -75,11 +75,11 @@ namespace _999AD
         }
         #endregion
         #region METHODS
-        public static void Update(GameTime gameTime)
+        public static void Update(float elapsedTime)
         {
             getPlayerInput();
-            Move((float)gameTime.ElapsedGameTime.TotalSeconds);
-            animations[(int)currentAnimation].Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            Move(elapsedTime);
+            animations[(int)currentAnimation].Update(elapsedTime);
         }
         //check input for movement
         static void getPlayerInput()

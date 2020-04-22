@@ -19,61 +19,54 @@ namespace _999AD
         public static bool lockOnPlayer=true; //if false, the camera will follow "pointLocked"
         public static Vector2 pointLocked=Vector2.Zero; //point followed by the camera
         static readonly Rectangle screenRectangle = new Rectangle(0, 0, Game1.screenWidth, Game1.screenHeight);
+        static float scale;
         #endregion
         #region CONSTRUCTORS
-        public static void Inizialize(Texture2D _background, RoomsManager.Rooms _room)
+        public static void Inizialize(Texture2D _background, RoomsManager.Rooms _room, float _scale)
         {
             background = _background;
             roomWidth = MapsManager.maps[(int)_room].RoomWidthtPx;
             roomHeight = MapsManager.maps[(int)_room].RoomHeightPx;
-            rectangle = new Rectangle(0, 0, (int)(Game1.screenWidth), (int)(Game1.screenHeight));
+            scale = _scale;
+            rectangle = new Rectangle(0, 0, (int)(Game1.screenWidth/scale), (int)(Game1.screenHeight/scale));
         }
-        public static void Inizialize(Texture2D _background, RoomsManager.Rooms _room, Vector2 _pointLocked)
+        #endregion
+        #region properties
+        public static float Scale
         {
-            background = _background;
-            roomWidth = MapsManager.maps[(int)_room].RoomWidthtPx;
-            roomHeight = MapsManager.maps[(int)_room].RoomHeightPx;
-            lockOnPlayer = false;
-            pointLocked = _pointLocked;
-            rectangle = new Rectangle(0, 0, (int)(Game1.screenWidth), (int)(Game1.screenHeight));
+            get { return scale; }
         }
         #endregion
         #region METHODS
         //convert a rectangle from game world to screen coordinates for drawing
         public static Rectangle RelativeRectangle(Rectangle rect)
         {
-            return new Rectangle(rect.X - rectangle.X,
-                                 rect.Y - rectangle.Y,
-                                 rect.Width,
-                                 rect.Height);
+            return new Rectangle((int)((rect.X - rectangle.X)*scale),
+                                 (int)((rect.Y - rectangle.Y)*scale),
+                                 (int)(rect.Width*scale),
+                                 (int)(rect.Height*scale));
         }
-        //Convert a Vector2 from game world to screen coordinates for drawing
-        public static Vector2 RelativeVector(Vector2 vector)
-        {
-            return new Vector2(vector.X - rectangle.X,
-                               vector.Y - rectangle.Y);
-        }
-        public static void Update(GameTime gameTime, int maxOffsetY)
+        public static void Update(int maxOffsetY)
         {
             if (lockOnPlayer) //follow the player if lock on player is true
             {
-                rectangle.X = (int)MathHelper.Clamp(Player.Center.X - Game1.screenWidth / 2f,
+                rectangle.X = (int)MathHelper.Clamp(Player.Center.X - Game1.screenWidth / (2f*scale),
                                                          0,
-                                                         roomWidth - Game1.screenWidth);
-                rectangle.Y = (int)MathHelper.Clamp(Player.Center.Y - Game1.screenHeight / 2f,
+                                                         roomWidth - Game1.screenWidth/scale);
+                rectangle.Y = (int)MathHelper.Clamp(Player.Center.Y - Game1.screenHeight / (2f * scale),
                                                         maxOffsetY,
-                                                        roomHeight - Game1.screenHeight - maxOffsetY);
+                                                        roomHeight - Game1.screenHeight/scale - maxOffsetY);
             }
             else //follow point locked otherwise
             {
                 pointLocked.X= MathHelper.Clamp(pointLocked.X,
-                                                Game1.screenWidth/2f,
-                                                roomWidth - Game1.screenWidth/2f);
+                                                Game1.screenWidth/ (2f * scale),
+                                                roomWidth - Game1.screenWidth/ (2f * scale));
                 pointLocked.Y= MathHelper.Clamp(pointLocked.Y,
-                                                Game1.screenHeight / 2f,
-                                                roomHeight - Game1.screenHeight / 2f);
-                rectangle.X = (int)(pointLocked.X - Game1.screenWidth / 2f);
-                rectangle.Y = (int)(pointLocked.Y - Game1.screenHeight / 2f);
+                                                Game1.screenHeight / (2f * scale),
+                                                roomHeight - Game1.screenHeight / (2f * scale));
+                rectangle.X = (int)(pointLocked.X - Game1.screenWidth / (2f * scale));
+                rectangle.Y = (int)(pointLocked.Y - Game1.screenHeight / (2f * scale));
             }
         }
         public static void Draw(SpriteBatch spriteBatch)

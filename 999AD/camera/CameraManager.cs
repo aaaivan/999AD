@@ -13,8 +13,9 @@ namespace _999AD
     {
         #region DECLARATIONS
         static Texture2D[] backgrounds = new Texture2D[(int)RoomsManager.Rooms.total];
+        public static readonly float[] scaleByRoom = new float[(int)RoomsManager.Rooms.total] { 1, 1, 0.625f };
         static bool shaking = false;
-        static int maxOffsetY = 2; //amplitude of the rumble
+        public static readonly int maxOffsetY = 2; //amplitude of the rumble
         static int offsetY = -2; //current offset
         static float timeBetweenOffsets = 0.1f; //tells how ofter the offset is changed in sign (smaller time->faster rumble)
         static float offsetElapsedTime = 0f; //time elapsed since the last change in offsetY
@@ -32,7 +33,7 @@ namespace _999AD
         //move camera to another room
         public static void SwitchCamera(RoomsManager.Rooms room)
         {
-            Camera.Inizialize(backgrounds[(int)room], room);
+            Camera.Inizialize(backgrounds[(int)room], room, scaleByRoom[(int)room]);
         }
         //makes the camera shake for the time (in seconds) passed to the function as parameter
         public static void shakeForTime(float _shakingTime)
@@ -42,9 +43,8 @@ namespace _999AD
             shaking = true;
         }
         //move the camera up/down while shaking
-        static void NextOffset(GameTime gameTime)
+        static void NextOffset(float elapsedTime)
         {
-            float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             offsetElapsedTime += elapsedTime;
             if (offsetElapsedTime >= timeBetweenOffsets)
             {
@@ -52,16 +52,16 @@ namespace _999AD
                 offsetElapsedTime = 0;
             }
         }
-        public static void Update(GameTime gameTime)
+        public static void Update(float elapsedTime)
         {
-            elapsedShakingTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            elapsedShakingTime += elapsedTime;
             if (elapsedShakingTime >= shakingTime)
                 shaking = false;
-            Camera.Update(gameTime, maxOffsetY);
+            Camera.Update(maxOffsetY);
             if (shaking)
             {
                 Camera.rectangle.Y += offsetY;
-                NextOffset(gameTime);
+                NextOffset(elapsedTime);
             }
         }
         #endregion

@@ -39,6 +39,12 @@ namespace _999AD
                     tileSize);
         }
         #endregion
+        #region PROPERTIES
+        Rectangle Rectangle
+        {
+            get { return new Rectangle((int)position.X, (int)position.Y, tileSize, tileSize); }
+        }
+        #endregion
         #region METHODS
         public bool isSolid()
         {
@@ -50,7 +56,7 @@ namespace _999AD
         {
             if (tileType == TileType.empty || tileType == TileType.solidEmpty)
                 return;
-            spriteBatch.Draw(spritesheet,Camera.RelativeVector(position), sourceRectangles[(int)tileType], Color.White);
+            spriteBatch.Draw(spritesheet,Camera.RelativeRectangle(Rectangle), sourceRectangles[(int)tileType], Color.White);
         }
         public static void DrawAtLocation(SpriteBatch spriteBatch, int tileType, Vector2 screenPosition)
         {

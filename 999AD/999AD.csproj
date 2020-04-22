@@ -44,6 +44,7 @@
     <Compile Include="Animation.cs" />
     <Compile Include="camera\Camera.cs" />
     <Compile Include="camera\CameraManager.cs" />
+    <Compile Include="GameEvents.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Gravity.cs" />
     <Compile Include="map\LevelEditor.cs" />
