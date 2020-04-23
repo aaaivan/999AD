@@ -25,7 +25,7 @@ namespace _999AD
         {
             position = _position;
             velocity = _initialVelocity;
-            animation = new Animation(spritesheet, new Rectangle(0, 0, spritesheet.Width, spritesheet.Height), width, height, 2, 0.1f, true);
+            animation = new Animation(spritesheet, new Rectangle(0, 0, spritesheet.Width, spritesheet.Height), width, height, spritesheet.Width/width, 0.1f, true);
             active = true;
         }
         #endregion

@@ -20,7 +20,7 @@ namespace _999AD
         public static Rectangle[] sourceRectangles;
         readonly TextureType textureType;
         Vector2 rotationCenter; //point around which the platform rotates
-        readonly int radius;
+        public readonly int radius;
         readonly Vector2 centerStartingPoint;
         readonly Vector2 centerEndingPoint;
         public readonly int width; //width of the platform
@@ -66,6 +66,14 @@ namespace _999AD
         #endregion
         #region PROPERTIES
         //move the platform's rectangle given its new center
+        public float AngleRadiants
+        {
+            get { return angleRadiants; }
+        }
+        public float AngularSpeed
+        {
+            get { return angularSpeed; }
+        }
         public Vector2 Position
         {
             get { return new Vector2(platformMidpointPosition.X-0.5f*width, platformMidpointPosition.Y - 0.5f * height); }

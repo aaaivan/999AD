@@ -82,7 +82,6 @@ namespace _999AD
                     if (GameEvents.eventAlreadyHappened[(int)GameEvents.Events.terrainCollapseFinalBoss] &&
                         MapsManager.NumberOfTilesToRemove == 0)
                         GameEvents.playEvent(GameEvents.Events.activatePlatformsFinalBoss);
-                    
                     break;
             }
         }
@@ -91,11 +90,20 @@ namespace _999AD
             switchRoom();
             eventHandler(elapsedTime);
             PlatformsManager.platformsRoomManagers[(int)currentRoom].Update(elapsedTime);
+            if (currentRoom== Rooms.finalBoss)
+            {
+                FireBallsManager.Update(elapsedTime);
+            }
         }
         public static void Draw(SpriteBatch spriteBatch)
         {
             MapsManager.maps[(int)currentRoom].Draw(spriteBatch);
             PlatformsManager.platformsRoomManagers[(int)currentRoom].Draw(spriteBatch);
+            if (currentRoom == Rooms.finalBoss)
+            {
+                FireBallsManager.Draw(spriteBatch);
+            }
+
         }
         #endregion
     }

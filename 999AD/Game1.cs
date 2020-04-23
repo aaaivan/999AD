@@ -91,6 +91,7 @@ namespace _999AD
             Player.Inizialize(Content.Load <Texture2D>("player"), new Vector2(20,0));
             RoomsManager.Inizialize();
             GameEvents.Inizialize();
+            FireBallsManager.Inizialize(Content.Load<Texture2D>(@"fireball"));
 #if LEVEL_EDITOR
             levelEditor = new LevelEditor(Content.Load<SpriteFont>(@"fonts\arial32"),
                                           Content.Load<SpriteFont>(@"fonts\arial14"),

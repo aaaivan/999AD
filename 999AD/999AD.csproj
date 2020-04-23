@@ -44,6 +44,10 @@
     <Compile Include="Animation.cs" />
     <Compile Include="camera\Camera.cs" />
     <Compile Include="camera\CameraManager.cs" />
+    <Compile Include="finalBoss\FinalBoss.cs" />
+    <Compile Include="finalBoss\FireBall.cs" />
+    <Compile Include="finalBoss\FireBallsManager.cs" />
+    <Compile Include="finalBoss\Lava.cs" />
     <Compile Include="GameEvents.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Gravity.cs" />
