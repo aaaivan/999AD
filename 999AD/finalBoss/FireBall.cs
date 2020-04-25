@@ -15,7 +15,7 @@ namespace _999AD
         public static Texture2D spritesheet;
         public static readonly int size = 20;
         public static readonly float radialShootingVelocity = 600;
-        public static readonly float shotLifeTime = 2;
+        public static readonly float shotLifeTime = 3;
         Animation animation;
         public readonly Vector2 rotationCenter = FireBallsManager.fireballsCenter; 
         float radialDistance;
@@ -85,7 +85,7 @@ namespace _999AD
                     angleRadiants -= MathHelper.Pi * 2;
                 else if (angleRadiants < 0)
                     angleRadiants += MathHelper.Pi * 2;
-                if (targetPlayer && index== lifeTimes.Length-1 &&
+                if (targetPlayer && index== lifeTimes.Length-2 &&
                     checkPlayerAngle())
                 {
                     targetPlayer = false;

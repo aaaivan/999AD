@@ -41,7 +41,7 @@ namespace _999AD
         public static void ThrowAtPlayer(int amount, float angularVelocity, float timeBtweenShots)
         {
             for (int i =0; i<amount; i++)
-            fireballs.Add(new FireBall(360f/amount*i, new float[] { 20,0, 0 }, new float[] { angularVelocity, angularVelocity, angularVelocity }, new float[] { 2,2*i, 3 }, true));
+            fireballs.Add(new FireBall(360f/amount*i, new float[] { 20,0, 0, FireBall.radialShootingVelocity }, new float[] { angularVelocity, angularVelocity, angularVelocity,0 }, new float[] { 2,timeBtweenShots*i,3,4 }, true));
         }
         public static void ThrowInAllDirections(int amount, float shotVelocity, float angularVelocity)
         {
@@ -143,10 +143,14 @@ namespace _999AD
                 new float[] { 0 }, 
                 new float[] { 0 }, 
                 new float[] { lifetime }, 
-                false, 0, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles));
+                false, 0, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomHeightPx));
         }
         #endregion
         #region METHODS
+        public static void Clear()
+        {
+            fireballs.Clear();
+        }
         public static void Update(float elapsedTime)
         {
             for (int i=fireballs.Count-1; i>=0; i--)

@@ -98,7 +98,7 @@ namespace _999AD
             {
                 Camera.pointLocked.X = Player.Center.X;
                 Camera.pointLocked.Y = (Player.Center.Y+2*FireBallsManager.fireballsCenter.Y)/3f;  //improve
-                //FinalBoss.Update(elapsedTime);
+                FinalBoss.Update(elapsedTime);
                 FireBallsManager.Update(elapsedTime);
                 LavaGeyserManager.Update(elapsedTime);
             }
@@ -113,6 +113,7 @@ namespace _999AD
             PlatformsManager.platformsRoomManagers[(int)currentRoom].Draw(spriteBatch);
             if (currentRoom == Rooms.finalBoss)
             {
+                FinalBoss.Draw(spriteBatch);
                 FireBallsManager.Draw(spriteBatch);
                 LavaGeyserManager.Draw(spriteBatch);
             }

@@ -93,6 +93,11 @@ namespace _999AD
             GameEvents.Inizialize();
             FireBallsManager.Inizialize(Content.Load<Texture2D>("fireball"), Content.Load<Texture2D>("laser"));
             LavaGeyserManager.Inizialize(Content.Load<Texture2D>("lavaGeyser"));
+            FinalBoss.Inizialize(Content.Load<Texture2D>(@"characters\finalBoss"),
+                                 new Texture2D[] { Content.Load<Texture2D>(@"characters\stoneWing"),
+                                                   Content.Load<Texture2D>(@"characters\healthyWing"),
+                                                   Content.Load<Texture2D>(@"characters\damagedWing"),
+                                                   Content.Load<Texture2D>(@"characters\deadWing")});
 #if LEVEL_EDITOR
             levelEditor = new LevelEditor(Content.Load<SpriteFont>(@"fonts\arial32"),
                                           Content.Load<SpriteFont>(@"fonts\arial14"),
@@ -135,7 +140,7 @@ namespace _999AD
             ProjectilesManager.Update(elapsedTime);
             GameEvents.Update(elapsedTime);
             if (currentKeyboard.IsKeyDown(Keys.Q))
-                FireBallsManager.ThrowAtPlayer(4, 4);
+                FireBallsManager.ThrowAtPlayer(4, 4, 0.5f);
             if (currentKeyboard.IsKeyDown(Keys.I))
                 FireBallsManager.ThrowInAllDirections(6, 500, 4);
             if (currentKeyboard.IsKeyDown(Keys.E))
@@ -149,7 +154,9 @@ namespace _999AD
             if (currentKeyboard.IsKeyDown(Keys.U))
                 FireBallsManager.RandomSweep(1, 3, 5);
             if (currentKeyboard.IsKeyDown(Keys.L))
-                LavaGeyserManager.ShootGeyser(new int[] {300,800}, 2);
+                LavaGeyserManager.ShootGeyser(new float[] { 300, 800 }, 2);
+            if (currentKeyboard.IsKeyDown(Keys.J) && !previousKeyboard.IsKeyDown(Keys.J))
+                LavaGeyserManager.EquallySpaced(LavaGeyser.size*2.5f, 2, 0);
 
 #endif
             previousKeyboard = currentKeyboard;

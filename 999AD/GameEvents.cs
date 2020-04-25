@@ -16,11 +16,11 @@ namespace _999AD
             activatePlatformsFinalBoss,
             total
         }
-        public static float[] eventsDuration = new float[(int)Events.total]
+        public static readonly float[] eventsDuration = new float[(int)Events.total]
         {
             0,
             2,
-            FinalBoss.bossAnimationDuration[(int)FinalBoss.BossAnimations.stoneToIdle],
+            2,
             0
         };
         public static float elapsedEventsDuration = 0;
@@ -69,7 +69,7 @@ namespace _999AD
                     if (eventAlreadyHappened[(int)Events.finalBossComesAlive])
                         break;
                     CameraManager.shakeForTime(eventsDuration[(int)Events.finalBossComesAlive]);
-                    FinalBoss.bossAnimation = FinalBoss.BossAnimations.stoneToIdle;
+                    FinalBoss.WakeUp();
                     happening = Events.finalBossComesAlive;
                     elapsedEventsDuration = 0;
                     break;

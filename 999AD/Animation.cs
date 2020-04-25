@@ -54,6 +54,10 @@ namespace _999AD
         {
             get { return sourceRectangles[currentFrame]; }
         }
+        public bool Active
+        {
+            get { return active; }
+        }
         #endregion
         #region METHODS
         public void Update(float elapsedTime)
@@ -81,6 +85,7 @@ namespace _999AD
         {
             elapsedFrameTime = 0;
             currentFrame = 0;
+            active = true;
         }
         #endregion
     }
