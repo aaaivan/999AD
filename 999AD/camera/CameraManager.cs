@@ -31,9 +31,9 @@ namespace _999AD
         #endregion
         #region METHODS
         //move camera to another room
-        public static void SwitchCamera(RoomsManager.Rooms room)
+        public static void SwitchCamera(RoomsManager.Rooms room, bool lockOnPlayer = true)
         {
-            Camera.Inizialize(backgrounds[(int)room], room, scaleByRoom[(int)room]);
+            Camera.Inizialize(backgrounds[(int)room], room, scaleByRoom[(int)room], lockOnPlayer);
         }
         //makes the camera shake for the time (in seconds) passed to the function as parameter
         public static void shakeForTime(float _shakingTime)

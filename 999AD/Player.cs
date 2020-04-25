@@ -20,8 +20,8 @@ namespace _999AD
         static List<Animation> animations= new List<Animation>();
         static AnimationTypes currentAnimation;
         public static Vector2 position;
-        public static readonly int height= 64;
-        public static readonly int width= 48;
+        public static readonly int height= 60;
+        public static readonly int width= 40;
         static Vector2 velocity= Vector2.Zero;
         static bool isFacingRight=true;
         public static readonly float walkingSpeed= 300; //movement speed
@@ -42,21 +42,29 @@ namespace _999AD
             spritesheet = _spritesheet;
             position = _position;
             //fill following assignments with sprite info
-            animations.Add(new Animation(spritesheet, new Rectangle(0, 0, 48*3, 64), 48, 64, 3, 0.3f, true));
-            animations.Add( new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
-            animations.Add(new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, false, true));
-            animations.Add(new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
-            animations.Add(new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
-            animations.Add(new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
-            animations.Add(new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, false));
+            animations.Add(new Animation(new Rectangle(0, 0, 48*3, 64), 48, 64, 3, 0.3f, true));
+            animations.Add( new Animation( new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
+            animations.Add(new Animation( new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, false, true));
+            animations.Add(new Animation( new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
+            animations.Add(new Animation( new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
+            animations.Add(new Animation( new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
+            animations.Add(new Animation( new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, false));
             currentAnimation = AnimationTypes.idle;
         }
         #endregion
         #region PROPERTIES
-        //return the player's rectangle
-        public static Rectangle Rectangle
+        //return the player's collision rectangle
+        public static Rectangle CollisionRectangle
         {
             get { return new Rectangle((int)position.X, (int)position.Y, width, height); }
+        }
+        //return the player's draw rectangle
+        public static Rectangle DrawRectangle
+        {
+            get { return new Rectangle((int)(Center.X-animations[(int)currentAnimation].Frame.Width/2),
+                                       (int)position.Y - animations[(int)currentAnimation].Frame.Height+height,
+                                       animations[(int)currentAnimation].Frame.Width,
+                                       animations[(int)currentAnimation].Frame.Height); }
         }
         //return the center of the player's rectangle
         public static Vector2 Center
@@ -307,7 +315,7 @@ namespace _999AD
         }
         public static void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(spritesheet, Camera.RelativeRectangle(Rectangle) ,animations[(int)currentAnimation].Frame, Color.White, 0f, Vector2.Zero,
+            spriteBatch.Draw(spritesheet, Camera.RelativeRectangle(DrawRectangle) ,animations[(int)currentAnimation].Frame, Color.White, 0f, Vector2.Zero,
                 isFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
         }
         #endregion

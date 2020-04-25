@@ -42,14 +42,13 @@ namespace _999AD
                         currentRoom = Rooms.room2;
                         CameraManager.SwitchCamera(Rooms.room2);
                         Player.position.X = 0;
-                        CameraManager.shakeForTime(5f);
                     }
                     break;
                 case Rooms.room2:
                     if (Player.position.X >= MapsManager.maps[(int)currentRoom].RoomWidthtPx)
                     {//move to finalBoss room
                         currentRoom = Rooms.finalBoss;
-                        CameraManager.SwitchCamera(Rooms.finalBoss);
+                        CameraManager.SwitchCamera(Rooms.finalBoss, false);
                         Player.position.X = 0;
                         Player.position.Y += 9*Tile.tileSize;
                     }
@@ -77,11 +76,15 @@ namespace _999AD
             switch (currentRoom)
             {
                 case Rooms.finalBoss:
-                    if (Player.position.X>=5*Tile.tileSize && Player.position.Y>=25*Tile.tileSize-Player.height*2)
-                        GameEvents.playEvent(GameEvents.Events.terrainCollapseFinalBoss);
+                    if (Player.position.X>=5*Tile.tileSize && Player.position.Y>=25*Tile.tileSize-Player.height*2 &&
+                        GameEvents.happening == GameEvents.Events.none)
+                        GameEvents.TriggerEvent(GameEvents.Events.terrainCollapseFinalBoss);
                     if (GameEvents.eventAlreadyHappened[(int)GameEvents.Events.terrainCollapseFinalBoss] &&
-                        MapsManager.NumberOfTilesToRemove == 0)
-                        GameEvents.playEvent(GameEvents.Events.activatePlatformsFinalBoss);
+                        GameEvents.happening == GameEvents.Events.none)
+                        GameEvents.TriggerEvent(GameEvents.Events.finalBossComesAlive);
+                    if (GameEvents.eventAlreadyHappened[(int)GameEvents.Events.finalBossComesAlive] &&
+                        GameEvents.happening == GameEvents.Events.none)
+                        GameEvents.TriggerEvent(GameEvents.Events.activatePlatformsFinalBoss);
                     break;
             }
         }
@@ -89,21 +92,30 @@ namespace _999AD
         {
             switchRoom();
             eventHandler(elapsedTime);
-            PlatformsManager.platformsRoomManagers[(int)currentRoom].Update(elapsedTime);
+            CameraManager.Update(elapsedTime);
+            MapsManager.Update(elapsedTime);
             if (currentRoom== Rooms.finalBoss)
             {
+                Camera.pointLocked.X = Player.Center.X;
+                Camera.pointLocked.Y = (Player.Center.Y+2*FireBallsManager.fireballsCenter.Y)/3f;  //improve
+                //FinalBoss.Update(elapsedTime);
                 FireBallsManager.Update(elapsedTime);
+                LavaGeyserManager.Update(elapsedTime);
             }
+            PlatformsManager.platformsRoomManagers[(int)currentRoom].Update(elapsedTime);
+
         }
         public static void Draw(SpriteBatch spriteBatch)
         {
             MapsManager.maps[(int)currentRoom].Draw(spriteBatch);
+            Player.Draw(spriteBatch);
+            ProjectilesManager.Draw(spriteBatch);
             PlatformsManager.platformsRoomManagers[(int)currentRoom].Draw(spriteBatch);
             if (currentRoom == Rooms.finalBoss)
             {
                 FireBallsManager.Draw(spriteBatch);
+                LavaGeyserManager.Draw(spriteBatch);
             }
-
         }
         #endregion
     }

@@ -88,10 +88,11 @@ namespace _999AD
             );
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
             ProjectilesManager.Inizialize(Content.Load<Texture2D>("projectile"));
-            Player.Inizialize(Content.Load <Texture2D>("player"), new Vector2(20,0));
+            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(20,0));
             RoomsManager.Inizialize();
             GameEvents.Inizialize();
-            FireBallsManager.Inizialize(Content.Load<Texture2D>(@"fireball"));
+            FireBallsManager.Inizialize(Content.Load<Texture2D>("fireball"), Content.Load<Texture2D>("laser"));
+            LavaGeyserManager.Inizialize(Content.Load<Texture2D>("lavaGeyser"));
 #if LEVEL_EDITOR
             levelEditor = new LevelEditor(Content.Load<SpriteFont>(@"fonts\arial32"),
                                           Content.Load<SpriteFont>(@"fonts\arial14"),
@@ -130,10 +131,26 @@ namespace _999AD
 
 #else
             RoomsManager.Update(elapsedTime);
-            CameraManager.Update(elapsedTime);
-            MapsManager.Update(elapsedTime);
             Player.Update(elapsedTime);
             ProjectilesManager.Update(elapsedTime);
+            GameEvents.Update(elapsedTime);
+            if (currentKeyboard.IsKeyDown(Keys.Q))
+                FireBallsManager.ThrowAtPlayer(4, 4);
+            if (currentKeyboard.IsKeyDown(Keys.I))
+                FireBallsManager.ThrowInAllDirections(6, 500, 4);
+            if (currentKeyboard.IsKeyDown(Keys.E))
+                FireBallsManager.TrowWithinCircularSector(30,300,3, 120);
+            if (currentKeyboard.IsKeyDown(Keys.R))
+                FireBallsManager.TargetPlatform(new int[] { 0,1,3}, 8, 5);
+            if (currentKeyboard.IsKeyDown(Keys.T))
+                FireBallsManager.Sweep(1.5f, 6);
+            if (currentKeyboard.IsKeyDown(Keys.Y))
+                FireBallsManager.Spiral(30, 15, 0.2f, 300);
+            if (currentKeyboard.IsKeyDown(Keys.U))
+                FireBallsManager.RandomSweep(1, 3, 5);
+            if (currentKeyboard.IsKeyDown(Keys.L))
+                LavaGeyserManager.ShootGeyser(new int[] {300,800}, 2);
+
 #endif
             previousKeyboard = currentKeyboard;
             base.Update(gameTime);
@@ -155,8 +172,6 @@ namespace _999AD
 #else
             Camera.Draw(spriteBatch);
             RoomsManager.Draw(spriteBatch);
-            ProjectilesManager.Draw(spriteBatch);
-            Player.Draw(spriteBatch);
 #endif
             spriteBatch.End();
             base.Draw(gameTime);

@@ -17,7 +17,7 @@ namespace _999AD
         public static readonly float radialShootingVelocity = 600;
         public static readonly float shotLifeTime = 2;
         Animation animation;
-        public readonly Vector2 rotationCenter = new Vector2(496, 576); //improve later 
+        public readonly Vector2 rotationCenter = FireBallsManager.fireballsCenter; 
         float radialDistance;
         float angleRadiants;
         public float[] radialVelocities;
@@ -43,7 +43,7 @@ namespace _999AD
             angularVelocities = _angularVelocities;
             lifeTimes = _lifeTimes;
             targetPlayer = _targetPlayer;
-            animation= new Animation(spritesheet, new Rectangle(0,0,spritesheet.Width, spritesheet.Height), size, size, spritesheet.Width / size, 0.2f, true);
+            animation= new Animation(new Rectangle(0,0,spritesheet.Width, spritesheet.Height), size, size, spritesheet.Width / size, 0.2f, true);
         }
         public static void Inizialize(Texture2D _spritesheet)
         {

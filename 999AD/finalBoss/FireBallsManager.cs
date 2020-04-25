@@ -12,25 +12,39 @@ namespace _999AD
     public static class FireBallsManager
     {
         #region DECLARATIONS
+        static public readonly Vector2 fireballsCenter = new Vector2(496, 576);
+        static Texture2D laser;
+        static int[] targetedPlatforms= new int[] { };
+        static float relativeLaserProgression=0;
+        static float laserVelocity = 2f;
+        static float persistanceTime = 4;
+        static float elapsedPersistanceTime = 0;
+        static int targetPlatformAmount = 0;
+        static float targetPlatformLifetime = 0;
         static List<FireBall> fireballs = new List<FireBall>();
         static Random rand = new Random();
         #endregion
         #region CONSTRUCTORS
-        public static void Inizialize(Texture2D spritesheet)
+        public static void Inizialize(Texture2D spritesheet, Texture2D _laser)
         {
             FireBall.spritesheet = spritesheet;
+            laser = _laser;
         }
-        public static void ThrowAtPlayer(int amount, float angularVelocity)
+        #endregion
+        #region PROPERTIES
+        public static int NumberOfActiveFireballs
         {
-            if (fireballs.Count > 0)
-                return;
+            get { return fireballs.Count; }
+        }
+        #endregion
+        #region FIREBALL PATTERNS
+        public static void ThrowAtPlayer(int amount, float angularVelocity, float timeBtweenShots)
+        {
             for (int i =0; i<amount; i++)
             fireballs.Add(new FireBall(360f/amount*i, new float[] { 20,0, 0 }, new float[] { angularVelocity, angularVelocity, angularVelocity }, new float[] { 2,2*i, 3 }, true));
         }
         public static void ThrowInAllDirections(int amount, float shotVelocity, float angularVelocity)
         {
-            if (fireballs.Count > 0)
-                return;
             float time = 2 + 2 * (float)rand.NextDouble();
             for (int i = 0; i < amount; i++)
                 fireballs.Add(new FireBall(360f / amount * i,
@@ -41,8 +55,6 @@ namespace _999AD
         }
         public static void TrowWithinCircularSector(int amount, float shotVelocity, float angularVelocity, float amplitudeDegrees)
         {
-            if (fireballs.Count > 0)
-                return;
             float time = 3 + 2 * (float)rand.NextDouble();
             float angle = rand.Next(360);
             for (int i = 0; i < amount; i++)
@@ -54,8 +66,6 @@ namespace _999AD
         }
         public static void Sweep(float angularVelocity, float lifetime)
         {
-            if (fireballs.Count > 0)
-                return;
             int angle = rand.Next(0, 360);
             int sign = 1 - 2 * rand.Next(0, 2);
             for (int i = 0; i < 10; i++)
@@ -66,8 +76,6 @@ namespace _999AD
         }
         public static void RandomSweep(float angularVelocity, float maxTimeWithoutInverion, int numberOfInversions)
         {
-            if (fireballs.Count > 0)
-                return;
             int angle = rand.Next(0, 360);
             int sign = 1 - 2 * rand.Next(0, 2);
             float[] times = new float[numberOfInversions+1];
@@ -89,8 +97,6 @@ namespace _999AD
         }
         public static void Spiral(int amount, float angleOffset, float timeBetweenShots, float shotVelocity)
         {
-            if (fireballs.Count > 0)
-                return;
             for (int i = 0; i < amount; i++)
                 fireballs.Add(new FireBall(angleOffset * i,
                     new float[] { 0,  shotVelocity},
@@ -100,9 +106,17 @@ namespace _999AD
         }
         public static void TargetPlatform(int[] platformIndexes, int amount, float lifetime)
         {
-            if (fireballs.Count > 0)
+            if (targetedPlatforms.Length != 0)
                 return;
-            foreach (int i in platformIndexes)
+            elapsedPersistanceTime = 0;
+            targetedPlatforms = platformIndexes;
+            relativeLaserProgression = 0;
+            targetPlatformAmount = amount;
+            targetPlatformLifetime = lifetime;
+        }
+        static void TargetPlatformGo(int amount, float lifetime)
+        {
+            foreach (int i in targetedPlatforms)
             {
                 float angle = PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[i].AngleRadiants;
                 float angularSpeed = PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[i].AngularSpeed;
@@ -123,6 +137,14 @@ namespace _999AD
                 }
             }
         }
+        public static void AddGhostFireball(float lifetime)
+        {
+            fireballs.Add(new FireBall(0, 
+                new float[] { 0 }, 
+                new float[] { 0 }, 
+                new float[] { lifetime }, 
+                false, 0, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles));
+        }
         #endregion
         #region METHODS
         public static void Update(float elapsedTime)
@@ -134,9 +156,43 @@ namespace _999AD
                 else
                     fireballs.RemoveAt(i);
             }
+            if (targetedPlatforms.Length!=0)
+            {
+                if (relativeLaserProgression < 1)
+                {
+                    relativeLaserProgression += laserVelocity * elapsedTime;
+                    if (relativeLaserProgression > 1)
+                        relativeLaserProgression = 1;
+                }
+                else
+                {
+                    elapsedPersistanceTime += elapsedTime;
+                    if (elapsedPersistanceTime> persistanceTime)
+                    {
+                        TargetPlatformGo(targetPlatformAmount, targetPlatformLifetime);
+                        targetedPlatforms = new int[] { };
+                    }
+                }
+            }
+
         }
         public static void Draw(SpriteBatch spriteBatch)
         {
+            foreach (int i in targetedPlatforms)
+            {
+                spriteBatch.Draw(laser,
+                    Camera.RelativeRectangle( new Rectangle((int)fireballsCenter.X,
+                                  (int)(fireballsCenter.Y - laser.Width / 2),
+                                  laser.Width,
+                                  (int)(PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[i].radius * relativeLaserProgression))
+                    ),
+                    null,
+                    Color.White,
+                    PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[i].AngleRadiants+MathHelper.Pi,
+                    new Vector2(laser.Width / 2, 0),
+                    SpriteEffects.None,
+                    1);
+            }
             foreach (FireBall fb in fireballs)
                 fb.Draw(spriteBatch);
         }
