@@ -66,7 +66,6 @@ namespace _999AD
 
             base.Initialize();
         }
-
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
@@ -82,16 +81,28 @@ namespace _999AD
             (
                 new Texture2D[(int)RoomsManager.Rooms.total]
                 {
-                    Content.Load<Texture2D>("room1"),
-                    Content.Load<Texture2D>("room2"),
-                    Content.Load<Texture2D>("room2")
+                    Content.Load<Texture2D>(@"backgrounds\room1"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\finalBoss")
                 }
             );
+#if LEVEL_EDITOR
+            levelEditor = new LevelEditor(Content.Load<SpriteFont>(@"fonts\arial32"),
+                                          Content.Load<SpriteFont>(@"fonts\arial14"),
+                                          Content.Load<Texture2D>("whiteTile"));
+#else
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
             ProjectilesManager.Inizialize(Content.Load<Texture2D>("projectile"));
-            Player.Inizialize(Content.Load <Texture2D>("player"), new Vector2(20,0));
-#if LEVEL_EDITOR
-            levelEditor = new LevelEditor(Content.Load<SpriteFont>("arial32"), Content.Load<SpriteFont>("arial14"), Content.Load<Texture2D>("whiteTile"));
+            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(20,0));
+            RoomsManager.Inizialize();
+            GameEvents.Inizialize();
+            FireBallsManager.Inizialize(Content.Load<Texture2D>("fireball"), Content.Load<Texture2D>("laser"));
+            LavaGeyserManager.Inizialize(Content.Load<Texture2D>("lavaGeyser"));
+            FinalBoss.Inizialize(Content.Load<Texture2D>(@"characters\finalBoss"),
+                                 new Texture2D[] { Content.Load<Texture2D>(@"characters\stoneWing"),
+                                                   Content.Load<Texture2D>(@"characters\healthyWing"),
+                                                   Content.Load<Texture2D>(@"characters\damagedWing"),
+                                                   Content.Load<Texture2D>(@"characters\deadWing")});
 #endif
         }
 
@@ -120,13 +131,33 @@ namespace _999AD
 #if LEVEL_EDITOR
             mouseState = Mouse.GetState();
             levelEditor.Update(mouseState, previousMouseState, tilesPerRow, infoBoxHeightPx);
-            CameraManager.Update(gameTime);
+            CameraManager.Update(elapsedTime);
             previousMouseState = mouseState;
+
 #else
-            RoomsManager.Update(gameTime);
-            CameraManager.Update(gameTime);
-            Player.Update(gameTime);
+            RoomsManager.Update(elapsedTime);
+            Player.Update(elapsedTime);
             ProjectilesManager.Update(elapsedTime);
+            GameEvents.Update(elapsedTime);
+            if (currentKeyboard.IsKeyDown(Keys.Q))
+                FireBallsManager.ThrowAtPlayer(4, 4, 0.5f);
+            if (currentKeyboard.IsKeyDown(Keys.I))
+                FireBallsManager.ThrowInAllDirections(6, 500, 4);
+            if (currentKeyboard.IsKeyDown(Keys.E))
+                FireBallsManager.TrowWithinCircularSector(30,300,3, 120);
+            if (currentKeyboard.IsKeyDown(Keys.R))
+                FireBallsManager.TargetPlatform(new int[] { 0,1,3}, 8, 5);
+            if (currentKeyboard.IsKeyDown(Keys.T))
+                FireBallsManager.Sweep(1.5f, 6);
+            if (currentKeyboard.IsKeyDown(Keys.Y))
+                FireBallsManager.Spiral(30, 15, 0.2f, 300);
+            if (currentKeyboard.IsKeyDown(Keys.U))
+                FireBallsManager.RandomSweep(1, 3, 5);
+            if (currentKeyboard.IsKeyDown(Keys.L))
+                LavaGeyserManager.ShootGeyser(new float[] { 300, 800 }, 2);
+            if (currentKeyboard.IsKeyDown(Keys.J) && !previousKeyboard.IsKeyDown(Keys.J))
+                LavaGeyserManager.EquallySpaced(LavaGeyser.size*2.5f, 2, 0);
+
 #endif
             previousKeyboard = currentKeyboard;
             base.Update(gameTime);
@@ -147,8 +178,6 @@ namespace _999AD
 #else
             Camera.Draw(spriteBatch);
             RoomsManager.Draw(spriteBatch);
-            ProjectilesManager.Draw(spriteBatch);
-            Player.Draw(spriteBatch);
 #endif
             spriteBatch.End();
             base.Draw(gameTime);

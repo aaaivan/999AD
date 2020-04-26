@@ -25,8 +25,8 @@ namespace _999AD
         static Vector2 velocity= Vector2.Zero;
         static bool isFacingRight=true;
         public static readonly float walkingSpeed= 300; //movement speed
-        public static readonly float jumpingSpeed= -800; //jumping initial vertical spped
-        public static readonly float maxWallJumpXSpeed = 1000; //wall jump initial horizontal speed
+        public static readonly float jumpingSpeed= -600; //jumping initial vertical speed
+        public static readonly float maxWallJumpXSpeed = 600; //wall jump initial horizontal speed
         static float wallJumpXSpeed = 0;
         static bool isTouchingTheGround=false;
         static bool isOnTheWall= false;
@@ -42,21 +42,29 @@ namespace _999AD
             spritesheet = _spritesheet;
             position = _position;
             //fill following assignments with sprite info
-            animations.Add(new Animation(spritesheet, new Rectangle(0, 0, 48*3, 64), 48, 64, 3, 0.3f, true));
-            animations.Add( new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
-            animations.Add(new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, false, true));
-            animations.Add(new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
-            animations.Add(new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
-            animations.Add(new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
-            animations.Add(new Animation(spritesheet, new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, false));
+            animations.Add(new Animation(new Rectangle(0, 0, 48*3, 64), 48, 64, 3, 0.3f, true));
+            animations.Add( new Animation( new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
+            animations.Add(new Animation( new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, false, true));
+            animations.Add(new Animation( new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
+            animations.Add(new Animation( new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
+            animations.Add(new Animation( new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
+            animations.Add(new Animation( new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, false));
             currentAnimation = AnimationTypes.idle;
         }
         #endregion
         #region PROPERTIES
-        //return the player's rectangle
-        public static Rectangle Rectangle
+        //return the player's collision rectangle
+        public static Rectangle CollisionRectangle
         {
             get { return new Rectangle((int)position.X, (int)position.Y, width, height); }
+        }
+        //return the player's draw rectangle
+        public static Rectangle DrawRectangle
+        {
+            get { return new Rectangle((int)(Center.X-animations[(int)currentAnimation].Frame.Width/2),
+                                       (int)position.Y - animations[(int)currentAnimation].Frame.Height+height,
+                                       animations[(int)currentAnimation].Frame.Width,
+                                       animations[(int)currentAnimation].Frame.Height); }
         }
         //return the center of the player's rectangle
         public static Vector2 Center
@@ -75,11 +83,11 @@ namespace _999AD
         }
         #endregion
         #region METHODS
-        public static void Update(GameTime gameTime)
+        public static void Update(float elapsedTime)
         {
             getPlayerInput();
-            Move((float)gameTime.ElapsedGameTime.TotalSeconds);
-            animations[(int)currentAnimation].Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            Move(elapsedTime);
+            animations[(int)currentAnimation].Update(elapsedTime);
         }
         //check input for movement
         static void getPlayerInput()
@@ -94,7 +102,7 @@ namespace _999AD
                 }
                 else if(isOnTheWall)
                 {
-                    velocity.Y = jumpingSpeed*0.7f;
+                    velocity.Y = jumpingSpeed;
                     elapsedTimeStuckOnWall = 0;
                     canDoubleJump = true;
                     if (!isFacingRight)
@@ -307,7 +315,7 @@ namespace _999AD
         }
         public static void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(spritesheet, Camera.RelativeRectangle(Rectangle) ,animations[(int)currentAnimation].Frame, Color.White, 0f, Vector2.Zero,
+            spriteBatch.Draw(spritesheet, Camera.RelativeRectangle(DrawRectangle) ,animations[(int)currentAnimation].Frame, Color.White, 0f, Vector2.Zero,
                 isFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
         }
         #endregion

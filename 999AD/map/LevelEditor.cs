@@ -42,8 +42,7 @@ namespace _999AD
             arial32 = _arial32;
             arial14 = _arial16;
             whiteTexture = _whiteTexture;
-            Camera.lockOnPlayer = false;
-            CameraManager.SwitchCamera((RoomsManager.Rooms)currentRoomNumber);
+            CameraManager.SwitchCamera((RoomsManager.Rooms)currentRoomNumber, false);
         }
         #endregion
         //save maps to file
@@ -77,8 +76,8 @@ namespace _999AD
         {
             int tileRow = 0;
             int tileCol = 0;
-            tileCol = (mouseState.X + Camera.rectangle.X) / Tile.tileSize;
-            tileRow = (mouseState.Y + Camera.rectangle.Y) / Tile.tileSize;
+            tileCol = ((int)(mouseState.X/CameraManager.scaleByRoom[currentRoomNumber]) + Camera.rectangle.X) / Tile.tileSize;
+            tileRow = ((int)(mouseState.Y / CameraManager.scaleByRoom[currentRoomNumber]) + Camera.rectangle.Y) / Tile.tileSize;
             tileCol = MathHelper.Clamp(tileCol, 0, MapsManager.maps[currentRoomNumber].roomWidthTiles - 1);
             tileRow = MathHelper.Clamp(tileRow, 0, MapsManager.maps[currentRoomNumber].roomHeightTiles - 1);
             return new Point(tileCol, tileRow);
@@ -341,7 +340,7 @@ namespace _999AD
                     else if (Game1.currentKeyboard.IsKeyDown(Keys.Enter))
                     {
                         currentRoomNumber = userInputInt < (int)RoomsManager.Rooms.total ? userInputInt : ((int)RoomsManager.Rooms.total - 1);
-                        CameraManager.SwitchCamera((RoomsManager.Rooms)currentRoomNumber);
+                        CameraManager.SwitchCamera((RoomsManager.Rooms)currentRoomNumber, false);
                         userInputInt = 0;
                         menu = MenuState.none;
                         message = "";
@@ -362,9 +361,15 @@ namespace _999AD
                         if (arr.Length != 2)
                             break;
                         widthTiles =int.Parse(arr[0]);
-                        widthTiles = MathHelper.Clamp(widthTiles,(Game1.screenWidth + Tile.tileSize-1)/ Tile.tileSize, 200);
+                        widthTiles = MathHelper.Clamp(
+                            widthTiles,
+                            (Game1.screenWidth + (int)(Tile.tileSize* CameraManager.scaleByRoom[currentRoomNumber]) -1)/ (int)(Tile.tileSize * CameraManager.scaleByRoom[currentRoomNumber]),
+                            200);
                         heightTiles = int.Parse(arr[1]);
-                        heightTiles = MathHelper.Clamp(heightTiles, (Game1.screenHeight + Tile.tileSize - 1) / Tile.tileSize, 200);
+                        heightTiles = MathHelper.Clamp(
+                            heightTiles,
+                            (Game1.screenHeight + 2 * CameraManager.maxOffsetY + (int)(Tile.tileSize * CameraManager.scaleByRoom[currentRoomNumber]) - 1) / (int)(Tile.tileSize * CameraManager.scaleByRoom[currentRoomNumber]),
+                            200);
                         menu = MenuState.pickResizingDirection;
                         userInputString = "U,R";
                         message = "Use the arrows to select\nthe edges (top/bottom and left/right)\n" +
@@ -405,7 +410,7 @@ namespace _999AD
                             }
                         }
                         MapsManager.maps[currentRoomNumber] = newMap;
-                        CameraManager.SwitchCamera((RoomsManager.Rooms)currentRoomNumber);
+                        CameraManager.SwitchCamera((RoomsManager.Rooms)currentRoomNumber, false);
                         menu = MenuState.none;
                         message = "";
                         userInputString = "";
@@ -557,7 +562,7 @@ namespace _999AD
                     for (int col = Camera.rectangle.X / Tile.tileSize; col <= (Camera.rectangle.Right - 1) / Tile.tileSize; col++)
                     {
                         if (MapsManager.maps[currentRoomNumber].array[row, col].isSolid())
-                            spriteBatch.Draw(whiteTexture, Camera.RelativeVector(new Vector2(col, row)*Tile.tileSize), Color.Red*0.3f);
+                            spriteBatch.Draw(whiteTexture, Camera.RelativeRectangle(new Rectangle(col * Tile.tileSize, row * Tile.tileSize, Tile.tileSize, Tile.tileSize)), Color.Red*0.3f);
                     }
                 }
             }

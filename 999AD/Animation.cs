@@ -12,10 +12,6 @@ namespace _999AD
     class Animation
     {
         #region DECLARATIONS
-        Texture2D spritesheet;  //spritesheet with all the frames. Can contain different animations.
-        Rectangle framesLocationOnSpritesheet; //rectangle containing all and only the frames of one animation
-        int frameWidth;
-        int frameHeight;
         int totalFrames; //number of frames for the animation
         Rectangle[] sourceRectangles;
         int currentFrame=0;
@@ -26,32 +22,41 @@ namespace _999AD
         bool active= true; //becomes false when the animations ends
         #endregion
         #region CONSTRUCTOR
-        public Animation(Texture2D _spritesheet, Rectangle _frameLocationOnSpritesheet,
+        public Animation(Rectangle _frameLocationOnSpritesheet,
                         int _frameWidth, int _frameHeight, int _totalFrames,
-                        float _timePerFrame, bool _loop, bool _keepLastFrameWhenInactive=false)
+                        float _timePerFrame, bool _loop, bool _keepLastFrameWhenInactive = false)
         {
-            spritesheet = _spritesheet;
-            framesLocationOnSpritesheet = _frameLocationOnSpritesheet;
-            frameHeight = _frameHeight;
-            frameWidth = _frameWidth;
             totalFrames = _totalFrames;
             timePerFrame = _timePerFrame;
             loop = _loop;
             keepLastFrameWhenInactive = _keepLastFrameWhenInactive;
             sourceRectangles = new Rectangle[totalFrames];
-            for (int i=0; i<totalFrames; i++)
+            for (int i = 0; i < totalFrames; i++)
             {
-                sourceRectangles[i]=(new Rectangle(framesLocationOnSpritesheet.X+ frameWidth * (i % (framesLocationOnSpritesheet.Width / frameWidth)),
-                                                   framesLocationOnSpritesheet.Y+ frameHeight * (i / (framesLocationOnSpritesheet.Width / frameWidth)),
-                                                    frameWidth,
-                                                    frameHeight));
+                sourceRectangles[i] = (new Rectangle(_frameLocationOnSpritesheet.X + _frameWidth * (i % (_frameLocationOnSpritesheet.Width / _frameWidth)),
+                                                   _frameLocationOnSpritesheet.Y + _frameHeight * (i / (_frameLocationOnSpritesheet.Width / _frameWidth)),
+                                                    _frameWidth,
+                                                    _frameHeight));
             }
+        }
+        public Animation(Rectangle[] _sourceRectangles,
+                        float _timePerFrame, bool _loop, bool _keepLastFrameWhenInactive = false)
+        {
+            sourceRectangles = _sourceRectangles;
+            totalFrames = sourceRectangles.Length;
+            timePerFrame = _timePerFrame;
+            loop = _loop;
+            keepLastFrameWhenInactive = _keepLastFrameWhenInactive;
         }
         #endregion
         #region PROPERTIES
         public Rectangle Frame
         {
             get { return sourceRectangles[currentFrame]; }
+        }
+        public bool Active
+        {
+            get { return active; }
         }
         #endregion
         #region METHODS
@@ -71,6 +76,16 @@ namespace _999AD
                         currentFrame = totalFrames - 1;
                 }
             }
+        }
+        public float TotalTime()
+        {
+            return timePerFrame * sourceRectangles.Length;
+        }
+        public void Reset()
+        {
+            elapsedFrameTime = 0;
+            currentFrame = 0;
+            active = true;
         }
         #endregion
     }

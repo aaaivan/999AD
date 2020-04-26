@@ -20,7 +20,7 @@ namespace _999AD
         public static Rectangle[] sourceRectangles;
         readonly TextureType textureType;
         Vector2 rotationCenter; //point around which the platform rotates
-        readonly int radius;
+        public readonly int radius;
         readonly Vector2 centerStartingPoint;
         readonly Vector2 centerEndingPoint;
         public readonly int width; //width of the platform
@@ -33,12 +33,12 @@ namespace _999AD
         float linearSpeed; //fraction of the total distance travelled every second
         readonly float centerRestingTime; //indicates for how many seconds the rotatationCenter rests at the starting and ending points
         float elapsedRestingTime = 0;
-        bool active; //if false the platform does not move
+        public bool active; //if false the platform does not move
         #endregion
         #region CONSTRUCTOR
         public MovingPlatform(TextureType _textureType, int _radius,
             Vector2 _centerStartingPoint, Vector2 _centerEndingPoint, float _angularSpeed, float _linearSpeed_pixelsPerSecond,
-            float _centerRestingTime = 0f, float _startingAngleDegrees=0, float _normalizedLinearProression = 0, bool _active=true)
+            bool _active=true, float _startingAngleDegrees=0, float _normalizedLinearProression = 0, float _centerRestingTime = 0f)
         {
             textureType = _textureType;
             radius = _radius;
@@ -54,7 +54,7 @@ namespace _999AD
             active = _active;
             rotationCenter = Vector2.Lerp(centerStartingPoint, centerEndingPoint, normalizedLinearProgression);
             platformMidpointPosition = new Vector2(rotationCenter.X + radius * (float)Math.Sin(angleRadiants),
-                rotationCenter.Y + radius * (float)Math.Cos(angleRadiants));
+                rotationCenter.Y - radius * (float)Math.Cos(angleRadiants));
         }
         public static void loadTextures(Texture2D _spritesheet)
         {
@@ -66,13 +66,27 @@ namespace _999AD
         #endregion
         #region PROPERTIES
         //move the platform's rectangle given its new center
+        public float AngleRadiants
+        {
+            get { return angleRadiants; }
+        }
+        public float AngularSpeed
+        {
+            get { return angularSpeed; }
+        }
         public Vector2 Position
         {
             get { return new Vector2(platformMidpointPosition.X-0.5f*width, platformMidpointPosition.Y - 0.5f * height); }
         }
         public Vector2 Shift
         {
-            get { return platformMidpointPosition - platformMidpointPreviousPosition; }
+            get
+            {
+                if (!active)
+                    return Vector2.Zero;
+                else
+                    return platformMidpointPosition - platformMidpointPreviousPosition;
+            }
         }
         public Rectangle Rectangle
         {
@@ -80,12 +94,11 @@ namespace _999AD
         }
         #endregion
         #region METHODS
-        public void Update(GameTime gameTime)
+        public void Update(float elapsedTime)
         {
             if(active)
             {
                 platformMidpointPreviousPosition = platformMidpointPosition;
-                float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (elapsedRestingTime < centerRestingTime)
                 {
                     elapsedRestingTime += elapsedTime;
@@ -116,7 +129,7 @@ namespace _999AD
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(spritesheet, Camera.RelativeVector(Position),
+            spriteBatch.Draw(spritesheet, Camera.RelativeRectangle(Rectangle),
                 sourceRectangles[(int)textureType], Color.White);
         }
         #endregion
