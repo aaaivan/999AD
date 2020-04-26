@@ -86,6 +86,11 @@ namespace _999AD
                     Content.Load<Texture2D>(@"backgrounds\finalBoss")
                 }
             );
+#if LEVEL_EDITOR
+            levelEditor = new LevelEditor(Content.Load<SpriteFont>(@"fonts\arial32"),
+                                          Content.Load<SpriteFont>(@"fonts\arial14"),
+                                          Content.Load<Texture2D>("whiteTile"));
+#else
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
             ProjectilesManager.Inizialize(Content.Load<Texture2D>("projectile"));
             Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(20,0));
@@ -98,11 +103,6 @@ namespace _999AD
                                                    Content.Load<Texture2D>(@"characters\healthyWing"),
                                                    Content.Load<Texture2D>(@"characters\damagedWing"),
                                                    Content.Load<Texture2D>(@"characters\deadWing")});
-#if LEVEL_EDITOR
-            levelEditor = new LevelEditor(Content.Load<SpriteFont>(@"fonts\arial32"),
-                                          Content.Load<SpriteFont>(@"fonts\arial14"),
-                                          Content.Load<Texture2D>("whiteTile"));
-
 #endif
         }
 
@@ -175,7 +175,6 @@ namespace _999AD
             spriteBatch.Begin();
 #if LEVEL_EDITOR
             levelEditor.Draw(spriteBatch, tilesPerRow, infoBoxHeightPx);
-
 #else
             Camera.Draw(spriteBatch);
             RoomsManager.Draw(spriteBatch);

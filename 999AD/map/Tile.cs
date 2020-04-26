@@ -48,7 +48,10 @@ namespace _999AD
         #region METHODS
         public bool isSolid()
         {
-            if (tileType == TileType.solid || tileType == TileType.solidEmpty)
+            if (tileType == TileType.solid ||
+                tileType == TileType.solidEmpty ||
+                tileType == TileType.sky ||
+                tileType == TileType.water)
                 return true;
             return false;
         }

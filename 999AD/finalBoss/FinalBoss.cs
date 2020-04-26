@@ -36,7 +36,7 @@ namespace _999AD
         static float elapsedRecoveryTime = 0;
         static public readonly int bossWidth = 180;
         static public readonly int bossHeight = 280;
-        static public readonly Vector2 bossInitialMidPoint = new Vector2(FireBallsManager.fireballsCenter.X, 520);
+        static public readonly Vector2 bossInitialMidPoint = new Vector2(FireBallsManager.fireballsCenter.X, 550);
         static public Vector2 bossMidPoint;
         static public readonly int wingsRelativeYPosition = 130;
         static float YSpeed = 0;
@@ -175,14 +175,14 @@ namespace _999AD
                     leftWingAnimation = WingAnimations.idle;
                 }
             }
-            //debug only
+            /*debug only
             if (Game1.currentKeyboard.IsKeyDown(Keys.Down) && !Game1.previousKeyboard.IsKeyDown(Keys.Down))
                 bossHP--;
             if (Game1.currentKeyboard.IsKeyDown(Keys.Left) && !Game1.previousKeyboard.IsKeyDown(Keys.Left))
                 DamageWing(false);
             if (Game1.currentKeyboard.IsKeyDown(Keys.Right) && !Game1.previousKeyboard.IsKeyDown(Keys.Right))
                 DamageWing(true);
-            //end debug only
+            //end debug only*/
             switch (bossAnimation)
             {
                 case BossAnimations.stone:
@@ -446,8 +446,8 @@ namespace _999AD
                                     LavaGeyserManager.SweepAcross(
                                         0.5f,
                                         (int)MathHelper.Lerp(1, 4, (float)bossHP / maxBossHp),
-                                        200,
-                                        800,
+                                        418,
+                                        1118,
                                         rand.Next(2) == 0);
                                     bossAnimation = BossAnimations.attack;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
@@ -593,8 +593,8 @@ namespace _999AD
                                         wingAnimations[(int)leftWingAnimation].Reset();
                                     }
                                     bossAnimations[(int)BossAnimations.attack].Reset();
-                                    LavaGeyserManager.SweepAcross(0.2f, 100, 200, 800, true);
-                                    LavaGeyserManager.SweepAcross(0.2f, 100, 200, 800, false);
+                                    LavaGeyserManager.SweepAcross(0.2f, 100, 418, 1118, true);
+                                    LavaGeyserManager.SweepAcross(0.2f, 100, 418, 1118, false);
                                 }
                                 break;
                             case Phases.four:

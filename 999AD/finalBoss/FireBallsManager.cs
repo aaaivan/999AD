@@ -12,7 +12,7 @@ namespace _999AD
     public static class FireBallsManager
     {
         #region DECLARATIONS
-        static public readonly Vector2 fireballsCenter = new Vector2(496, 576);
+        static public readonly Vector2 fireballsCenter = new Vector2(768, 600);
         static Texture2D laser;
         static int[] targetedPlatforms= new int[] { };
         static float relativeLaserProgression=0;

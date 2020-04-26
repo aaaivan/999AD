@@ -16,7 +16,7 @@ namespace _999AD
         public static Rectangle rectangle; //area framed in the camera
         static int roomWidth; //in pixels
         static int roomHeight; //in pixels
-        public static bool lockOnPlayer; //if false, the camera will follow "pointLocked"
+        static bool lockOnPlayer; //if false, the camera will follow "pointLocked"
         public static Vector2 pointLocked= new Vector2(0,0); //point followed by the camera
         static readonly Rectangle screenRectangle = new Rectangle(0, 0, Game1.screenWidth, Game1.screenHeight);
         static float scale;
@@ -32,7 +32,7 @@ namespace _999AD
             lockOnPlayer = _lockOnPlayer;
         }
         #endregion
-        #region properties
+        #region PROPERTIES
         public static float Scale
         {
             get { return scale; }

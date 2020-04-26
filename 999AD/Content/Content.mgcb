@@ -85,18 +85,6 @@
 /processorParam:TextureFormat=Color
 /build:backgrounds/room1.png
 
-#begin backgrounds/room2.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:backgrounds/room2.png
-
 #begin fonts/arial14.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -218,4 +206,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:characters/damagedWing.png
+
+#begin backgrounds/room2.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:backgrounds/room2.jpg
 
