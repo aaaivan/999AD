@@ -14,9 +14,9 @@ namespace _999AD
         #region DECLARATIONS
         static Texture2D[] backgrounds = new Texture2D[(int)RoomsManager.Rooms.total];
         public static readonly float[] scaleByRoom = new float[(int)RoomsManager.Rooms.total] { 1, 1, 0.625f };
-        static bool shaking = false;
         public static readonly int maxOffsetY = 2; //amplitude of the rumble
-        static int offsetY = -2; //current offset
+        static bool shaking = false;
+        static int offsetY; //current offset
         static float timeBetweenOffsets = 0.1f; //tells how ofter the offset is changed in sign (smaller time->faster rumble)
         static float offsetElapsedTime = 0f; //time elapsed since the last change in offsetY
         static float shakingTime; //tells for how many second the framing will shake
@@ -26,6 +26,7 @@ namespace _999AD
         public static void Inizialize(Texture2D[] _backgrounds)
         {
             backgrounds = _backgrounds;
+            offsetY = -maxOffsetY;
             SwitchCamera(RoomsManager.Rooms.room1);
         }
         #endregion
@@ -42,26 +43,24 @@ namespace _999AD
             elapsedShakingTime = 0f;
             shaking = true;
         }
-        //move the camera up/down while shaking
-        static void NextOffset(float elapsedTime)
-        {
-            offsetElapsedTime += elapsedTime;
-            if (offsetElapsedTime >= timeBetweenOffsets)
-            {
-                offsetY *= -1;
-                offsetElapsedTime = 0;
-            }
-        }
         public static void Update(float elapsedTime)
         {
-            elapsedShakingTime += elapsedTime;
-            if (elapsedShakingTime >= shakingTime)
-                shaking = false;
-            Camera.Update(maxOffsetY);
+            Camera.Update(shaking);
             if (shaking)
             {
                 Camera.rectangle.Y += offsetY;
-                NextOffset(elapsedTime);
+                elapsedShakingTime += elapsedTime;
+                if (elapsedShakingTime >= shakingTime)
+                    shaking = false;
+                else
+                {
+                    offsetElapsedTime += elapsedTime;
+                    if (offsetElapsedTime >= timeBetweenOffsets)
+                    {
+                        offsetY *= -1;
+                        offsetElapsedTime = 0;
+                    }
+                }
             }
         }
         #endregion

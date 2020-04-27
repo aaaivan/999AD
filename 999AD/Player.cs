@@ -20,8 +20,8 @@ namespace _999AD
         static List<Animation> animations= new List<Animation>();
         static AnimationTypes currentAnimation;
         public static Vector2 position;
-        public static readonly int height= 64;
-        public static readonly int width= 48;
+        public static readonly int height= 24;
+        public static readonly int width= 16;
         static Vector2 velocity= Vector2.Zero;
         static bool isFacingRight=true;
         public static readonly float walkingSpeed= 300; //movement speed
@@ -42,7 +42,7 @@ namespace _999AD
             spritesheet = _spritesheet;
             position = _position;
             //fill following assignments with sprite info
-            animations.Add(new Animation(new Rectangle(0, 0, 48*3, 64), 48, 64, 3, 0.3f, true));
+            animations.Add(new Animation(new Rectangle(0, 0, 16*3, 24), 16, 24, 3, 0.3f, true));
             animations.Add( new Animation( new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
             animations.Add(new Animation( new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, false, true));
             animations.Add(new Animation( new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));

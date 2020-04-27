@@ -74,14 +74,14 @@ namespace _999AD
                 catch (IOException)
                 {
                     maps[room] = new RoomMap(
-                        (Game1.screenHeight+ (int)(Tile.tileSize * CameraManager.scaleByRoom[room]) - 1)/ (int)(Tile.tileSize * CameraManager.scaleByRoom[room]),
-                        (Game1.screenWidth + (int)(Tile.tileSize * CameraManager.scaleByRoom[room]) - 1) / (int)(Tile.tileSize * CameraManager.scaleByRoom[room])) ;
+                        (Game1.gameHeight + 2 * CameraManager.maxOffsetY + (int)(Tile.tileSize * CameraManager.scaleByRoom[room]) - 1) / (int)(Tile.tileSize * CameraManager.scaleByRoom[room]),
+                        (Game1.gameWidth + (int)(Tile.tileSize * CameraManager.scaleByRoom[room]) - 1) / (int)(Tile.tileSize * CameraManager.scaleByRoom[room]));
                 }
-                catch(System.ArgumentOutOfRangeException)
+                catch (System.ArgumentOutOfRangeException)
                 {
                     maps[room] = new RoomMap(
-                        (Game1.screenHeight + 2* CameraManager.maxOffsetY + (int)(Tile.tileSize * CameraManager.scaleByRoom[room]) - 1) / (int)(Tile.tileSize * CameraManager.scaleByRoom[room]),
-                        (Game1.screenWidth + (int)(Tile.tileSize * CameraManager.scaleByRoom[room]) - 1) / (int)(Tile.tileSize * CameraManager.scaleByRoom[room]));
+                        (Game1.gameHeight + 2* CameraManager.maxOffsetY + (int)(Tile.tileSize * CameraManager.scaleByRoom[room]) - 1) / (int)(Tile.tileSize * CameraManager.scaleByRoom[room]),
+                        (Game1.gameWidth + (int)(Tile.tileSize * CameraManager.scaleByRoom[room]) - 1) / (int)(Tile.tileSize * CameraManager.scaleByRoom[room]));
                 }
             }
         }

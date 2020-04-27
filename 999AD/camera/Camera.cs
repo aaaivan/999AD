@@ -14,21 +14,21 @@ namespace _999AD
         #region DECLARATIONS
         static Texture2D background; //the background of the room
         public static Rectangle rectangle; //area framed in the camera
-        static int roomWidth; //in pixels
-        static int roomHeight; //in pixels
         static bool lockOnPlayer; //if false, the camera will follow "pointLocked"
         public static Vector2 pointLocked= new Vector2(0,0); //point followed by the camera
-        static readonly Rectangle screenRectangle = new Rectangle(0, 0, Game1.screenWidth, Game1.screenHeight);
+        static readonly Rectangle screenRectangle = new Rectangle(0, 0, Game1.gameWidth, Game1.gameHeight);
+        static int roomWidth;
+        static int roomHeight;
         static float scale;
         #endregion
         #region CONSTRUCTORS
         public static void Inizialize(Texture2D _background, RoomsManager.Rooms _room, float _scale, bool _lockOnPlayer)
         {
             background = _background;
+            scale = _scale;
             roomWidth = MapsManager.maps[(int)_room].RoomWidthtPx;
             roomHeight = MapsManager.maps[(int)_room].RoomHeightPx;
-            scale = _scale;
-            rectangle = new Rectangle(0, 0, (int)(Game1.screenWidth/scale), (int)(Game1.screenHeight/scale));
+            rectangle = new Rectangle(0, CameraManager.maxOffsetY, (int)(Game1.gameWidth/scale), (int)(Game1.gameHeight/scale));
             lockOnPlayer = _lockOnPlayer;
         }
         #endregion
@@ -47,27 +47,28 @@ namespace _999AD
                                  (int)(rect.Width*scale),
                                  (int)(rect.Height*scale));
         }
-        public static void Update(int maxOffsetY)
+        public static void Update(bool shaking)
         {
             if (lockOnPlayer) //follow the player if lock on player is true
             {
-                rectangle.X = (int)MathHelper.Clamp(Player.Center.X - Game1.screenWidth / (2f*scale),
+                rectangle.X = (int)MathHelper.Clamp(Player.Center.X - Game1.gameWidth / (2f*scale),
                                                          0,
-                                                         roomWidth - Game1.screenWidth/scale);
-                rectangle.Y = (int)MathHelper.Clamp(Player.Center.Y - Game1.screenHeight / (2f * scale),
-                                                        maxOffsetY,
-                                                        roomHeight - Game1.screenHeight/scale - maxOffsetY);
+                                                         roomWidth - Game1.gameWidth/scale);
+                rectangle.Y = (int)MathHelper.Clamp(Player.Center.Y - Game1.gameHeight / (2f * scale),
+                                                        CameraManager.maxOffsetY,
+                                                        roomHeight - Game1.gameHeight/scale - CameraManager.maxOffsetY);
             }
             else //follow point locked otherwise
             {
                 pointLocked.X= MathHelper.Clamp(pointLocked.X,
-                                                Game1.screenWidth/ (2f * scale),
-                                                roomWidth - Game1.screenWidth/ (2f * scale));
+                                                Game1.gameWidth/ (2f * scale),
+                                                roomWidth - Game1.gameWidth/ (2f * scale));
+                int offset = shaking ? CameraManager.maxOffsetY : 0;
                 pointLocked.Y= MathHelper.Clamp(pointLocked.Y,
-                                                Game1.screenHeight / (2f * scale)+maxOffsetY,
-                                                roomHeight - Game1.screenHeight / (2f * scale)-maxOffsetY);
-                rectangle.X = (int)(pointLocked.X - Game1.screenWidth / (2f * scale));
-                rectangle.Y = (int)(pointLocked.Y - Game1.screenHeight / (2f * scale));
+                                                Game1.gameHeight / (2f * scale)+ offset,
+                                                roomHeight - Game1.gameHeight / (2f * scale)- offset);
+                rectangle.X = (int)(pointLocked.X - Game1.gameWidth / (2f * scale));
+                rectangle.Y = (int)(pointLocked.Y - Game1.gameHeight / (2f * scale));
             }
         }
         public static void Draw(SpriteBatch spriteBatch)

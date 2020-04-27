@@ -76,8 +76,8 @@ namespace _999AD
         {
             int tileRow = 0;
             int tileCol = 0;
-            tileCol = ((int)(mouseState.X/CameraManager.scaleByRoom[currentRoomNumber]) + Camera.rectangle.X) / Tile.tileSize;
-            tileRow = ((int)(mouseState.Y / CameraManager.scaleByRoom[currentRoomNumber]) + Camera.rectangle.Y) / Tile.tileSize;
+            tileCol = ((int)(mouseState.X/(CameraManager.scaleByRoom[currentRoomNumber]*Game1.scale)) + Camera.rectangle.X) / Tile.tileSize;
+            tileRow = ((int)(mouseState.Y / (CameraManager.scaleByRoom[currentRoomNumber] * Game1.scale)) + Camera.rectangle.Y) / Tile.tileSize;
             tileCol = MathHelper.Clamp(tileCol, 0, MapsManager.maps[currentRoomNumber].roomWidthTiles - 1);
             tileRow = MathHelper.Clamp(tileRow, 0, MapsManager.maps[currentRoomNumber].roomHeightTiles - 1);
             return new Point(tileCol, tileRow);
@@ -341,6 +341,7 @@ namespace _999AD
                     {
                         currentRoomNumber = userInputInt < (int)RoomsManager.Rooms.total ? userInputInt : ((int)RoomsManager.Rooms.total - 1);
                         CameraManager.SwitchCamera((RoomsManager.Rooms)currentRoomNumber, false);
+                        Camera.pointLocked = new Vector2(0, 0);
                         userInputInt = 0;
                         menu = MenuState.none;
                         message = "";
@@ -363,13 +364,13 @@ namespace _999AD
                         widthTiles =int.Parse(arr[0]);
                         widthTiles = MathHelper.Clamp(
                             widthTiles,
-                            (Game1.screenWidth + (int)(Tile.tileSize* CameraManager.scaleByRoom[currentRoomNumber]) -1)/ (int)(Tile.tileSize * CameraManager.scaleByRoom[currentRoomNumber]),
-                            200);
+                            (Game1.gameWidth + (int)(Tile.tileSize* CameraManager.scaleByRoom[currentRoomNumber]) -1)/ (int)(Tile.tileSize * CameraManager.scaleByRoom[currentRoomNumber]),
+                            500);
                         heightTiles = int.Parse(arr[1]);
                         heightTiles = MathHelper.Clamp(
                             heightTiles,
-                            (Game1.screenHeight + 2 * CameraManager.maxOffsetY + (int)(Tile.tileSize * CameraManager.scaleByRoom[currentRoomNumber]) - 1) / (int)(Tile.tileSize * CameraManager.scaleByRoom[currentRoomNumber]),
-                            200);
+                            (Game1.gameHeight + 2 * CameraManager.maxOffsetY + (int)(Tile.tileSize * CameraManager.scaleByRoom[currentRoomNumber]) - 1) / (int)(Tile.tileSize * CameraManager.scaleByRoom[currentRoomNumber]),
+                            500);
                         menu = MenuState.pickResizingDirection;
                         userInputString = "U,R";
                         message = "Use the arrows to select\nthe edges (top/bottom and left/right)\n" +
@@ -444,12 +445,12 @@ namespace _999AD
                     else if (GetStringInput())
                         message = "Enter the indexes of the tiles you want to\nrandomly select from (format: index1,index2...)\n" +
                             "You can also click the tiles displayed on the right.\nIndexes: "+userInputString;
-                    else if (mouseState.X >= Game1.screenWidth && mouseState.X < Game1.screenWidth + Tile.tileSize * tilesPerRow &&
-                        mouseState.Y >= 0 && mouseState.Y < Game1.screenHeight &&
+                    else if (mouseState.X >= Game1.gameWidth*Game1.scale && mouseState.X < Game1.viewportRectangle.Width &&
+                        mouseState.Y >= 0 && mouseState.Y < Game1.viewportRectangle.Height &&
                         mouseState.LeftButton == ButtonState.Pressed &&
                         previousMouseState.LeftButton!= ButtonState.Pressed)
                     {
-                        int newTileType = (mouseState.X - Game1.screenWidth) / Tile.tileSize + (mouseState.Y / Tile.tileSize * tilesPerRow);
+                        int newTileType = (mouseState.X - Game1.gameWidth*Game1.scale) / (Tile.tileSize*Game1.scale) + (mouseState.Y / (Tile.tileSize*Game1.scale) * tilesPerRow);
                         userInputString += (","+newTileType + ",");
                         message = "Enter the indexes of the tiles you want to\nrandomly select from (format: index1,index2...)\n" +
                             "You can also click the tiles displayed on the right.\nIndexes: " + userInputString;
@@ -499,8 +500,8 @@ namespace _999AD
                     Camera.pointLocked.X += 10;
                 if (Game1.currentKeyboard.IsKeyDown(Keys.Left))
                     Camera.pointLocked.X -= 10;
-                if (mouseState.X >= 0 && mouseState.X < Game1.screenWidth &&
-                    mouseState.Y >= 0 && mouseState.Y < Game1.screenHeight)
+                if (mouseState.X >= 0 && mouseState.X < Game1.gameWidth*Game1.scale &&
+                    mouseState.Y >= 0 && mouseState.Y < Game1.gameHeight * Game1.scale)
                 {
                     Point tile = TileFromPointerLocation(mouseState);
                     hoveredTileType = (int)MapsManager.maps[currentRoomNumber].array[tile.Y, tile.X].tileType;
@@ -524,11 +525,11 @@ namespace _999AD
                     }
                     tilePositionInfo = "Tile hovered: row " + tile.Y + ", col " + tile.X + "\n Type: " + hoveredTileType + "(" + (Tile.TileType)hoveredTileType + ")";
                 }
-                else if (mouseState.X >= Game1.screenWidth && mouseState.X < Game1.screenWidth+Tile.tileSize*tilesPerRow)
+                else if (mouseState.X >= Game1.gameWidth*Game1.scale && mouseState.X < Game1.viewportRectangle.Width)
                 {
                     if(mouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton!=ButtonState.Pressed)
                     {
-                        int newTileType = (mouseState.X - Game1.screenWidth) / Tile.tileSize + (mouseState.Y / Tile.tileSize * tilesPerRow);
+                        int newTileType = (mouseState.X - Game1.gameWidth*Game1.scale) / (Tile.tileSize*Game1.scale) + (mouseState.Y / (Tile.tileSize*Game1.scale) * tilesPerRow);
                         if (newTileType< (int)Tile.TileType.total)
                         {
                             randomMode = false;
@@ -543,14 +544,11 @@ namespace _999AD
                     tileTypeInfo = "Tile selected: " + currentTileType + "("+(Tile.TileType)currentTileType+")";
             }
         }
-        public void Draw(SpriteBatch spriteBatch, int tilesPerRow, int infoBoxHeighPx)
+        public void Draw(SpriteBatch spriteBatch, int tilesPerRow, int infoBoxHeighPx, int editorWidth, int editorHeight)
         {
             if (menu== MenuState.start)
             {
-                spriteBatch.DrawString(arial32,
-                        message,
-                        new Vector2((Game1.screenWidth+tilesPerRow*Tile.tileSize) / 2, Game1.screenHeight / 2) - arial32.MeasureString(message) / 2,
-                        Color.Black);
+                spriteBatch.Draw(whiteTexture, new Rectangle(0,0, editorWidth, editorHeight), Color.CornflowerBlue);
                 return;
             }
             Camera.Draw(spriteBatch);
@@ -566,40 +564,51 @@ namespace _999AD
                     }
                 }
             }
-            spriteBatch.Draw(whiteTexture, new Rectangle(0, Game1.screenHeight, Game1.screenWidth,  infoBoxHeighPx), Color.LightGray);
+            spriteBatch.Draw(whiteTexture, new Rectangle(0, Game1.gameHeight, Game1.gameWidth,  infoBoxHeighPx), Color.LightGray);
+            spriteBatch.Draw(whiteTexture, new Rectangle(Game1.gameWidth, 0, Tile.tileSize * tilesPerRow, Game1.gameHeight+ infoBoxHeighPx), Color.LightGray);
+            for (int i=0; i<(int)Tile.TileType.total; i++)
+            {
+                Tile.DrawAtLocation(spriteBatch, i,new Vector2(i % tilesPerRow, i / tilesPerRow) * Tile.tileSize+new Vector2(Game1.gameWidth,0));
+            }
+        }
+        public void DrawText(SpriteBatch spriteBatch, int infoBoxHeightPx)
+        {
+            if (menu == MenuState.start)
+            {
+                spriteBatch.DrawString(arial32,
+                        message,
+                        new Vector2((Game1.viewportRectangle.Width) / 2, Game1.viewportRectangle.Height / 2) - arial32.MeasureString(message) / 2,
+                        Color.Black);
+                return;
+            }
             spriteBatch.DrawString(arial14,
-                                    tileTypeInfo,
-                                    new Vector2(Game1.screenWidth / 2, Game1.screenHeight + 20) - arial14.MeasureString(tileTypeInfo) / 2,
-                                    Color.Black);
+                        tileTypeInfo,
+                        new Vector2(Game1.gameWidth*Game1.scale / 2, Game1.gameHeight* Game1.scale + infoBoxHeightPx* Game1.scale / 2) - arial14.MeasureString(tileTypeInfo) / 2,
+                        Color.Black);
             spriteBatch.DrawString(arial14,
                                     tilePositionInfo,
-                                    new Vector2(Game1.screenWidth -10- arial14.MeasureString(tilePositionInfo).X,
-                                                Game1.screenHeight + 20 - arial14.MeasureString(tilePositionInfo).Y / 2),
+                                    new Vector2(Game1.gameWidth* Game1.scale - 10- arial14.MeasureString(tilePositionInfo).X,
+                                                Game1.gameHeight* Game1.scale + infoBoxHeightPx* Game1.scale / 2 - arial14.MeasureString(tilePositionInfo).Y / 2),
                                     Color.Black);
             spriteBatch.DrawString(arial14,
                                     roomInfo,
-                                    new Vector2(10, Game1.screenHeight + 20 - arial14.MeasureString(roomInfo).Y / 2),
+                                    new Vector2(10, Game1.gameHeight* Game1.scale + infoBoxHeightPx* Game1.scale / 2 - arial14.MeasureString(roomInfo).Y / 2),
                                     Color.Black);
-            if (menu!= MenuState.start && menu!=MenuState.none)
+            if (menu != MenuState.start && menu != MenuState.none)
             {
                 spriteBatch.Draw(
-                        whiteTexture,
-                        new Rectangle((int)(Game1.screenWidth / 2 - arial32.MeasureString(message).X / 2 - 10),
-                                       (int)(Game1.screenHeight / 2 - arial32.MeasureString(message).Y / 2 - 10),
-                                       (int)arial32.MeasureString(message).X+20,
-                                       (int)arial32.MeasureString(message).Y+20),
-                        Color.LightGray);
-
+                    whiteTexture,
+                    new Rectangle((int)(Game1.viewportRectangle.Width/2 - arial32.MeasureString(message).X / 2 - 10),
+                       (int)(Game1.viewportRectangle.Height / 2 - arial32.MeasureString(message).Y / 2 - 10),
+                       (int)arial32.MeasureString(message).X + 20,
+                       (int)arial32.MeasureString(message).Y + 20),
+                    Color.LightGray);
                 spriteBatch.DrawString(arial32,
                         message,
-                        new Vector2(Game1.screenWidth / 2, Game1.screenHeight / 2) - arial32.MeasureString(message) / 2,
+                        new Vector2(Game1.viewportRectangle.Width / 2, Game1.viewportRectangle.Height / 2) - arial32.MeasureString(message) / 2,
                         Color.Black);
             }
-            spriteBatch.Draw(whiteTexture, new Rectangle(Game1.screenWidth, 0, Tile.tileSize * tilesPerRow, Game1.screenHeight+ infoBoxHeighPx), Color.LightGray);
-            for (int i=0; i<(int)Tile.TileType.total; i++)
-            {
-                Tile.DrawAtLocation(spriteBatch, i,new Vector2(i % tilesPerRow, i / tilesPerRow) * Tile.tileSize+new Vector2(Game1.screenWidth,0));
-            }
+
         }
     }
 }
