@@ -560,7 +560,18 @@ namespace _999AD
                     for (int col = Camera.rectangle.X / Tile.tileSize; col <= (Camera.rectangle.Right - 1) / Tile.tileSize; col++)
                     {
                         if (MapsManager.maps[currentRoomNumber].array[row, col].isSolid())
-                            spriteBatch.Draw(whiteTexture, Camera.RelativeRectangle(new Rectangle(col * Tile.tileSize, row * Tile.tileSize, Tile.tileSize, Tile.tileSize)), Color.Red*0.3f);
+                            spriteBatch.Draw(whiteTexture, Camera.RelativeRectangle(new Rectangle(col * Tile.tileSize, row * Tile.tileSize, Tile.tileSize, Tile.tileSize)), Color.Red * 0.3f);
+                    }
+                }
+            }
+            if (deadlyView)
+            {
+                for (int row = Camera.rectangle.Y / Tile.tileSize; row <= (Camera.rectangle.Bottom - 1) / Tile.tileSize; row++)
+                {
+                    for (int col = Camera.rectangle.X / Tile.tileSize; col <= (Camera.rectangle.Right - 1) / Tile.tileSize; col++)
+                    {
+                        if (MapsManager.maps[currentRoomNumber].array[row, col].isDeadly())
+                            spriteBatch.Draw(whiteTexture, Camera.RelativeRectangle(new Rectangle(col * Tile.tileSize, row * Tile.tileSize, Tile.tileSize, Tile.tileSize)), Color.Purple * 0.3f);
                     }
                 }
             }

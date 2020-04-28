@@ -12,13 +12,9 @@ namespace _999AD
     static class Gravity
     {
         #region DECLARATIONS
-        public static float gravityAcceleration;
-        #endregion
-        #region CONSTRUCTOR
-        public static void Inizialize(float _gravityAcceleration)
-        {
-            gravityAcceleration = _gravityAcceleration;
-        }
+        public static float gravityAcceleration= 1200;
+        public static float airFrictionCoeff = 3f;
+        public static float wallFrictionCoeff = 4f;
         #endregion
         #region METHODS
         public static void MoveDestructableObject(ref Vector2 velocity, ref Vector2 position, int width, int height, ref bool active, float elapsedTime, float maxYVelocity=2000)

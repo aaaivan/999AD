@@ -13,7 +13,7 @@ namespace _999AD
     {
         enum AnimationTypes
         {
-            idle, walk, jump, fall, attack, push, interact, total
+            idle, walk, jump, fall, attack, die, total
         }
         #region DECLARATIONS
         static Texture2D spritesheet;
@@ -24,9 +24,9 @@ namespace _999AD
         public static readonly int width= 16;
         static Vector2 velocity= Vector2.Zero;
         static bool isFacingRight=true;
-        public static readonly float walkingSpeed= 300; //movement speed
-        public static readonly float jumpingSpeed= -600; //jumping initial vertical speed
-        public static readonly float maxWallJumpXSpeed = 600; //wall jump initial horizontal speed
+        public static readonly float walkingSpeed= 100; //movement speed
+        public static readonly float jumpingSpeed= -500; //jumping initial vertical speed
+        public static readonly float maxWallJumpXSpeed = 300; //wall jump initial horizontal speed
         static float wallJumpXSpeed = 0;
         static bool isTouchingTheGround=false;
         static bool isOnTheWall= false;
@@ -170,7 +170,11 @@ namespace _999AD
             else
             {
                 velocity.X += wallJumpXSpeed;
-                wallJumpXSpeed *= 0.92f;//improve
+                if (Math.Abs(wallJumpXSpeed) > walkingSpeed)
+                    velocity.X = MathHelper.Clamp(velocity.X, -maxWallJumpXSpeed, maxWallJumpXSpeed);
+                else
+                    velocity.X = MathHelper.Clamp(velocity.X, -walkingSpeed, walkingSpeed);
+                wallJumpXSpeed -= 2*wallJumpXSpeed*Gravity.airFrictionCoeff*elapsedTime; //2 magic number
                 if (isOnTheWall)
                 {
                     if (elapsedTimeStuckOnWall < maxTimeStuckOnwal)
@@ -178,16 +182,15 @@ namespace _999AD
                         elapsedTimeStuckOnWall += elapsedTime;
                         velocity.Y = 0;
                     }
-                    else
+                    else if (Gravity.gravityAcceleration - velocity.Y * Gravity.wallFrictionCoeff > 0)
                     {
-                        velocity.Y = 50; //improve
+                        velocity.Y += (Gravity.gravityAcceleration - velocity.Y * Gravity.wallFrictionCoeff)*elapsedTime;
                     }
                 }
                 else
                 {
-                    velocity.Y += Gravity.gravityAcceleration * elapsedTime;
-                    if (velocity.Y > 1000) //IMPROVE
-                        velocity.Y = 1000; //IMPROVE
+                    if (Gravity.gravityAcceleration - velocity.Y * Gravity.airFrictionCoeff>0)
+                    velocity.Y += (Gravity.gravityAcceleration-velocity.Y*Gravity.airFrictionCoeff) * elapsedTime;
                 }
                 if (velocity.Y > Gravity.gravityAcceleration * elapsedTime * 15)
                     isTouchingTheGround = false;

@@ -73,7 +73,6 @@ namespace _999AD
 #endif     
             //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
-            Gravity.Inizialize(2000);
             previousKeyboard = Keyboard.GetState();
 
             base.Initialize();
