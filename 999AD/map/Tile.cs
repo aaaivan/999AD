@@ -14,9 +14,16 @@ namespace _999AD
         #region DECLARATIONS
         public enum TileType
         {
-            empty, solidEmpty, solid, grass, sand, lava, sky, water, wall, concrete, total
+            empty, solidEmpty,
+            grassTL, grassTR, grassBL, grassBR, grassT, grassR, grassB, grassL, grass,
+            stoneTL, stoneTR, stoneBL, stoneBR, stoneT, stoneR, stoneB, stoneL, stone,
+            dirtTL, dirtTR, dirtBL, dirtBR, dirtT, dirtR, dirtB, dirtL, dirt,
+            marbleT, marbleR, marbleB, marbleL, marble,
+            caveT, caveR, caveB, caveL, cave,
+            spikeT, spikeR, spikeB, spikeL,
+            total
         }
-        public static readonly int tileSize=32;
+        public static readonly int tileSize=8;
         static Texture2D spritesheet; //set by MapsManager
         static Rectangle[] sourceRectangles = new Rectangle[(int)TileType.total]; //filled by the Inizialize() function, which is called by MapsManager
         public TileType tileType;
@@ -48,10 +55,13 @@ namespace _999AD
         #region METHODS
         public bool isSolid()
         {
-            if (tileType == TileType.solid ||
-                tileType == TileType.solidEmpty ||
-                tileType == TileType.sky ||
-                tileType == TileType.water)
+            if ((int)tileType > 0 && (int)tileType < 39)
+                return true;
+            return false;
+        }
+        public bool isDeadly()
+        {
+            if ((int)tileType >= 39 && (int)tileType < 42)
                 return true;
             return false;
         }

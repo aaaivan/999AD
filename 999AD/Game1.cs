@@ -18,22 +18,22 @@ namespace _999AD
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        public static int screenWidth = 960; //resolution
-        public static int screenHeight = 540; //resolution
+        public static int gameWidth = 384; //pixels on the x axis
+        public static int gameHeight = 216; //pixels on the y axis
+        public static Rectangle viewportRectangle;
+        RenderTarget2D nativeRenderTarget;
+        public static int scale;
 #if LEVEL_EDITOR
-        public readonly static bool levelEditorMode = true;
         LevelEditor levelEditor;
+        public static int editorWidth;
+        public static int editorHeight;
         public static MouseState mouseState;
         public static MouseState previousMouseState;
-        public static int tilesPerRow=5;
-        public static int infoBoxHeightPx = 40;
-#else
-        public readonly static bool levelEditorMode = true;
+        public static int tilesPerRow=10;
+        public static int infoBoxHeightPx = 20;
 #endif
         public static KeyboardState previousKeyboard;
         public static KeyboardState currentKeyboard;
-
-
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -53,15 +53,26 @@ namespace _999AD
 #if LEVEL_EDITOR
             mouseState = Mouse.GetState();
             previousMouseState = mouseState;
-            graphics.PreferredBackBufferWidth = screenWidth+ Tile.tileSize * tilesPerRow;
-            graphics.PreferredBackBufferHeight = screenHeight+ infoBoxHeightPx;
+            editorWidth= gameWidth + Tile.tileSize * tilesPerRow;
+            editorHeight= gameHeight + infoBoxHeightPx;
+            scale = MathHelper.Min(GraphicsDevice.DisplayMode.Width / editorWidth, GraphicsDevice.DisplayMode.Height / editorHeight);
+            nativeRenderTarget = new RenderTarget2D(GraphicsDevice, editorWidth, editorHeight);
+            viewportRectangle = new Rectangle(0,0,editorWidth * scale,editorHeight * scale);
+            graphics.PreferredBackBufferWidth = viewportRectangle.Width;
+            graphics.PreferredBackBufferHeight = viewportRectangle.Height;
 #else
-            graphics.PreferredBackBufferWidth = screenWidth;
-            graphics.PreferredBackBufferHeight = screenHeight;
+            scale = MathHelper.Min(GraphicsDevice.DisplayMode.Width / gameWidth, GraphicsDevice.DisplayMode.Height / gameHeight);
+            nativeRenderTarget = new RenderTarget2D(GraphicsDevice, gameWidth, gameHeight);
+            viewportRectangle = new Rectangle(
+                0,
+                0,
+                gameWidth * scale,
+                gameHeight * scale);
+            graphics.PreferredBackBufferWidth = viewportRectangle.Width;
+            graphics.PreferredBackBufferHeight = viewportRectangle.Height;
 #endif     
             //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
-            Gravity.Inizialize(2000);
             previousKeyboard = Keyboard.GetState();
 
             base.Initialize();
@@ -133,31 +144,11 @@ namespace _999AD
             levelEditor.Update(mouseState, previousMouseState, tilesPerRow, infoBoxHeightPx);
             CameraManager.Update(elapsedTime);
             previousMouseState = mouseState;
-
 #else
             RoomsManager.Update(elapsedTime);
             Player.Update(elapsedTime);
             ProjectilesManager.Update(elapsedTime);
             GameEvents.Update(elapsedTime);
-            if (currentKeyboard.IsKeyDown(Keys.Q))
-                FireBallsManager.ThrowAtPlayer(4, 4, 0.5f);
-            if (currentKeyboard.IsKeyDown(Keys.I))
-                FireBallsManager.ThrowInAllDirections(6, 500, 4);
-            if (currentKeyboard.IsKeyDown(Keys.E))
-                FireBallsManager.TrowWithinCircularSector(30,300,3, 120);
-            if (currentKeyboard.IsKeyDown(Keys.R))
-                FireBallsManager.TargetPlatform(new int[] { 0,1,3}, 8, 5);
-            if (currentKeyboard.IsKeyDown(Keys.T))
-                FireBallsManager.Sweep(1.5f, 6);
-            if (currentKeyboard.IsKeyDown(Keys.Y))
-                FireBallsManager.Spiral(30, 15, 0.2f, 300);
-            if (currentKeyboard.IsKeyDown(Keys.U))
-                FireBallsManager.RandomSweep(1, 3, 5);
-            if (currentKeyboard.IsKeyDown(Keys.L))
-                LavaGeyserManager.ShootGeyser(new float[] { 300, 800 }, 2);
-            if (currentKeyboard.IsKeyDown(Keys.J) && !previousKeyboard.IsKeyDown(Keys.J))
-                LavaGeyserManager.EquallySpaced(LavaGeyser.size*2.5f, 2, 0);
-
 #endif
             previousKeyboard = currentKeyboard;
             base.Update(gameTime);
@@ -169,17 +160,26 @@ namespace _999AD
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            GraphicsDevice.SetRenderTarget(nativeRenderTarget);
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
 #if LEVEL_EDITOR
-            levelEditor.Draw(spriteBatch, tilesPerRow, infoBoxHeightPx);
+            levelEditor.Draw(spriteBatch, tilesPerRow, infoBoxHeightPx, editorWidth, editorHeight);
 #else
             Camera.Draw(spriteBatch);
             RoomsManager.Draw(spriteBatch);
 #endif
             spriteBatch.End();
+            GraphicsDevice.SetRenderTarget(null);
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            spriteBatch.Draw(nativeRenderTarget, viewportRectangle, Color.White);
+#if LEVEL_EDITOR
+            levelEditor.DrawText(spriteBatch, infoBoxHeightPx);
+#endif
+            spriteBatch.End();
+
             base.Draw(gameTime);
         }
     }
