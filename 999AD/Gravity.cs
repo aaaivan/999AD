@@ -13,7 +13,7 @@ namespace _999AD
     {
         #region DECLARATIONS
         public static float gravityAcceleration= 1200;
-        public static float airFrictionCoeff = 3f;
+        public static float airFrictionCoeff = 1.2f;
         public static float wallFrictionCoeff = 4f;
         #endregion
         #region METHODS

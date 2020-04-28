@@ -26,7 +26,7 @@ namespace _999AD
         static bool isFacingRight=true;
         public static readonly float walkingSpeed= 100; //movement speed
         public static readonly float jumpingSpeed= -500; //jumping initial vertical speed
-        public static readonly float maxWallJumpXSpeed = 300; //wall jump initial horizontal speed
+        public static readonly float maxWallJumpXSpeed = 180; //wall jump initial horizontal speed
         static float wallJumpXSpeed = 0;
         static bool isTouchingTheGround=false;
         static bool isOnTheWall= false;
@@ -104,7 +104,8 @@ namespace _999AD
                 {
                     velocity.Y = jumpingSpeed;
                     elapsedTimeStuckOnWall = 0;
-                    canDoubleJump = true;
+                    canDoubleJump = false;
+                    isOnTheWall = false;
                     if (!isFacingRight)
                         wallJumpXSpeed= maxWallJumpXSpeed;
                     else
@@ -169,12 +170,19 @@ namespace _999AD
             }
             else
             {
-                velocity.X += wallJumpXSpeed;
                 if (Math.Abs(wallJumpXSpeed) > walkingSpeed)
-                    velocity.X = MathHelper.Clamp(velocity.X, -maxWallJumpXSpeed, maxWallJumpXSpeed);
+                    velocity.X = wallJumpXSpeed;
                 else
-                    velocity.X = MathHelper.Clamp(velocity.X, -walkingSpeed, walkingSpeed);
-                wallJumpXSpeed -= 2*wallJumpXSpeed*Gravity.airFrictionCoeff*elapsedTime; //2 magic number
+                {
+                    if (Math.Sign(wallJumpXSpeed) == -Math.Sign(velocity.X))
+                        wallJumpXSpeed = 0;
+                    else
+                    {
+                        velocity.X += wallJumpXSpeed;
+                        velocity.X = MathHelper.Clamp(velocity.X, -walkingSpeed, walkingSpeed);
+                    }
+                }
+                wallJumpXSpeed -= 2*wallJumpXSpeed*Gravity.airFrictionCoeff*elapsedTime;//2 is a magic number
                 if (isOnTheWall)
                 {
                     if (elapsedTimeStuckOnWall < maxTimeStuckOnwal)
@@ -240,7 +248,7 @@ namespace _999AD
             if (isTouchingTheGround)
                 velocity.X = 0;
             else
-                velocity.X *= 0.3f;
+                velocity.X *= 0.4f; //0.5f magic number
             #endregion
             position.Y += velocity.Y * elapsedTime;
             #region CHECK COLLISIONS WITH TILES

@@ -54,7 +54,7 @@ namespace _999AD
                 rectangle.X = (int)MathHelper.Clamp(Player.Center.X - Game1.gameWidth / (2f*scale),
                                                          0,
                                                          roomWidth - Game1.gameWidth/scale);
-                rectangle.Y = (int)MathHelper.Clamp(Player.Center.Y - Game1.gameHeight / (2f * scale),
+                rectangle.Y = (int)MathHelper.Clamp(Player.Center.Y+Player.height/2 - Game1.gameHeight / (2f * scale),
                                                         CameraManager.maxOffsetY,
                                                         roomHeight - Game1.gameHeight/scale - CameraManager.maxOffsetY);
             }
