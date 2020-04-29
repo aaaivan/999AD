@@ -36,7 +36,7 @@ namespace _999AD
         static float elapsedRecoveryTime = 0;
         static public readonly int bossWidth = 180;
         static public readonly int bossHeight = 280;
-        static public readonly Vector2 bossInitialMidPoint = new Vector2(FireBallsManager.fireballsCenter.X, 550);
+        static Vector2 bossInitialMidPoint;
         static public Vector2 bossMidPoint;
         static public readonly int wingsRelativeYPosition = 130;
         static float YSpeed = 0;
@@ -57,6 +57,7 @@ namespace _999AD
         #region CONSTRUCTOR
         public static void Inizialize(Texture2D _bossSpritesheet, Texture2D[] _wingSpritesheets)
         {
+            bossInitialMidPoint = new Vector2(FireBallsManager.fireballsCenter.X, 550);
             bossSpritesheet = _bossSpritesheet;
             wingSpritesheets = _wingSpritesheets;
             bossHP = maxBossHp;

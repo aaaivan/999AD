@@ -11,8 +11,11 @@ namespace _999AD
 {
     static class PlatformsManager
     {
+        #region DECLARATIONS
         public static PlatformsRoomManager[] platformsRoomManagers; //list of platform managers for each room
         public static int platformIndex; //index of the platform ridden by the player
+        #endregion
+        #region CONSTRUCTOR
         public static void Inizialize(Texture2D _spritesheet)
         {
             MovingPlatform.loadTextures(_spritesheet);
@@ -46,5 +49,6 @@ namespace _999AD
                 )
             };
         }
+        #endregion
     }
 }

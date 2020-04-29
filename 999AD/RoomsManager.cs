@@ -70,30 +70,11 @@ namespace _999AD
                     break;
             }
         }
-        //this function trigger events when a centain set of conditions is true
-        static void eventHandler(float elapsedTime)
-        {
-            switch (currentRoom)
-            {
-                case Rooms.finalBoss:
-                    if (Player.position.X>=5*Tile.tileSize && Player.position.Y>=25*Tile.tileSize-Player.height*2 &&
-                        GameEvents.happening == GameEvents.Events.none)
-                        GameEvents.TriggerEvent(GameEvents.Events.terrainCollapseFinalBoss);
-                    if (GameEvents.eventAlreadyHappened[(int)GameEvents.Events.terrainCollapseFinalBoss] &&
-                        GameEvents.happening == GameEvents.Events.none)
-                        GameEvents.TriggerEvent(GameEvents.Events.finalBossComesAlive);
-                    if (GameEvents.eventAlreadyHappened[(int)GameEvents.Events.finalBossComesAlive] &&
-                        GameEvents.happening == GameEvents.Events.none)
-                        GameEvents.TriggerEvent(GameEvents.Events.activatePlatformsFinalBoss);
-                    break;
-            }
-        }
         public static void Update(float elapsedTime)
         {
             switchRoom();
-            eventHandler(elapsedTime);
             CameraManager.Update(elapsedTime);
-            MapsManager.Update(elapsedTime);
+            MapsManager.maps[(int)currentRoom].Update(elapsedTime);
             if (currentRoom== Rooms.finalBoss)
             {
                 Camera.pointLocked.X = Player.Center.X;
@@ -103,7 +84,8 @@ namespace _999AD
                 LavaGeyserManager.Update(elapsedTime);
             }
             PlatformsManager.platformsRoomManagers[(int)currentRoom].Update(elapsedTime);
-
+            CollectablesManager.collectablesRoomManagers[(int)currentRoom].Update(elapsedTime);
+            MonologuesManager.monologuesRoomManagers[(int)currentRoom].Update(elapsedTime);
         }
         public static void Draw(SpriteBatch spriteBatch)
         {
@@ -111,12 +93,14 @@ namespace _999AD
             Player.Draw(spriteBatch);
             ProjectilesManager.Draw(spriteBatch);
             PlatformsManager.platformsRoomManagers[(int)currentRoom].Draw(spriteBatch);
+            CollectablesManager.collectablesRoomManagers[(int)currentRoom].Draw(spriteBatch);
             if (currentRoom == Rooms.finalBoss)
             {
                 FinalBoss.Draw(spriteBatch);
                 FireBallsManager.Draw(spriteBatch);
                 LavaGeyserManager.Draw(spriteBatch);
             }
+            MonologuesManager.monologuesRoomManagers[(int)currentRoom].Draw(spriteBatch);
         }
         #endregion
     }

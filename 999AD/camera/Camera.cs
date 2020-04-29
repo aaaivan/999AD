@@ -16,7 +16,7 @@ namespace _999AD
         public static Rectangle rectangle; //area framed in the camera
         static bool lockOnPlayer; //if false, the camera will follow "pointLocked"
         public static Vector2 pointLocked= new Vector2(0,0); //point followed by the camera
-        static readonly Rectangle screenRectangle = new Rectangle(0, 0, Game1.gameWidth, Game1.gameHeight);
+        static Rectangle screenRectangle;
         static int roomWidth;
         static int roomHeight;
         static float scale;
@@ -30,6 +30,10 @@ namespace _999AD
             roomHeight = MapsManager.maps[(int)_room].RoomHeightPx;
             rectangle = new Rectangle(0, CameraManager.maxOffsetY, (int)(Game1.gameWidth/scale), (int)(Game1.gameHeight/scale));
             lockOnPlayer = _lockOnPlayer;
+        }
+        public static void Inizialize()
+        {
+            screenRectangle = new Rectangle(0, 0, Game1.gameWidth, Game1.gameHeight);
         }
         #endregion
         #region PROPERTIES
