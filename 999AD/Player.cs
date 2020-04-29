@@ -35,6 +35,9 @@ namespace _999AD
         public static readonly float maxTimeStuckOnwal = 0.2f;
         static float elapsedTimeStuckOnWall=0f;
         public static readonly Vector2 projectileInitialVelocity = new Vector2(500, -300);
+        public static readonly int maxHealthPoints = 3;
+        static int healthPoints = 3;
+        static int deaths = 0;
         #endregion
         #region CONSTRUCTOR
         public static void Inizialize(Texture2D _spritesheet, Vector2 _position)

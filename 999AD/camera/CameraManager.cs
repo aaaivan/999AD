@@ -25,6 +25,7 @@ namespace _999AD
         #region CONSTRUCTOR
         public static void Inizialize(Texture2D[] _backgrounds)
         {
+            Camera.Inizialize();
             backgrounds = _backgrounds;
             offsetY = -maxOffsetY;
             SwitchCamera(RoomsManager.Rooms.room1);

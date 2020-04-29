@@ -16,8 +16,8 @@ namespace _999AD
         public static readonly int size = 20;
         public static readonly float radialShootingVelocity = 600;
         public static readonly float shotLifeTime = 3;
+        static Vector2 rotationCenter;
         Animation animation;
-        public readonly Vector2 rotationCenter = FireBallsManager.fireballsCenter; 
         float radialDistance;
         float angleRadiants;
         public float[] radialVelocities;
@@ -48,6 +48,7 @@ namespace _999AD
         public static void Inizialize(Texture2D _spritesheet)
         {
             spritesheet = _spritesheet;
+            rotationCenter = FireBallsManager.fireballsCenter;
         }
         #endregion
         #region PRPERTIES

@@ -58,6 +58,10 @@ namespace _999AD
         {
             get { return active; }
         }
+        public float TotalTime
+        {
+            get { return timePerFrame * sourceRectangles.Length; }
+        }
         #endregion
         #region METHODS
         public void Update(float elapsedTime)
@@ -77,15 +81,16 @@ namespace _999AD
                 }
             }
         }
-        public float TotalTime()
-        {
-            return timePerFrame * sourceRectangles.Length;
-        }
         public void Reset()
         {
             elapsedFrameTime = 0;
             currentFrame = 0;
             active = true;
+        }
+        public Animation DeepCopy()
+        {
+            Animation newAnimation = new Animation(sourceRectangles, timePerFrame, loop, keepLastFrameWhenInactive);
+            return newAnimation;
         }
         #endregion
     }

@@ -14,10 +14,6 @@ namespace _999AD
     {
         #region DECLARATIONS
         public static RoomMap[] maps = new RoomMap[(int)RoomsManager.Rooms.total];
-        static bool removeRowSFX = false;
-        static float timeBoforeRemovingNextTile = 0;
-        static float timer = 0f;
-        static List<int[]> tilesToRemove = new List<int[]>();
 
         #endregion
         #region CONSTRUCTOR
@@ -25,12 +21,6 @@ namespace _999AD
         {
             Tile.LoadTextures( _spritesheet);
             loadMaps();
-        }
-        #endregion
-        #region PROPERTIES
-        public static int NumberOfTilesToRemove
-        {
-            get { return tilesToRemove.Count; }
         }
         #endregion
         #region METHODS
@@ -83,32 +73,6 @@ namespace _999AD
                         (Game1.gameHeight + 2* CameraManager.maxOffsetY + (int)(Tile.tileSize * CameraManager.scaleByRoom[room]) - 1) / (int)(Tile.tileSize * CameraManager.scaleByRoom[room]),
                         (Game1.gameWidth + (int)(Tile.tileSize * CameraManager.scaleByRoom[room]) - 1) / (int)(Tile.tileSize * CameraManager.scaleByRoom[room]));
                 }
-            }
-        }
-        public static void Update(float elapsedTime)
-        {
-            if (removeRowSFX)
-            {
-                timer += elapsedTime;
-                if(timer>=timeBoforeRemovingNextTile)
-                {
-                    maps[(int)RoomsManager.CurrentRoom].array[tilesToRemove[0][0], tilesToRemove[0][1]].tileType = Tile.TileType.empty;
-                    tilesToRemove.RemoveAt(0);
-                    timer = 0;
-                    if (tilesToRemove.Count==0)
-                    {
-                        removeRowSFX = false;
-                    }
-                }
-            }
-        }
-        public static void RemoveRowOfTiles(List<int[]> _tilesToRemove, float _timeBeforeRemovingNextTile)
-        {
-            if (!removeRowSFX)
-            {
-                removeRowSFX = true;
-                tilesToRemove = _tilesToRemove;
-                timeBoforeRemovingNextTile = _timeBeforeRemovingNextTile;
             }
         }
         #endregion

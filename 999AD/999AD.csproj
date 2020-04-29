@@ -44,6 +44,9 @@
     <Compile Include="Animation.cs" />
     <Compile Include="camera\Camera.cs" />
     <Compile Include="camera\CameraManager.cs" />
+    <Compile Include="Collectables\CollectablesRoomManager.cs" />
+    <Compile Include="Collectables\Collectable.cs" />
+    <Compile Include="Collectables\CollectablesManager.cs" />
     <Compile Include="finalBoss\FinalBoss.cs" />
     <Compile Include="finalBoss\FireBall.cs" />
     <Compile Include="finalBoss\FireBallsManager.cs" />
@@ -53,6 +56,9 @@
     <Compile Include="Gravity.cs" />
     <Compile Include="finalBoss\LavaGeyserManager.cs" />
     <Compile Include="map\LevelEditor.cs" />
+    <Compile Include="monologues\Monologue.cs" />
+    <Compile Include="monologues\MonologuesManager.cs" />
+    <Compile Include="monologues\MonologuesRoomManager.cs" />
     <Compile Include="projectile\Projectile.cs" />
     <Compile Include="projectile\ProjectilesManager.cs" />
     <Compile Include="map\RoomMap.cs" />
@@ -80,6 +86,7 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <None Include="app.manifest" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

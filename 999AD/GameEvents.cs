@@ -33,8 +33,11 @@ namespace _999AD
         }
         public static void Update(float elapsedTime)
         {
-            if (happening== Events.none)
+            if (happening == Events.none)
+            {
+                eventHandler(elapsedTime);
                 return;
+            }
             elapsedEventsDuration += elapsedTime;
             if (elapsedEventsDuration >= eventsDuration[(int)happening])
             {
@@ -43,6 +46,21 @@ namespace _999AD
                 happening = Events.none;
             }
 
+        }
+        //this function trigger events when a centain set of conditions is true
+        static void eventHandler(float elapsedTime)
+        {
+            switch (RoomsManager.CurrentRoom)
+            {
+                case RoomsManager.Rooms.finalBoss:
+                    if (Player.position.X >= 5 * Tile.tileSize && Player.position.Y >= 25 * Tile.tileSize - Player.height * 2)
+                        TriggerEvent(Events.terrainCollapseFinalBoss);
+                    if (eventAlreadyHappened[(int)Events.terrainCollapseFinalBoss])
+                        TriggerEvent(Events.finalBossComesAlive);
+                    if (eventAlreadyHappened[(int)Events.finalBossComesAlive])
+                        TriggerEvent(Events.activatePlatformsFinalBoss);
+                    break;
+            }
         }
         public static void TriggerEvent(Events _event)
         {
@@ -60,7 +78,7 @@ namespace _999AD
                             tilesToRemove.Add(new int[2] { 25, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - col - 1 });
                         }
                         CameraManager.shakeForTime(eventsDuration[(int)Events.terrainCollapseFinalBoss]);
-                        MapsManager.RemoveRowOfTiles(tilesToRemove, eventsDuration[(int)Events.terrainCollapseFinalBoss]/MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles);
+                        MapsManager.maps[(int)RoomsManager.CurrentRoom].RemoveRowOfTiles(tilesToRemove, eventsDuration[(int)Events.terrainCollapseFinalBoss]/MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles);
                         happening = Events.terrainCollapseFinalBoss;
                         elapsedEventsDuration = 0;
                     }

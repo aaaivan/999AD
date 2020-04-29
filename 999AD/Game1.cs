@@ -18,8 +18,8 @@ namespace _999AD
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        public static int gameWidth = 384; //pixels on the x axis
-        public static int gameHeight = 216; //pixels on the y axis
+        public static readonly  int gameWidth = 384; //pixels on the x axis
+        public static readonly int gameHeight = 216; //pixels on the y axis
         public static Rectangle viewportRectangle;
         RenderTarget2D nativeRenderTarget;
         public static int scale;
@@ -114,6 +114,11 @@ namespace _999AD
                                                    Content.Load<Texture2D>(@"characters\healthyWing"),
                                                    Content.Load<Texture2D>(@"characters\damagedWing"),
                                                    Content.Load<Texture2D>(@"characters\deadWing")});
+            CollectablesManager.Inizialize(Content.Load<Texture2D>("collectables"));
+            MonologuesManager.Inizialize(Content.Load<Texture2D>("dialogueBox"),
+                                         Content.Load<Texture2D>("arrowDialogue"),
+                                         Content.Load<Texture2D>("interact"),
+                                         Content.Load<SpriteFont>(@"fonts\File"));
 #endif
         }
 

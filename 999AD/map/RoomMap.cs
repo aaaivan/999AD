@@ -15,6 +15,10 @@ namespace _999AD
         public readonly int roomHeightTiles; //room width in tiles
         public readonly int roomWidthTiles; //room height in tiles
         public Tile[,] array; //array of all the tiles forming the room
+        static bool removeRowSFX = false;
+        static float timeBoforeRemovingNextTile = 0;
+        static float timer = 0f;
+        static List<int[]> tilesToRemove = new List<int[]>();
         #endregion
         #region CONSTRACTOR
         public RoomMap(int _roomHeightTiles, int _roomWidthTiles)
@@ -43,6 +47,33 @@ namespace _999AD
         }
         #endregion
         #region METHODS
+        public void Update(float elapsedTime)
+        {
+            if (removeRowSFX)
+            {
+                timer += elapsedTime;
+                if (timer >= timeBoforeRemovingNextTile)
+                {
+                    array[tilesToRemove[0][0], tilesToRemove[0][1]].tileType = Tile.TileType.empty;
+                    tilesToRemove.RemoveAt(0);
+                    timer = 0;
+                    if (tilesToRemove.Count == 0)
+                    {
+                        removeRowSFX = false;
+                    }
+                }
+            }
+        }
+        public void RemoveRowOfTiles(List<int[]> _tilesToRemove, float _timeBeforeRemovingNextTile)
+        {
+            if (!removeRowSFX)
+            {
+                removeRowSFX = true;
+                tilesToRemove = _tilesToRemove;
+                timeBoforeRemovingNextTile = _timeBeforeRemovingNextTile;
+            }
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             for (int row = Camera.rectangle.Y/Tile.tileSize; row <= (Camera.rectangle.Bottom-1) / Tile.tileSize; row++)
