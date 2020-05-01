@@ -48,7 +48,7 @@ namespace _999AD
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(spritesheet, Camera.RelativeRectangle(Rectangle), animation.Frame, Color.White);
+            spriteBatch.Draw(spritesheet, Camera.RelativeRectangle(position, width, height), animation.Frame, Color.White);
         }
         #endregion
     }

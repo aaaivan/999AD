@@ -23,6 +23,9 @@ namespace _999AD
         public static Rectangle viewportRectangle;
         RenderTarget2D nativeRenderTarget;
         public static int scale;
+        //debug
+        SpriteFont spriteFont;
+
 #if LEVEL_EDITOR
         LevelEditor levelEditor;
         public static int editorWidth;
@@ -87,6 +90,8 @@ namespace _999AD
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            spriteFont = Content.Load<SpriteFont>(@"fonts\monologue");
+
             MapsManager.Inizialize(Content.Load<Texture2D>("tiles"));
             CameraManager.Inizialize
             (
@@ -94,7 +99,11 @@ namespace _999AD
                 {
                     Content.Load<Texture2D>(@"backgrounds\room1"),
                     Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\finalBoss")
+                    Content.Load<Texture2D>(@"backgrounds\finalBoss"),
+                    Content.Load<Texture2D>(@"backgrounds\escape"),
+                    Content.Load<Texture2D>(@"backgrounds\escape"),
+                    Content.Load<Texture2D>(@"backgrounds\escape"),
+                    Content.Load<Texture2D>(@"backgrounds\escape")
                 }
             );
 #if LEVEL_EDITOR
@@ -104,11 +113,12 @@ namespace _999AD
 #else
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
             ProjectilesManager.Inizialize(Content.Load<Texture2D>("projectile"));
-            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(20,0));
+            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(3980,16));
             RoomsManager.Inizialize();
             GameEvents.Inizialize();
             FireBallsManager.Inizialize(Content.Load<Texture2D>("fireball"), Content.Load<Texture2D>("laser"));
-            LavaGeyserManager.Inizialize(Content.Load<Texture2D>("lavaGeyser"));
+            LavaGeyserManager.Inizialize(Content.Load<Texture2D>("lavaGeyser"),
+                                         Content.Load<Texture2D>("whiteTile"));
             FinalBoss.Inizialize(Content.Load<Texture2D>(@"characters\finalBoss"),
                                  new Texture2D[] { Content.Load<Texture2D>(@"characters\stoneWing"),
                                                    Content.Load<Texture2D>(@"characters\healthyWing"),
@@ -118,7 +128,7 @@ namespace _999AD
             MonologuesManager.Inizialize(Content.Load<Texture2D>("dialogueBox"),
                                          Content.Load<Texture2D>("arrowDialogue"),
                                          Content.Load<Texture2D>("interact"),
-                                         Content.Load<SpriteFont>(@"fonts\File"));
+                                         Content.Load<SpriteFont>(@"fonts\monologue"));
 #endif
         }
 
@@ -175,6 +185,9 @@ namespace _999AD
 #else
             Camera.Draw(spriteBatch);
             RoomsManager.Draw(spriteBatch);
+            //debug
+            MouseState mouseState = Mouse.GetState();
+            spriteBatch.DrawString(spriteFont, (mouseState.X/5 + (int)Camera.position.X) + "," + (mouseState.Y/5 + (int)Camera.position.Y), new Vector2(10, 10), Color.Blue);
 #endif
             spriteBatch.End();
             GraphicsDevice.SetRenderTarget(null);

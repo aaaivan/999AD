@@ -13,7 +13,7 @@ namespace _999AD
     {
         #region DECLARATIONS
         static Texture2D[] backgrounds = new Texture2D[(int)RoomsManager.Rooms.total];
-        public static readonly float[] scaleByRoom = new float[(int)RoomsManager.Rooms.total] { 1, 1, 0.625f };
+        public static readonly float[] scaleByRoom = new float[(int)RoomsManager.Rooms.total] { 1, 1, 0.5f, 1,1,1,1 };
         public static readonly int maxOffsetY = 2; //amplitude of the rumble
         static bool shaking = false;
         static int offsetY; //current offset
@@ -49,7 +49,7 @@ namespace _999AD
             Camera.Update(shaking);
             if (shaking)
             {
-                Camera.rectangle.Y += offsetY;
+                Camera.position.Y += offsetY;
                 elapsedShakingTime += elapsedTime;
                 if (elapsedShakingTime >= shakingTime)
                     shaking = false;

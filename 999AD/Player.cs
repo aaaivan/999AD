@@ -13,19 +13,19 @@ namespace _999AD
     {
         enum AnimationTypes
         {
-            idle, walk, jump, fall, attack, die, total
+            idle, walk, jump, attck, fall, hurt, total
         }
         #region DECLARATIONS
         static Texture2D spritesheet;
         static List<Animation> animations= new List<Animation>();
         static AnimationTypes currentAnimation;
         public static Vector2 position;
-        public static readonly int height= 24;
-        public static readonly int width= 16;
+        public static readonly int height= 22;
+        public static readonly int width= 12;
         static Vector2 velocity= Vector2.Zero;
         static bool isFacingRight=true;
         public static readonly float walkingSpeed= 100; //movement speed
-        public static readonly float jumpingSpeed= -500; //jumping initial vertical speed
+        public static readonly float jumpingSpeed= -400; //jumping initial vertical speed
         public static readonly float maxWallJumpXSpeed = 180; //wall jump initial horizontal speed
         static float wallJumpXSpeed = 0;
         static bool isTouchingTheGround=false;
@@ -44,15 +44,14 @@ namespace _999AD
         {
             spritesheet = _spritesheet;
             position = _position;
-            //fill following assignments with sprite info
-            animations.Add(new Animation(new Rectangle(0, 0, 16*3, 24), 16, 24, 3, 0.3f, true));
-            animations.Add( new Animation( new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
-            animations.Add(new Animation( new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, false, true));
-            animations.Add(new Animation( new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
-            animations.Add(new Animation( new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
-            animations.Add(new Animation( new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, true));
-            animations.Add(new Animation( new Rectangle(0, 0, 0, 0), 0, 0, 0, 0f, false));
-            currentAnimation = AnimationTypes.idle;
+            //fill following statements with sprite info
+            animations.Add(new Animation(new Rectangle(0, 0, 128, 24), 16, 24, 8, 0.3f, true));
+            animations.Add( new Animation( new Rectangle(0, 24, 160,24), 16, 24, 10, 0.06f, true));
+            animations.Add(new Animation( new Rectangle(0, 48, 80, 24), 16, 24, 5, 0f, false, true));
+            animations.Add(new Animation( new Rectangle(0, 72, 112, 24), 16, 24, 7, 0f, true));
+            animations.Add(new Animation( new Rectangle(0, 96, 64, 24), 16, 24, 4, 0f, true));
+            animations.Add(new Animation( new Rectangle(0, 120, 96, 24), 16, 24, 6, 0f, true));
+            currentAnimation = AnimationTypes.walk;
         }
         #endregion
         #region PROPERTIES
@@ -60,14 +59,6 @@ namespace _999AD
         public static Rectangle CollisionRectangle
         {
             get { return new Rectangle((int)position.X, (int)position.Y, width, height); }
-        }
-        //return the player's draw rectangle
-        public static Rectangle DrawRectangle
-        {
-            get { return new Rectangle((int)(Center.X-animations[(int)currentAnimation].Frame.Width/2),
-                                       (int)position.Y - animations[(int)currentAnimation].Frame.Height+height,
-                                       animations[(int)currentAnimation].Frame.Width,
-                                       animations[(int)currentAnimation].Frame.Height); }
         }
         //return the center of the player's rectangle
         public static Vector2 Center
@@ -100,6 +91,10 @@ namespace _999AD
                 if (isTouchingTheGround)
                 {
                     velocity.Y = jumpingSpeed;
+                    if (Game1.currentKeyboard.IsKeyDown(Keys.D))
+                        wallJumpXSpeed = maxWallJumpXSpeed;
+                    else if (Game1.currentKeyboard.IsKeyDown(Keys.A))
+                        wallJumpXSpeed = -maxWallJumpXSpeed;
                     isTouchingTheGround = false;
                     isOnMovingPlatform = false;
                 }
@@ -124,12 +119,10 @@ namespace _999AD
             if (Game1.currentKeyboard.IsKeyDown(Keys.D))
             {
                 velocity.X += walkingSpeed;
-                isFacingRight = true;
             }
             if (Game1.currentKeyboard.IsKeyDown(Keys.A))
             {
                 velocity.X -= walkingSpeed;
-                isFacingRight = false;
             }
             if (Game1.currentKeyboard.IsKeyDown(Keys.Space) && !Game1.previousKeyboard.IsKeyDown(Keys.Space))
             {
@@ -141,9 +134,9 @@ namespace _999AD
         {
             #region CHECK IF THE PLAYER IS ON THE WALL
             int topRow = (int)MathHelper.Clamp(position.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
-            int btmRow = (int)MathHelper.Clamp((position.Y + height - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
+            int btmRow = (int)MathHelper.Clamp((position.Y + height - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
             int leftCol = (int)MathHelper.Clamp(position.X / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
-            int rightCol = (int)MathHelper.Clamp((position.X + width - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
+            int rightCol = (int)MathHelper.Clamp((position.X + width - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
             if (isOnTheWall)
             {
                 isOnTheWall = false;
@@ -207,12 +200,16 @@ namespace _999AD
                     isTouchingTheGround = false;
             }
             #endregion
+            if (velocity.X > 0)
+                isFacingRight = true;
+            else if (velocity.X < 0)
+                isFacingRight = false;
             position.X += velocity.X * elapsedTime;
             #region CHECK COLLISION WITH SOLID TILES
             leftCol = (int)MathHelper.Clamp(position.X / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
-            rightCol = (int)MathHelper.Clamp((position.X + width - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
+            rightCol = (int)MathHelper.Clamp((position.X + width - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
             topRow = (int)MathHelper.Clamp(position.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
-            btmRow = (int)MathHelper.Clamp((position.Y + height - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
+            btmRow = (int)MathHelper.Clamp((position.Y + height - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
 
             //check right-hand side
             if (velocity.X > 0)
@@ -251,31 +248,38 @@ namespace _999AD
             if (isTouchingTheGround)
                 velocity.X = 0;
             else
-                velocity.X *= 0.4f; //0.5f magic number
+                velocity.X *= 0.4f; //0.4f magic number
             #endregion
             position.Y += velocity.Y * elapsedTime;
             #region CHECK COLLISIONS WITH TILES
             topRow = (int)MathHelper.Clamp(position.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
-            btmRow = (int)MathHelper.Clamp((position.Y + height - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
+            btmRow = (int)MathHelper.Clamp((position.Y + height - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
             leftCol = (int)MathHelper.Clamp(position.X / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
-            rightCol = (int)MathHelper.Clamp((position.X + width - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
+            rightCol = (int)MathHelper.Clamp((position.X + width - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
 
             //check bottom
             if (velocity.Y > 0)
             {
-                for (int col = leftCol; col <= rightCol; col++)
+                int span= ((int)(velocity.Y*elapsedTime+Tile.tileSize)/ Tile.tileSize);
+                for (int i = span - 1; i >= 0; i--)
                 {
-                    if (MapsManager.maps[(int)RoomsManager.CurrentRoom].array[btmRow, col].isSolid())
+                    for (int col = leftCol; col <= rightCol; col++)
                     {
-                        position.Y = btmRow * Tile.tileSize - height;
-                        velocity.Y = 0;
-                        wallJumpXSpeed = 0;
-                        isTouchingTheGround = true;
-                        isOnMovingPlatform = false;
-                        canDoubleJump = true;
-                        isOnTheWall = false;
-                        elapsedTimeStuckOnWall = 0;
-                        break;
+                        if (btmRow - i < 0)
+                            break;
+                        if (MapsManager.maps[(int)RoomsManager.CurrentRoom].array[btmRow-i, col].isSolid())
+                        {
+                            position.Y = (btmRow-i) * Tile.tileSize - height;
+                            velocity.Y = 0;
+                            wallJumpXSpeed = 0;
+                            isTouchingTheGround = true;
+                            isOnMovingPlatform = false;
+                            canDoubleJump = true;
+                            isOnTheWall = false;
+                            elapsedTimeStuckOnWall = 0;
+                            i = 0;
+                            break;
+                        }
                     }
                 }
             }
@@ -329,7 +333,12 @@ namespace _999AD
         }
         public static void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(spritesheet, Camera.RelativeRectangle(DrawRectangle) ,animations[(int)currentAnimation].Frame, Color.White, 0f, Vector2.Zero,
+            spriteBatch.Draw(spritesheet,
+                Camera.RelativeRectangle(new Vector2(Center.X - animations[(int)currentAnimation].Frame.Width / 2,
+                                                     position.Y - animations[(int)currentAnimation].Frame.Height + height),
+                                         animations[(int)currentAnimation].Frame.Width,
+                                         animations[(int)currentAnimation].Frame.Height),
+                animations[(int)currentAnimation].Frame, Color.White, 0f, Vector2.Zero,
                 isFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
         }
         #endregion

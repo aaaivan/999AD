@@ -34,6 +34,22 @@ namespace _999AD
                     new Monologue[]
                     {
                     }),
+                new MonologuesRoomManager(
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(
+                    new Monologue[]
+                    {
+                    })
             };
         }
         #endregion

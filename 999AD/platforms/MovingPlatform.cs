@@ -14,7 +14,9 @@ namespace _999AD
         #region DECLARATIONS
         public enum TextureType
         {
-            texture1, texture2, texture3, total
+            texture1, texture2, texture3,
+            fallingFloor272_40, fallingFloor296_40, fallingFloor112_216,
+            total
         }
         public static Texture2D spritesheet; //textures of all the platforms
         public static Rectangle[] sourceRectangles;
@@ -34,11 +36,12 @@ namespace _999AD
         readonly float centerRestingTime; //indicates for how many seconds the rotatationCenter rests at the starting and ending points
         float elapsedRestingTime = 0;
         public bool active; //if false the platform does not move
+        bool moveOnce;
         #endregion
         #region CONSTRUCTOR
         public MovingPlatform(TextureType _textureType, int _radius,
             Vector2 _centerStartingPoint, Vector2 _centerEndingPoint, float _angularSpeed, float _linearSpeed_pixelsPerSecond,
-            bool _active=true, float _startingAngleDegrees=0, float _normalizedLinearProression = 0, float _centerRestingTime = 0f)
+            bool _active=true, float _startingAngleDegrees=0, float _normalizedLinearProression = 0, float _centerRestingTime = 0f, bool _moveOnce=false)
         {
             textureType = _textureType;
             radius = _radius;
@@ -50,18 +53,25 @@ namespace _999AD
             angularSpeed = _angularSpeed;
             linearSpeed = _linearSpeed_pixelsPerSecond / (Vector2.Distance(centerEndingPoint, centerStartingPoint));
             centerRestingTime = _centerRestingTime;
+            elapsedRestingTime = centerRestingTime;
             normalizedLinearProgression = MathHelper.Clamp(_normalizedLinearProression, 0, 1);
             active = _active;
             rotationCenter = Vector2.Lerp(centerStartingPoint, centerEndingPoint, normalizedLinearProgression);
             platformMidpointPosition = new Vector2(rotationCenter.X + radius * (float)Math.Sin(angleRadiants),
                 rotationCenter.Y - radius * (float)Math.Cos(angleRadiants));
+            moveOnce = _moveOnce;
         }
         public static void loadTextures(Texture2D _spritesheet)
         {
             spritesheet = _spritesheet;
-            sourceRectangles = new Rectangle[(int)TextureType.total] { new Rectangle(0, 0, 100, 10),
-                                                                       new Rectangle(0, 10, 100, 20),
-                                                                       new Rectangle(0, 30, 100, 30) };
+            sourceRectangles = new Rectangle[(int)TextureType.total]
+            { new Rectangle(0, 0, 50, 5),
+              new Rectangle(0, 5, 50, 10),
+              new Rectangle(0, 15, 50, 15),
+              new Rectangle(0, 30, 272, 40),
+              new Rectangle(0, 70, 292, 40),
+              new Rectangle(0, 110, 112, 216)
+            };
         }
         #endregion
         #region PROPERTIES
@@ -105,19 +115,23 @@ namespace _999AD
                     return;
                 }
                 normalizedLinearProgression += linearSpeed * elapsedTime;
-                if (normalizedLinearProgression >= 1)
+                if (normalizedLinearProgression > 1)
                 {
                     normalizedLinearProgression = 1;
                     linearSpeed *= -1;
                     elapsedRestingTime = 0;
+                    if (moveOnce)
+                        active = false;
                 }
-                else if (normalizedLinearProgression <= 0)
+                else if (normalizedLinearProgression < 0)
                 {
                     normalizedLinearProgression = 0;
                     linearSpeed *= -1;
                     elapsedRestingTime = 0;
+                    if (moveOnce)
+                        active = false;
                 }
-                rotationCenter= Vector2.Lerp(centerStartingPoint, centerEndingPoint, normalizedLinearProgression);
+                rotationCenter = Vector2.Lerp(centerStartingPoint, centerEndingPoint, normalizedLinearProgression);
                 angleRadiants += angularSpeed * elapsedTime;
                 if (angleRadiants >= MathHelper.Pi * 2)
                     angleRadiants -= MathHelper.Pi * 2;
@@ -129,7 +143,7 @@ namespace _999AD
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(spritesheet, Camera.RelativeRectangle(Rectangle),
+            spriteBatch.Draw(spritesheet, Camera.RelativeRectangle(Position, width, height),
                 sourceRectangles[(int)textureType], Color.White);
         }
         #endregion

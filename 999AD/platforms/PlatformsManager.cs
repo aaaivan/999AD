@@ -25,8 +25,6 @@ namespace _999AD
                 (
                     new MovingPlatform[]
                     {
-                        //new MovingPlatform(MovingPlatform.TextureType.texture2, 50, new Vector2(100, 50), new Vector2(600, 100), 3, 100),
-                        new MovingPlatform(MovingPlatform.TextureType.texture1, 0, new Vector2(400,200), new Vector2(600,400), 0,100)
                     }
                 ),
                 new PlatformsRoomManager //room2
@@ -39,12 +37,49 @@ namespace _999AD
                 (
                     new MovingPlatform[]
                     {
-                        new MovingPlatform(MovingPlatform.TextureType.texture2, 340, FireBallsManager.fireballsCenter, Vector2.Zero, 1,0,false,0),
-                        new MovingPlatform(MovingPlatform.TextureType.texture2, 340, FireBallsManager.fireballsCenter, Vector2.Zero, 1,0,false,120),
-                        new MovingPlatform(MovingPlatform.TextureType.texture2, 340, FireBallsManager.fireballsCenter,Vector2.Zero, 1,0,false,240),
-                        new MovingPlatform(MovingPlatform.TextureType.texture2, 230, FireBallsManager.fireballsCenter,Vector2.Zero, -1,0,false,180),
-                        new MovingPlatform(MovingPlatform.TextureType.texture2, 230, FireBallsManager.fireballsCenter, Vector2.Zero,-1,0,false,60),
-                        new MovingPlatform(MovingPlatform.TextureType.texture2, 230, FireBallsManager.fireballsCenter,Vector2.Zero, -1,0,false,300)
+                        new MovingPlatform(MovingPlatform.TextureType.texture2, 205, FireBallsManager.fireballsCenter, Vector2.Zero, 0.5f,0,false,0),
+                        new MovingPlatform(MovingPlatform.TextureType.texture2, 205, FireBallsManager.fireballsCenter, Vector2.Zero, 0.5f,0,false,120),
+                        new MovingPlatform(MovingPlatform.TextureType.texture2, 205, FireBallsManager.fireballsCenter,Vector2.Zero, 0.5f,0,false,240),
+                        new MovingPlatform(MovingPlatform.TextureType.texture2, 140, FireBallsManager.fireballsCenter,Vector2.Zero, -0.5f,0,false,180),
+                        new MovingPlatform(MovingPlatform.TextureType.texture2, 140, FireBallsManager.fireballsCenter, Vector2.Zero,-0.5f,0,false,60),
+                        new MovingPlatform(MovingPlatform.TextureType.texture2, 140, FireBallsManager.fireballsCenter,Vector2.Zero, -0.5f,0,false,300),
+                        new MovingPlatform(MovingPlatform.TextureType.texture2, 0,
+                                            new Vector2(100, MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomHeightPx+50),
+                                            new Vector2(100, 72), 0,30, false, 0,0,0,true)
+                    }
+                ),
+                new PlatformsRoomManager //escape0
+                (
+                    new MovingPlatform[]
+                    {
+                        new MovingPlatform(MovingPlatform.TextureType.fallingFloor272_40, 0,
+                                        new Vector2(MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomWidthtPx-553, 300),
+                                        new Vector2(MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomWidthtPx-553, 380), 0,5, false, 0,0,0, true),
+                        new MovingPlatform(MovingPlatform.TextureType.fallingFloor272_40, 0,
+                                        new Vector2(MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomWidthtPx-869, 300),
+                                        new Vector2(MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomWidthtPx-869, 380), 0,5, false, 0,0,0, true),
+                        new MovingPlatform(MovingPlatform.TextureType.fallingFloor112_216, 0,
+                                        new Vector2(MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomWidthtPx-1280, MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomHeightPx+108),
+                                        new Vector2(MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomWidthtPx-1280, MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomHeightPx-84),
+                                        0,20, false, 0,0,0, true)
+                    }
+                ),
+                new PlatformsRoomManager //escape1
+                (
+                    new MovingPlatform[]
+                    {
+                    }
+                ),
+                new PlatformsRoomManager //escape2
+                (
+                    new MovingPlatform[]
+                    {
+                    }
+                ),
+                new PlatformsRoomManager //escape3
+                (
+                    new MovingPlatform[]
+                    {
                     }
                 )
             };

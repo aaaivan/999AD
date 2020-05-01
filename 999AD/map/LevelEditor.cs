@@ -48,8 +48,9 @@ namespace _999AD
         //save maps to file
         void saveMaps()
         {
-            for (int room=0; room< (int)RoomsManager.Rooms.total; room++)
-            {
+            //for (int room=0; room< (int)RoomsManager.Rooms.total; room++)
+            //{
+            int room = currentRoomNumber;
                 StreamWriter outputStream = new StreamWriter("mapRoom_" + room + ".txt");
                 try
                 {
@@ -69,15 +70,15 @@ namespace _999AD
                 {
                     message = "Save FAILED!\nAsk Ivan.";
                 }
-            }
+            //}
         }
         //return the coordinates of the tile hovered by the pointer
         Point TileFromPointerLocation(MouseState mouseState)
         {
             int tileRow = 0;
             int tileCol = 0;
-            tileCol = ((int)(mouseState.X/(CameraManager.scaleByRoom[currentRoomNumber]*Game1.scale)) + Camera.rectangle.X) / Tile.tileSize;
-            tileRow = ((int)(mouseState.Y / (CameraManager.scaleByRoom[currentRoomNumber] * Game1.scale)) + Camera.rectangle.Y) / Tile.tileSize;
+            tileCol = ((int)(mouseState.X/(CameraManager.scaleByRoom[currentRoomNumber]*Game1.scale)) + Camera.Rectangle.X) / Tile.tileSize;
+            tileRow = ((int)(mouseState.Y / (CameraManager.scaleByRoom[currentRoomNumber] * Game1.scale)) + Camera.Rectangle.Y) / Tile.tileSize;
             tileCol = MathHelper.Clamp(tileCol, 0, MapsManager.maps[currentRoomNumber].roomWidthTiles - 1);
             tileRow = MathHelper.Clamp(tileRow, 0, MapsManager.maps[currentRoomNumber].roomHeightTiles - 1);
             return new Point(tileCol, tileRow);
@@ -555,23 +556,23 @@ namespace _999AD
             MapsManager.maps[currentRoomNumber].Draw(spriteBatch);
             if (solidView)
             {
-                for (int row = Camera.rectangle.Y / Tile.tileSize; row <= (Camera.rectangle.Bottom - 1) / Tile.tileSize; row++)
+                for (int row = Camera.Rectangle.Y / Tile.tileSize; row <= (Camera.Rectangle.Bottom - 1) / Tile.tileSize; row++)
                 {
-                    for (int col = Camera.rectangle.X / Tile.tileSize; col <= (Camera.rectangle.Right - 1) / Tile.tileSize; col++)
+                    for (int col = Camera.Rectangle.X / Tile.tileSize; col <= (Camera.Rectangle.Right - 1) / Tile.tileSize; col++)
                     {
                         if (MapsManager.maps[currentRoomNumber].array[row, col].isSolid())
-                            spriteBatch.Draw(whiteTexture, Camera.RelativeRectangle(new Rectangle(col * Tile.tileSize, row * Tile.tileSize, Tile.tileSize, Tile.tileSize)), Color.Red * 0.3f);
+                            spriteBatch.Draw(whiteTexture, Camera.RelativeRect(new Rectangle(col * Tile.tileSize, row * Tile.tileSize, Tile.tileSize, Tile.tileSize)), Color.Red * 0.3f);
                     }
                 }
             }
             if (deadlyView)
             {
-                for (int row = Camera.rectangle.Y / Tile.tileSize; row <= (Camera.rectangle.Bottom - 1) / Tile.tileSize; row++)
+                for (int row = Camera.Rectangle.Y / Tile.tileSize; row <= (Camera.Rectangle.Bottom - 1) / Tile.tileSize; row++)
                 {
-                    for (int col = Camera.rectangle.X / Tile.tileSize; col <= (Camera.rectangle.Right - 1) / Tile.tileSize; col++)
+                    for (int col = Camera.Rectangle.X / Tile.tileSize; col <= (Camera.Rectangle.Right - 1) / Tile.tileSize; col++)
                     {
                         if (MapsManager.maps[currentRoomNumber].array[row, col].isDeadly())
-                            spriteBatch.Draw(whiteTexture, Camera.RelativeRectangle(new Rectangle(col * Tile.tileSize, row * Tile.tileSize, Tile.tileSize, Tile.tileSize)), Color.Purple * 0.3f);
+                            spriteBatch.Draw(whiteTexture, Camera.RelativeRect(new Rectangle(col * Tile.tileSize, row * Tile.tileSize, Tile.tileSize, Tile.tileSize)), Color.Purple * 0.3f);
                     }
                 }
             }

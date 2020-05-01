@@ -19,7 +19,7 @@ namespace _999AD
         static Texture2D spritesheet;
         static Animation[] animations;
         Animation animation;
-        Rectangle rectangle;
+        public readonly Rectangle rectangle;
         public readonly ItemType type; 
         bool collected;
         #endregion
@@ -42,10 +42,6 @@ namespace _999AD
         {
             get { return collected; }
         }
-        public Rectangle Rectangle
-        {
-            get { return rectangle; }
-        }
         #endregion
         #region METHODS
         public void Update(float elapsedTime)
@@ -56,7 +52,7 @@ namespace _999AD
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-                spriteBatch.Draw(spritesheet, Camera.RelativeRectangle(rectangle), animation.Frame, Color.White);
+                spriteBatch.Draw(spritesheet, Camera.RelativeRect(rectangle), animation.Frame, Color.White);
         }
         #endregion
 

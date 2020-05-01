@@ -33,6 +33,10 @@ namespace _999AD
                 }),
                 new CollectablesRoomManager(new Collectable[]{ }),
                 new CollectablesRoomManager(new Collectable[]{ }),
+                new CollectablesRoomManager(new Collectable[]{ }),
+                new CollectablesRoomManager(new Collectable[]{ }),
+                new CollectablesRoomManager(new Collectable[]{ }),
+                new CollectablesRoomManager(new Collectable[]{ })
             };
             for (int i = 0; i < (int)Collectable.ItemType.total; i++)
                 collectedItems.Add((Collectable.ItemType)i, 0);

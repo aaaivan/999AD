@@ -12,7 +12,7 @@ namespace _999AD
     static class Gravity
     {
         #region DECLARATIONS
-        public static float gravityAcceleration= 1200;
+        public static float gravityAcceleration= 1000;
         public static float airFrictionCoeff = 1.2f;
         public static float wallFrictionCoeff = 4f;
         #endregion

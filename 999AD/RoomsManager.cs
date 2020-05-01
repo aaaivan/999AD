@@ -14,9 +14,9 @@ namespace _999AD
         #region DECLARATIONS
         public enum Rooms
         {
-            room1, room2, finalBoss, total
+            room1, room2, finalBoss, escape0, escape1, escape2, escape3, total
         }
-        static Rooms currentRoom = Rooms.room1;
+        static Rooms currentRoom = Rooms.escape0;
         #endregion
         #region CONSTRUCTOR
         public static void Inizialize()
@@ -48,9 +48,9 @@ namespace _999AD
                     if (Player.position.X >= MapsManager.maps[(int)currentRoom].RoomWidthtPx)
                     {//move to finalBoss room
                         currentRoom = Rooms.finalBoss;
-                        CameraManager.SwitchCamera(Rooms.finalBoss, false);
-                        Player.position.X = 0;
-                        Player.position.Y += 9*Tile.tileSize;
+                        CameraManager.SwitchCamera(Rooms.finalBoss);
+                        Player.position.X = MapsManager.maps[(int)Rooms.finalBoss].RoomWidthtPx-Player.width;
+                        Player.position.Y = 0;
                     }
                     else if (Player.position.X + Player.width <= 0)
                     {//move to room1
@@ -78,11 +78,11 @@ namespace _999AD
             if (currentRoom== Rooms.finalBoss)
             {
                 Camera.pointLocked.X = Player.Center.X;
-                Camera.pointLocked.Y = (Player.Center.Y+2*FireBallsManager.fireballsCenter.Y)/3f;  //improve
+                Camera.pointLocked.Y = (Player.Center.Y + 2 * FireBallsManager.fireballsCenter.Y) / 3f;
                 FinalBoss.Update(elapsedTime);
-                FireBallsManager.Update(elapsedTime);
-                LavaGeyserManager.Update(elapsedTime);
             }
+            FireBallsManager.Update(elapsedTime);
+            LavaGeyserManager.Update(elapsedTime);
             PlatformsManager.platformsRoomManagers[(int)currentRoom].Update(elapsedTime);
             CollectablesManager.collectablesRoomManagers[(int)currentRoom].Update(elapsedTime);
             MonologuesManager.monologuesRoomManagers[(int)currentRoom].Update(elapsedTime);
@@ -97,9 +97,9 @@ namespace _999AD
             if (currentRoom == Rooms.finalBoss)
             {
                 FinalBoss.Draw(spriteBatch);
-                FireBallsManager.Draw(spriteBatch);
-                LavaGeyserManager.Draw(spriteBatch);
             }
+            FireBallsManager.Draw(spriteBatch);
+            LavaGeyserManager.Draw(spriteBatch);
             MonologuesManager.monologuesRoomManagers[(int)currentRoom].Draw(spriteBatch);
         }
         #endregion
