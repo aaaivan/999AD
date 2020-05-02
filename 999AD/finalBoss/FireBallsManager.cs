@@ -12,7 +12,7 @@ namespace _999AD
     public static class FireBallsManager
     {
         #region DECLARATIONS
-        static public readonly Vector2 fireballsCenter = new Vector2(768, 600);
+        static public readonly Vector2 fireballsCenter = new Vector2(384, 400);
         static Texture2D laser;
         static int[] targetedPlatforms= new int[] { };
         static float relativeLaserProgression=0;
@@ -27,8 +27,8 @@ namespace _999AD
         #region CONSTRUCTORS
         public static void Inizialize(Texture2D spritesheet, Texture2D _laser)
         {
-            FireBall.spritesheet = spritesheet;
             laser = _laser;
+            FireBall.Inizialize(spritesheet);
         }
         #endregion
         #region PROPERTIES
@@ -185,7 +185,7 @@ namespace _999AD
             foreach (int i in targetedPlatforms)
             {
                 spriteBatch.Draw(laser,
-                    Camera.RelativeRectangle( new Rectangle((int)fireballsCenter.X,
+                    Camera.RelativeRect( new Rectangle((int)fireballsCenter.X,
                                   (int)(fireballsCenter.Y - laser.Width / 2),
                                   laser.Width,
                                   (int)(PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[i].radius * relativeLaserProgression))

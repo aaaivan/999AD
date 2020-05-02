@@ -38,7 +38,7 @@ namespace _999AD
         static public readonly int bossHeight = 280;
         static Vector2 bossInitialMidPoint;
         static public Vector2 bossMidPoint;
-        static public readonly int wingsRelativeYPosition = 130;
+        static public readonly int wingsRelativeYPosition = 100;
         static float YSpeed = 0;
         static BossAnimations bossAnimation = BossAnimations.stone;
         static WingAnimations rightWingAnimation = WingAnimations.idle;
@@ -57,7 +57,7 @@ namespace _999AD
         #region CONSTRUCTOR
         public static void Inizialize(Texture2D _bossSpritesheet, Texture2D[] _wingSpritesheets)
         {
-            bossInitialMidPoint = new Vector2(FireBallsManager.fireballsCenter.X, 550);
+            bossInitialMidPoint = new Vector2(FireBallsManager.fireballsCenter.X, FireBallsManager.fireballsCenter.Y - 30);
             bossSpritesheet = _bossSpritesheet;
             wingSpritesheets = _wingSpritesheets;
             bossHP = maxBossHp;
@@ -66,12 +66,12 @@ namespace _999AD
             bossMidPoint = bossInitialMidPoint+new Vector2(0,5);
             bossAnimations = new Animation[(int)BossAnimations.total]
                 {
-                    new Animation(new Rectangle(0,0,200, 300),200,300, 1, 0, true),
-                    new Animation(new Rectangle(0,0,800, 300),200,300, 4, 1, false, true),
-                    new Animation(new Rectangle(0,300,400, 300),200,300,2, 0.5f, true),
-                    new Animation(new Rectangle(0,600,400, 300),200,300,2, 1f, false, true),
-                    new Animation(new Rectangle(0,900,400, 300),200,300,2, 0.5f, true),
-                    new Animation(new Rectangle(0,1200,400, 300),200,300,2, 0.5f, true),
+                    new Animation(new Rectangle(0,0,100, 150),100,150, 1, 0, true),
+                    new Animation(new Rectangle(0,0,400, 150),100,150, 4, 1, false, true),
+                    new Animation(new Rectangle(0,150,200, 150),100,150,2, 0.5f, true),
+                    new Animation(new Rectangle(0,300,200, 150),100,150,2, 1f, false, true),
+                    new Animation(new Rectangle(0,450,200, 150),100,150,2, 0.5f, true),
+                    new Animation(new Rectangle(0,600,200, 150),100,150,2, 0.5f, true),
                 };
             wingAnimations = new Animation[(int)WingAnimations.total]
             {
@@ -129,6 +129,10 @@ namespace _999AD
                               wingAnimations[(int)leftWingAnimation].Frame.Height);
             }
         }
+        public static bool Dead
+        {
+            get { return dead; }
+        }
         #endregion
         #region METHODS
         public static void WakeUp()
@@ -176,14 +180,14 @@ namespace _999AD
                     leftWingAnimation = WingAnimations.idle;
                 }
             }
-            /*debug only
+            //debug only
             if (Game1.currentKeyboard.IsKeyDown(Keys.Down) && !Game1.previousKeyboard.IsKeyDown(Keys.Down))
                 bossHP--;
             if (Game1.currentKeyboard.IsKeyDown(Keys.Left) && !Game1.previousKeyboard.IsKeyDown(Keys.Left))
                 DamageWing(false);
             if (Game1.currentKeyboard.IsKeyDown(Keys.Right) && !Game1.previousKeyboard.IsKeyDown(Keys.Right))
                 DamageWing(true);
-            //end debug only*/
+            //end debug only
             switch (bossAnimation)
             {
                 case BossAnimations.stone:
@@ -195,7 +199,7 @@ namespace _999AD
                     {
                         case Phases.one:
                             {
-                                if (bossHP == 0)
+                                if (bossHP <= 0)
                                 {
                                     bossAnimation = BossAnimations.recovering;
                                     if (rightWingHP > 0)
@@ -253,7 +257,7 @@ namespace _999AD
                             }
                         case Phases.two:
                             {
-                                if (bossHP == 0)
+                                if (bossHP <= 0)
                                 {
                                     bossAnimation = BossAnimations.recovering;
                                     if (rightWingHP > 0)
@@ -326,7 +330,7 @@ namespace _999AD
                             }
                         case Phases.three:
                             {
-                                if (bossHP == 0)
+                                if (bossHP <= 0)
                                 {
                                     bossAnimation = BossAnimations.recovering;
                                     if (rightWingHP > 0)
@@ -424,7 +428,7 @@ namespace _999AD
                             }
                         case Phases.four:
                             {
-                                if (bossHP == 0)
+                                if (bossHP <= 0)
                                 {
                                     bossAnimation = BossAnimations.recovering;
                                     if (rightWingHP > 0)
@@ -445,10 +449,11 @@ namespace _999AD
                                 if (attack == 0)
                                 {
                                     LavaGeyserManager.SweepAcross(
+                                        1,
                                         0.5f,
-                                        (int)MathHelper.Lerp(1, 4, (float)bossHP / maxBossHp),
-                                        418,
-                                        1118,
+                                        (int)MathHelper.Lerp(2, 4, (float)bossHP / maxBossHp),
+                                        244,
+                                        524,
                                         rand.Next(2) == 0);
                                     bossAnimation = BossAnimations.attack;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
@@ -594,8 +599,8 @@ namespace _999AD
                                         wingAnimations[(int)leftWingAnimation].Reset();
                                     }
                                     bossAnimations[(int)BossAnimations.attack].Reset();
-                                    LavaGeyserManager.SweepAcross(0.2f, 100, 418, 1118, true);
-                                    LavaGeyserManager.SweepAcross(0.2f, 100, 418, 1118, false);
+                                    LavaGeyserManager.SweepAcross(1,0.2f, 100, 244, 524, true);
+                                    LavaGeyserManager.SweepAcross(6,0.2f, 100, 244, 524, false);
                                 }
                                 break;
                             case Phases.four:
@@ -660,9 +665,9 @@ namespace _999AD
         }
         public static void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(wingSpritesheets[(int)rightWingTexture], Camera.RelativeRectangle(RightWingRectangle), wingAnimations[(int)rightWingAnimation].Frame, Color.White);
-            spriteBatch.Draw(wingSpritesheets[(int)leftWingTexture], Camera.RelativeRectangle(LeftWingRectangle), wingAnimations[(int)leftWingAnimation].Frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 1); ;
-            spriteBatch.Draw(bossSpritesheet, Camera.RelativeRectangle(BossDrawRectangle), bossAnimations[(int)bossAnimation].Frame, Color.White);
+            spriteBatch.Draw(wingSpritesheets[(int)rightWingTexture], Camera.RelativeRect(RightWingRectangle), wingAnimations[(int)rightWingAnimation].Frame, Color.White);
+            spriteBatch.Draw(wingSpritesheets[(int)leftWingTexture], Camera.RelativeRect(LeftWingRectangle), wingAnimations[(int)leftWingAnimation].Frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 1); ;
+            spriteBatch.Draw(bossSpritesheet, Camera.RelativeRect(BossDrawRectangle), bossAnimations[(int)bossAnimation].Frame, Color.White);
         }
         #endregion
 

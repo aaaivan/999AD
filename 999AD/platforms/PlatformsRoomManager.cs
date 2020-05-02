@@ -30,7 +30,7 @@ namespace _999AD
         {
             foreach (MovingPlatform platform in movingPlatforms)
             {
-                if (platform.Rectangle.Intersects(Camera.rectangle))
+                if (platform.Rectangle.Intersects(Camera.Rectangle))
                     platform.Draw(spriteBatch);
             }
         }

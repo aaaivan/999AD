@@ -21,16 +21,39 @@ namespace _999AD
             MonologuesRoomManager.Inizialize(interactSymbol);
             monologuesRoomManagers = new MonologuesRoomManager[(int)RoomsManager.Rooms.total]
             {
-                new MonologuesRoomManager(
+                new MonologuesRoomManager(  //tutorial0
                     new Monologue[]
                     {
-                        new Monologue(new Rectangle(123, 100, 48, 66), new string[]{"How dare you disturb my sleep?!", "FUCKING HELL!" })
+                        new Monologue(new Rectangle(264, 142, 55, 78),
+                        new string[]
+                        {
+                            "Wha...?!",
+                            "...",
+                            "So... you have been sent here on a quest to\nsave the world, you say..." ,
+                            "I see. I have one teensy-weensy, but ever\nso crucial little, tiny feat for you...",
+                            "GO BACK HOME, YOU FOOL!"})
                     }),
-                new MonologuesRoomManager(
+                new MonologuesRoomManager(  //tutorial1
                     new Monologue[]
                     {
                     }),
-                new MonologuesRoomManager(
+                new MonologuesRoomManager(  //tutorial2
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(  //tutorial3
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(  //finalBoss
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(  //escape0
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(  //escape1
                     new Monologue[]
                     {
                     }),

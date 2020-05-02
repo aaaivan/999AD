@@ -38,7 +38,7 @@ namespace _999AD
         {
             for (int i = collectables.Count - 1; i >= 0; i--)
             {
-                if (Camera.rectangle.Intersects(collectables[i].Rectangle))
+                if (Camera.Rectangle.Intersects(collectables[i].rectangle))
                 collectables[i].Draw(spriteBatch);
             }
         }

@@ -12,11 +12,11 @@ namespace _999AD
     class FireBall
     {
         #region DECLARATIONS
-        public static Texture2D spritesheet;
-        public static readonly int size = 20;
+        static Texture2D spritesheet;
+        public static readonly int size = 10;
         public static readonly float radialShootingVelocity = 600;
         public static readonly float shotLifeTime = 3;
-        static Vector2 rotationCenter;
+        Vector2 rotationCenter;
         Animation animation;
         float radialDistance;
         float angleRadiants;
@@ -32,7 +32,7 @@ namespace _999AD
         public FireBall(float _angleDegrees, float[] _radialVelocities, float[] _angularVelocities, float[] _lifeTimes,
             bool _targetPlayer = false, float centerOffsetX = 0, float centerOffsetY = 0, float _radialDistance = 0)
         {
-            rotationCenter += new Vector2(centerOffsetX, centerOffsetY);
+            rotationCenter = FireBallsManager.fireballsCenter+new Vector2(centerOffsetX, centerOffsetY);
             radialDistance = _radialDistance;
             angleRadiants = _angleDegrees / 180*(float)Math.PI;
             if (angleRadiants >= MathHelper.Pi * 2)
@@ -48,7 +48,6 @@ namespace _999AD
         public static void Inizialize(Texture2D _spritesheet)
         {
             spritesheet = _spritesheet;
-            rotationCenter = FireBallsManager.fireballsCenter;
         }
         #endregion
         #region PRPERTIES
@@ -56,7 +55,7 @@ namespace _999AD
         {
             get { return active; }
         }
-        Rectangle Rectangle
+        Rectangle CollisionRectangle
         {
             get { return new Rectangle((int)(Center.X-size*0.5f), (int)(Center.Y - size * 0.5f), size, size); }
         }
@@ -112,7 +111,7 @@ namespace _999AD
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(spritesheet, Camera.RelativeRectangle(Rectangle), animation.Frame, Color.White);
+            spriteBatch.Draw(spritesheet, Camera.RelativeRectangle(new Vector2(Center.X - size * 0.5f, Center.Y - size * 0.5f), size, size), animation.Frame, Color.White);
         }
         #endregion
     }

@@ -19,6 +19,7 @@ namespace _999AD
         static float timeBoforeRemovingNextTile = 0;
         static float timer = 0f;
         static List<int[]> tilesToRemove = new List<int[]>();
+        int removeTogether = 1;
         #endregion
         #region CONSTRACTOR
         public RoomMap(int _roomHeightTiles, int _roomWidthTiles)
@@ -54,31 +55,37 @@ namespace _999AD
                 timer += elapsedTime;
                 if (timer >= timeBoforeRemovingNextTile)
                 {
-                    array[tilesToRemove[0][0], tilesToRemove[0][1]].tileType = Tile.TileType.empty;
-                    tilesToRemove.RemoveAt(0);
-                    timer = 0;
-                    if (tilesToRemove.Count == 0)
+                    for (int i = 0; i < removeTogether; i++)
                     {
-                        removeRowSFX = false;
+                        if (tilesToRemove.Count == 0)
+                        {
+                            removeRowSFX = false;
+                            break;
+                        }
+                        array[tilesToRemove[0][0], tilesToRemove[0][1]].tileType = Tile.TileType.empty;
+                        tilesToRemove.RemoveAt(0);
                     }
+                    timer = 0;
                 }
             }
         }
-        public void RemoveRowOfTiles(List<int[]> _tilesToRemove, float _timeBeforeRemovingNextTile)
+        public void RemoveGroupOfTiles(List<int[]> _tilesToRemove, float _timeBeforeRemovingNextTile, int _removeTogether, float delay=0)
         {
             if (!removeRowSFX)
             {
                 removeRowSFX = true;
                 tilesToRemove = _tilesToRemove;
                 timeBoforeRemovingNextTile = _timeBeforeRemovingNextTile;
+                removeTogether = _removeTogether;
+                timer = -delay;
             }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            for (int row = Camera.rectangle.Y/Tile.tileSize; row <= (Camera.rectangle.Bottom-1) / Tile.tileSize; row++)
+            for (int row = Camera.Rectangle.Y/Tile.tileSize; row <= (Camera.Rectangle.Bottom-1) / Tile.tileSize; row++)
             {
-                for (int col = Camera.rectangle.X/Tile.tileSize; col <= (Camera.rectangle.Right-1) / Tile.tileSize; col++)
+                for (int col = Camera.Rectangle.X/Tile.tileSize; col <= (Camera.Rectangle.Right-1) / Tile.tileSize; col++)
                     array[row, col].Draw(spriteBatch);
             }
         }

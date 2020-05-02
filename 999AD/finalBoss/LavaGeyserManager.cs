@@ -16,9 +16,9 @@ namespace _999AD
         static Random rand= new Random();
         #endregion
         #region CONSTRUCTOR
-        static public void Inizialize(Texture2D spritesheet)
+        static public void Inizialize(Texture2D spritesheet, Texture2D whiteTexture)
         {
-            LavaGeyser.spritesheet = spritesheet;
+            LavaGeyser.Inizialize(spritesheet, whiteTexture);
         }
         #endregion
         #region PROPERTIES
@@ -28,14 +28,14 @@ namespace _999AD
         }
         #endregion
         #region METHODS
-        public static void ShootGeyser(float[] xPositions, float timeBeforeErupting )
+        public static void ShootGeyser(float[] xPositions, float timeBeforeErupting, int initialYVelocity=-1400 )
         {
             foreach (float f in xPositions)
             {
-                lavaGeysers.Add(new LavaGeyser(f, timeBeforeErupting));
+                lavaGeysers.Add(new LavaGeyser(f, timeBeforeErupting, initialYVelocity));
             }
         }
-        public static void SweepAcross(float timeBetweenEruptions, int safeAreas, float safeAreaMinX, float safeAreaMaxX, bool leftToright)
+        public static void SweepAcross(float delay, float timeBetweenEruptions, int safeAreas, float safeAreaMinX, float safeAreaMaxX, bool leftToRight)
         {
             int totalEruptions = (MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomWidthtPx - 1 + LavaGeyser.size) / LavaGeyser.size;
             int min = (int)(safeAreaMinX / LavaGeyser.size);
@@ -48,27 +48,23 @@ namespace _999AD
                 firstSafe = min;
                 safeAreas = max - min + 1;
             }
-            if (leftToright)
+            if (leftToRight)
             {
                 for (int i =0, j=0; i<totalEruptions; i++)
                 {
                     if (i==firstSafe)
-                    {
-                        i = i + safeAreas;
-                    }
-                    lavaGeysers.Add(new LavaGeyser((i+0.5f)* LavaGeyser.size, 1+j*timeBetweenEruptions));
+                        i += safeAreas;
+                    lavaGeysers.Add(new LavaGeyser((i+0.5f)* LavaGeyser.size, delay+j*timeBetweenEruptions));
                     j++;
                 }
             }
             else
             {
-                for (int i = 0, j=0; i < totalEruptions; i++)
+                for (int i = totalEruptions-1, j=0; i >= 0; i--)
                 {
-                    if (i == firstSafe)
-                    {
-                        i = i + safeAreas;
-                    }
-                    lavaGeysers.Add(new LavaGeyser((i + 0.5f) * LavaGeyser.size, 2 + timeBetweenEruptions*(totalEruptions - j - 1)));
+                    if (i == firstSafe-1+safeAreas)
+                        i -= safeAreas;
+                    lavaGeysers.Add(new LavaGeyser((i + 0.5f) * LavaGeyser.size, delay + j * timeBetweenEruptions));
                     j++;
                 }
             }

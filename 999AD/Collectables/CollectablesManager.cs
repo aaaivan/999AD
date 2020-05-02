@@ -26,13 +26,29 @@ namespace _999AD
                 });
             collectablesRoomManagers = new CollectablesRoomManager[(int)RoomsManager.Rooms.total]
             {
-                new CollectablesRoomManager(new Collectable[]
+                new CollectablesRoomManager(new Collectable[]   //tutorial0
                 {
-                    new Collectable(new Rectangle(100, 150,16,16), Collectable.ItemType.coin),
-                    new Collectable(new Rectangle(300, 150, 16, 16), Collectable.ItemType.key)
+                    new Collectable(new Rectangle(151, 210,16,16), Collectable.ItemType.coin),
+                    new Collectable(new Rectangle(201, 164, 16, 16), Collectable.ItemType.coin)
                 }),
-                new CollectablesRoomManager(new Collectable[]{ }),
-                new CollectablesRoomManager(new Collectable[]{ }),
+                new CollectablesRoomManager(new Collectable[]   //tutorial1
+                {
+                }),
+                new CollectablesRoomManager(new Collectable[]   //tutorial2
+                {
+                }),
+                new CollectablesRoomManager(new Collectable[]   //tutorial3
+                {
+                }),
+                new CollectablesRoomManager(new Collectable[]   //finaleBoss
+                {
+                }),
+                new CollectablesRoomManager(new Collectable[]   //escape0
+                {
+                }),
+                new CollectablesRoomManager(new Collectable[]   //escape1
+                {
+                }),
             };
             for (int i = 0; i < (int)Collectable.ItemType.total; i++)
                 collectedItems.Add((Collectable.ItemType)i, 0);
