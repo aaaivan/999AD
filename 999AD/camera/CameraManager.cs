@@ -13,7 +13,16 @@ namespace _999AD
     {
         #region DECLARATIONS
         static Texture2D[] backgrounds = new Texture2D[(int)RoomsManager.Rooms.total];
-        public static readonly float[] scaleByRoom = new float[(int)RoomsManager.Rooms.total] { 1, 1, 0.5f, 1,1,1,1 };
+        public static readonly float[] scaleByRoom = new float[(int)RoomsManager.Rooms.total]
+        {
+            1, //tutorial0
+            1, //tutorial1
+            1, //tutorial2
+            1, //tutorial3
+            0.5f, //finalBoss
+            1, //escape0
+            1 //escape1
+        };
         public static readonly int maxOffsetY = 2; //amplitude of the rumble
         static bool shaking = false;
         static int offsetY; //current offset
@@ -28,7 +37,7 @@ namespace _999AD
             Camera.Inizialize();
             backgrounds = _backgrounds;
             offsetY = -maxOffsetY;
-            SwitchCamera(RoomsManager.Rooms.room1);
+            SwitchCamera(RoomsManager.Rooms.tutorial0);
         }
         #endregion
         #region METHODS

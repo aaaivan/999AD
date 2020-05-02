@@ -14,9 +14,9 @@ namespace _999AD
         #region DECLARATIONS
         public enum Rooms
         {
-            room1, room2, finalBoss, escape0, escape1, escape2, escape3, total
+            tutorial0, tutorial1, tutorial2, tutorial3, finalBoss, escape0, escape1, total
         }
-        static Rooms currentRoom = Rooms.escape2;
+        static Rooms currentRoom = Rooms.escape1;
         #endregion
         #region CONSTRUCTOR
         public static void Inizialize()
@@ -36,15 +36,15 @@ namespace _999AD
         {
             switch (currentRoom)
             {
-                case Rooms.room1:
-                    if (Player.position.X > MapsManager.maps[(int)Rooms.room1].RoomWidthtPx)
+                case Rooms.tutorial0:
+                    if (Player.position.X > MapsManager.maps[(int)Rooms.tutorial0].RoomWidthtPx)
                     {//move to room2
-                        currentRoom = Rooms.room2;
-                        CameraManager.SwitchCamera(Rooms.room2);
+                        currentRoom = Rooms.tutorial1;
+                        CameraManager.SwitchCamera(Rooms.tutorial1);
                         Player.position.X = 0;
                     }
                     break;
-                case Rooms.room2:
+                case Rooms.tutorial1:
                     if (Player.position.X >= MapsManager.maps[(int)currentRoom].RoomWidthtPx)
                     {//move to finalBoss room
                         currentRoom = Rooms.finalBoss;
@@ -54,17 +54,17 @@ namespace _999AD
                     }
                     else if (Player.position.X + Player.width <= 0)
                     {//move to room1
-                        currentRoom = Rooms.room1;
-                        CameraManager.SwitchCamera(Rooms.room1);
+                        currentRoom = Rooms.tutorial0;
+                        CameraManager.SwitchCamera(Rooms.tutorial0);
                         Player.position.X = MapsManager.maps[(int)currentRoom].RoomWidthtPx - Player.width;
                     }
                     break;
                 case Rooms.finalBoss:
                     if (Player.position.X + Player.width <= 0)
                     {//move to room2
-                        currentRoom = Rooms.room2;
-                        CameraManager.SwitchCamera(Rooms.room2);
-                        Player.position.X = MapsManager.maps[(int)Rooms.room2].RoomWidthtPx - Player.width;
+                        currentRoom = Rooms.tutorial1;
+                        CameraManager.SwitchCamera(Rooms.tutorial1);
+                        Player.position.X = MapsManager.maps[(int)Rooms.tutorial1].RoomWidthtPx - Player.width;
                         Player.position.Y -= 9 * Tile.tileSize;
                     }
                     break;

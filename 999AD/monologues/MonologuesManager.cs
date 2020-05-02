@@ -21,7 +21,7 @@ namespace _999AD
             MonologuesRoomManager.Inizialize(interactSymbol);
             monologuesRoomManagers = new MonologuesRoomManager[(int)RoomsManager.Rooms.total]
             {
-                new MonologuesRoomManager(
+                new MonologuesRoomManager(  //tutorial0
                     new Monologue[]
                     {
                         new Monologue(new Rectangle(264, 142, 55, 78),
@@ -33,30 +33,30 @@ namespace _999AD
                             "I see. I have one teensy-weensy, but ever\nso crucial little, tiny feat for you...",
                             "GO BACK HOME, YOU FOOL!"})
                     }),
-                new MonologuesRoomManager(
+                new MonologuesRoomManager(  //tutorial1
                     new Monologue[]
                     {
                     }),
-                new MonologuesRoomManager(
+                new MonologuesRoomManager(  //tutorial2
                     new Monologue[]
                     {
                     }),
-                new MonologuesRoomManager(
+                new MonologuesRoomManager(  //tutorial3
                     new Monologue[]
                     {
                     }),
-                new MonologuesRoomManager(
+                new MonologuesRoomManager(  //finalBoss
                     new Monologue[]
                     {
                     }),
-                new MonologuesRoomManager(
+                new MonologuesRoomManager(  //escape0
                     new Monologue[]
                     {
                     }),
-                new MonologuesRoomManager(
+                new MonologuesRoomManager(  //escape1
                     new Monologue[]
                     {
-                    })
+                    }),
             };
         }
         #endregion

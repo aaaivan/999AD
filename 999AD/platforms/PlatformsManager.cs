@@ -21,13 +21,25 @@ namespace _999AD
             MovingPlatform.loadTextures(_spritesheet);
             platformsRoomManagers = new PlatformsRoomManager[(int)RoomsManager.Rooms.total]
             {
-                new PlatformsRoomManager //room1
+                new PlatformsRoomManager //tutorial0
                 (
                     new MovingPlatform[]
                     {
                     }
                 ),
-                new PlatformsRoomManager //room2
+                new PlatformsRoomManager //tutorial1
+                (
+                    new MovingPlatform[]
+                    {
+                    }
+                ),
+                new PlatformsRoomManager //tutorial2
+                (
+                    new MovingPlatform[]
+                    {
+                    }
+                ),
+                new PlatformsRoomManager //tutorial3
                 (
                     new MovingPlatform[]
                     {
@@ -85,18 +97,6 @@ namespace _999AD
                                         new Vector2(MapsManager.maps[(int)RoomsManager.Rooms.escape1].RoomWidthtPx-1156, MapsManager.maps[(int)RoomsManager.Rooms.escape1].RoomHeightPx+24),
                                         new Vector2(MapsManager.maps[(int)RoomsManager.Rooms.escape1].RoomWidthtPx-1156, MapsManager.maps[(int)RoomsManager.Rooms.escape1].RoomHeightPx-8),
                                         0,10, false, 0,0,0, true)
-                    }
-                ),
-                new PlatformsRoomManager //escape2
-                (
-                    new MovingPlatform[]
-                    {
-                    }
-                ),
-                new PlatformsRoomManager //escape3
-                (
-                    new MovingPlatform[]
-                    {
                     }
                 )
             };
