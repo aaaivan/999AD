@@ -69,7 +69,7 @@ namespace _999AD
                 }
             }
         }
-        public void RemoveGroupOfTiles(List<int[]> _tilesToRemove, float _timeBeforeRemovingNextTile, int _removeTogether)
+        public void RemoveGroupOfTiles(List<int[]> _tilesToRemove, float _timeBeforeRemovingNextTile, int _removeTogether, float delay=0)
         {
             if (!removeRowSFX)
             {
@@ -77,6 +77,7 @@ namespace _999AD
                 tilesToRemove = _tilesToRemove;
                 timeBoforeRemovingNextTile = _timeBeforeRemovingNextTile;
                 removeTogether = _removeTogether;
+                timer = -delay;
             }
         }
 

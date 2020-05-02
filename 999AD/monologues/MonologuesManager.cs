@@ -24,7 +24,14 @@ namespace _999AD
                 new MonologuesRoomManager(
                     new Monologue[]
                     {
-                        new Monologue(new Rectangle(123, 100, 48, 66), new string[]{"How dare you disturb my sleep?!", "FUCKING HELL!" })
+                        new Monologue(new Rectangle(264, 142, 55, 78),
+                        new string[]
+                        {
+                            "Wha...?!",
+                            "...",
+                            "So... you have been sent here on a quest to\nsave the world, you say..." ,
+                            "I see. I have one teensy-weensy, but ever\nso crucial little, tiny feat for you...",
+                            "GO BACK HOME, YOU FOOL!"})
                     }),
                 new MonologuesRoomManager(
                     new Monologue[]

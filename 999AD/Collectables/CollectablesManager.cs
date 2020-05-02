@@ -28,8 +28,8 @@ namespace _999AD
             {
                 new CollectablesRoomManager(new Collectable[]
                 {
-                    new Collectable(new Rectangle(100, 150,16,16), Collectable.ItemType.coin),
-                    new Collectable(new Rectangle(300, 150, 16, 16), Collectable.ItemType.key)
+                    new Collectable(new Rectangle(151, 210,16,16), Collectable.ItemType.coin),
+                    new Collectable(new Rectangle(201, 164, 16, 16), Collectable.ItemType.coin)
                 }),
                 new CollectablesRoomManager(new Collectable[]{ }),
                 new CollectablesRoomManager(new Collectable[]{ }),

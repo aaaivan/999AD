@@ -75,6 +75,10 @@ namespace _999AD
                         );
             }
         }
+        public static bool IsOnMovingPlatform
+        {
+            get { return isOnMovingPlatform; }
+        }
         #endregion
         #region METHODS
         public static void Update(float elapsedTime)
@@ -86,6 +90,7 @@ namespace _999AD
         //check input for movement
         static void getPlayerInput()
         {
+            currentAnimation = AnimationTypes.idle;
             if (Game1.currentKeyboard.IsKeyDown(Keys.W) && !Game1.previousKeyboard.IsKeyDown(Keys.W))
             {
                 if (isTouchingTheGround)
@@ -118,10 +123,12 @@ namespace _999AD
             }
             if (Game1.currentKeyboard.IsKeyDown(Keys.D))
             {
+                currentAnimation = AnimationTypes.walk;
                 velocity.X += walkingSpeed;
             }
             if (Game1.currentKeyboard.IsKeyDown(Keys.A))
             {
+                currentAnimation = AnimationTypes.walk;
                 velocity.X -= walkingSpeed;
             }
             if (Game1.currentKeyboard.IsKeyDown(Keys.Space) && !Game1.previousKeyboard.IsKeyDown(Keys.Space))
@@ -196,7 +203,7 @@ namespace _999AD
                     if (Gravity.gravityAcceleration - velocity.Y * Gravity.airFrictionCoeff>0)
                     velocity.Y += (Gravity.gravityAcceleration-velocity.Y*Gravity.airFrictionCoeff) * elapsedTime;
                 }
-                if (velocity.Y > Gravity.gravityAcceleration * elapsedTime * 15)
+                if (velocity.Y > Gravity.gravityAcceleration * elapsedTime * 20)
                     isTouchingTheGround = false;
             }
             #endregion

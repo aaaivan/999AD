@@ -28,11 +28,11 @@ namespace _999AD
         }
         #endregion
         #region METHODS
-        public static void ShootGeyser(float[] xPositions, float timeBeforeErupting )
+        public static void ShootGeyser(float[] xPositions, float timeBeforeErupting, int initialYVelocity=-1400 )
         {
             foreach (float f in xPositions)
             {
-                lavaGeysers.Add(new LavaGeyser(f, timeBeforeErupting));
+                lavaGeysers.Add(new LavaGeyser(f, timeBeforeErupting, initialYVelocity));
             }
         }
         public static void SweepAcross(float delay, float timeBetweenEruptions, int safeAreas, float safeAreaMinX, float safeAreaMaxX, bool leftToRight)

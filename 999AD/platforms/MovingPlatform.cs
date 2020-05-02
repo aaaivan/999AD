@@ -14,8 +14,11 @@ namespace _999AD
         #region DECLARATIONS
         public enum TextureType
         {
-            texture1, texture2, texture3,
-            fallingFloor272_40, fallingFloor296_40, fallingFloor112_216,
+            platform40_8,
+            fallingFloor272_40,
+            fallingFloor296_40,
+            fallingFloor112_216,
+            fallingFloor184_216,
             total
         }
         public static Texture2D spritesheet; //textures of all the platforms
@@ -65,12 +68,12 @@ namespace _999AD
         {
             spritesheet = _spritesheet;
             sourceRectangles = new Rectangle[(int)TextureType.total]
-            { new Rectangle(0, 0, 50, 5),
-              new Rectangle(0, 5, 50, 10),
-              new Rectangle(0, 15, 50, 15),
-              new Rectangle(0, 30, 272, 40),
-              new Rectangle(0, 70, 292, 40),
-              new Rectangle(0, 110, 112, 216)
+            { 
+              new Rectangle(0, 0, 40, 8),
+              new Rectangle(0, 8, 272, 40),
+              new Rectangle(0, 48, 296, 40),
+              new Rectangle(0, 88, 112, 224),
+              new Rectangle(112, 88, 184, 112)
             };
         }
         #endregion
@@ -140,6 +143,12 @@ namespace _999AD
                 platformMidpointPosition.X = rotationCenter.X + radius * (float)Math.Sin(angleRadiants);
                 platformMidpointPosition.Y = rotationCenter.Y - radius * (float)Math.Cos(angleRadiants);
             }
+        }
+        public void RemovePlatform()
+        {
+            platformMidpointPosition.X = -width;
+            platformMidpointPosition.Y = -height;
+            active = false;
         }
         public void Draw(SpriteBatch spriteBatch)
         {
