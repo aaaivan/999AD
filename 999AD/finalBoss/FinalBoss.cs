@@ -47,12 +47,15 @@ namespace _999AD
         static WingTextures leftWingTexture = WingTextures.stone;
         static Phases currentPhase = Phases.one;
         static readonly int maxBossHp = 10;
-        static readonly int maxWingHP = (int)Phases.total / 2;
+        static readonly int maxWingHP = 2;
         static int bossHP;
         static int rightWingHP;
         static int leftWingHP;
         static Random rand = new Random();
         static bool dead = false;
+        static Color bossColor = Color.White;
+        static readonly int framesOfDifferentColor = 5;
+        static int frameCount = 0;
         #endregion
         #region CONSTRUCTOR
         public static void Inizialize(Texture2D _bossSpritesheet, Texture2D[] _wingSpritesheets)
@@ -99,7 +102,7 @@ namespace _999AD
         {
             get { return new Rectangle((int)(bossMidPoint.X - bossWidth / 2), (int)(bossMidPoint.Y - bossHeight / 2), bossWidth, bossHeight); }
         }
-        public static Rectangle BossDrawRectangle
+        public static Rectangle BossDrawRectangle //improve: adjust based on sprite
         {
             get
             {
@@ -109,7 +112,28 @@ namespace _999AD
                                      bossAnimations[(int)bossAnimation].Frame.Height);
             }
         }
-        public static Rectangle RightWingRectangle
+        public static Rectangle RightWingCollisionRectangle //improve: adjust based on sprite
+        {
+            get
+            {
+                return new Rectangle((int)bossMidPoint.X,
+                                    (int)(bossMidPoint.Y - wingsRelativeYPosition),
+                                    wingAnimations[(int)rightWingAnimation].Frame.Width,
+                                    8);
+            }
+        }
+        public static Rectangle LeftWingCollisionRectangle //improve: adjust based on sprite
+        {
+            get
+            {
+                return new Rectangle((int)bossMidPoint.X - wingAnimations[(int)leftWingAnimation].Frame.Width,
+                              (int)(bossMidPoint.Y - wingsRelativeYPosition),
+                              wingAnimations[(int)leftWingAnimation].Frame.Width,
+                              8);
+            }
+        }
+
+        public static Rectangle RightWingDrawRectangle
         {
             get
             {
@@ -119,7 +143,7 @@ namespace _999AD
                                     wingAnimations[(int)rightWingAnimation].Frame.Height);
             }
         }
-        public static Rectangle LeftWingRectangle
+        public static Rectangle LeftWingDrawRectangle
         {
             get
             {
@@ -143,7 +167,7 @@ namespace _999AD
         } 
         public static void Update(float elapsedTime)
         {
-            if (dead)
+            if (dead||bossAnimation==BossAnimations.stone)
                 return;
             if (bossAnimation==BossAnimations.idle || bossAnimation == BossAnimations.recovering)
             {
@@ -180,14 +204,14 @@ namespace _999AD
                     leftWingAnimation = WingAnimations.idle;
                 }
             }
-            //debug only
+            /*//debug only
             if (Game1.currentKeyboard.IsKeyDown(Keys.Down) && !Game1.previousKeyboard.IsKeyDown(Keys.Down))
                 bossHP--;
             if (Game1.currentKeyboard.IsKeyDown(Keys.Left) && !Game1.previousKeyboard.IsKeyDown(Keys.Left))
                 DamageWing(false);
             if (Game1.currentKeyboard.IsKeyDown(Keys.Right) && !Game1.previousKeyboard.IsKeyDown(Keys.Right))
                 DamageWing(true);
-            //end debug only
+            //end debug only*/
             switch (bossAnimation)
             {
                 case BossAnimations.stone:
@@ -202,6 +226,8 @@ namespace _999AD
                                 if (bossHP <= 0)
                                 {
                                     bossAnimation = BossAnimations.recovering;
+                                    LavaGeyserManager.Clear();
+                                    FireBallsManager.Clear();
                                     if (rightWingHP > 0)
                                     {
                                         rightWingAnimation = WingAnimations.spread;
@@ -260,6 +286,8 @@ namespace _999AD
                                 if (bossHP <= 0)
                                 {
                                     bossAnimation = BossAnimations.recovering;
+                                    LavaGeyserManager.Clear();
+                                    FireBallsManager.Clear();
                                     if (rightWingHP > 0)
                                     {
                                         rightWingAnimation = WingAnimations.spread;
@@ -333,6 +361,8 @@ namespace _999AD
                                 if (bossHP <= 0)
                                 {
                                     bossAnimation = BossAnimations.recovering;
+                                    LavaGeyserManager.Clear();
+                                    FireBallsManager.Clear();
                                     if (rightWingHP > 0)
                                     {
                                         rightWingAnimation = WingAnimations.spread;
@@ -431,6 +461,8 @@ namespace _999AD
                                 if (bossHP <= 0)
                                 {
                                     bossAnimation = BossAnimations.recovering;
+                                    LavaGeyserManager.Clear();
+                                    FireBallsManager.Clear();
                                     if (rightWingHP > 0)
                                     {
                                         rightWingAnimation = WingAnimations.spread;
@@ -663,11 +695,60 @@ namespace _999AD
             }
 
         }
+        public static bool WingHitByReactangle(Rectangle collisionRect, float yVelocity, float elapsedTime)
+        {
+            if (yVelocity <= 0)
+                return false;
+            Rectangle spaceSpanned;
+            spaceSpanned = new Rectangle(collisionRect.X,
+                                             (int)(collisionRect.Y - yVelocity * elapsedTime),
+                                             collisionRect.Width,
+                                             (int)(yVelocity * elapsedTime));
+            if (rightWingAnimation == WingAnimations.flap)
+            {
+                if (RightWingCollisionRectangle.Intersects(spaceSpanned))
+                {
+                    DamageWing(true);
+                    return true;
+                }
+            }
+            if (leftWingAnimation == WingAnimations.flap)
+            {
+                if (LeftWingCollisionRectangle.Intersects(spaceSpanned))
+                {
+                    DamageWing(false);
+                    return true;
+                }
+            }
+            return false;
+        }
+        public static bool BossHitByRectangle(Rectangle collisionRect)
+        {
+            if (bossAnimation == BossAnimations.idle || bossAnimation == BossAnimations.attack)
+            {
+                if (BossCollisionRectangle.Intersects(collisionRect))
+                {
+                    bossHP-=1;
+                    bossColor = Color.Red * 0.8f;
+                    return true;
+                }
+            }
+            return false;
+        }
         public static void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(wingSpritesheets[(int)rightWingTexture], Camera.RelativeRect(RightWingRectangle), wingAnimations[(int)rightWingAnimation].Frame, Color.White);
-            spriteBatch.Draw(wingSpritesheets[(int)leftWingTexture], Camera.RelativeRect(LeftWingRectangle), wingAnimations[(int)leftWingAnimation].Frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 1); ;
-            spriteBatch.Draw(bossSpritesheet, Camera.RelativeRect(BossDrawRectangle), bossAnimations[(int)bossAnimation].Frame, Color.White);
+            if (dead)
+                return;
+            spriteBatch.Draw(wingSpritesheets[(int)rightWingTexture], Camera.RelativeRect(RightWingDrawRectangle), wingAnimations[(int)rightWingAnimation].Frame, Color.White);
+            spriteBatch.Draw(wingSpritesheets[(int)leftWingTexture], Camera.RelativeRect(LeftWingDrawRectangle), wingAnimations[(int)leftWingAnimation].Frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 1); ;
+            spriteBatch.Draw(bossSpritesheet, Camera.RelativeRect(BossDrawRectangle), bossAnimations[(int)bossAnimation].Frame, bossColor);
+            if (frameCount >= 5)
+            {
+                frameCount = 0;
+                bossColor = Color.White;
+            }
+            else
+                frameCount++;
         }
         #endregion
 

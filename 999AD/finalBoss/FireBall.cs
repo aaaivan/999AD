@@ -55,7 +55,7 @@ namespace _999AD
         {
             get { return active; }
         }
-        Rectangle CollisionRectangle
+        public Rectangle CollisionRectangle
         {
             get { return new Rectangle((int)(Center.X-size*0.5f), (int)(Center.Y - size * 0.5f), size, size); }
         }

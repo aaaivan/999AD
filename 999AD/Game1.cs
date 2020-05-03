@@ -112,7 +112,7 @@ namespace _999AD
 #else
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
             ProjectilesManager.Inizialize(Content.Load<Texture2D>("projectile"));
-            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(1290,40));
+            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(800,40));
             RoomsManager.Inizialize();
             GameEvents.Inizialize();
             FireBallsManager.Inizialize(Content.Load<Texture2D>("fireball"), Content.Load<Texture2D>("laser"));
@@ -163,6 +163,7 @@ namespace _999AD
             Player.Update(elapsedTime);
             ProjectilesManager.Update(elapsedTime);
             GameEvents.Update(elapsedTime);
+            Collisions.Update(elapsedTime);
 #endif
             previousKeyboard = currentKeyboard;
             base.Update(gameTime);

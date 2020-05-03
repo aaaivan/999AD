@@ -47,6 +47,7 @@
     <Compile Include="Collectables\CollectablesRoomManager.cs" />
     <Compile Include="Collectables\Collectable.cs" />
     <Compile Include="Collectables\CollectablesManager.cs" />
+    <Compile Include="Collisions.cs" />
     <Compile Include="finalBoss\FinalBoss.cs" />
     <Compile Include="finalBoss\FireBall.cs" />
     <Compile Include="finalBoss\FireBallsManager.cs" />
