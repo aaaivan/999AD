@@ -20,8 +20,8 @@ namespace _999AD
         static List<Animation> animations= new List<Animation>();
         static AnimationTypes currentAnimation;
         public static Vector2 position;
-        public static readonly int height= 22;
-        public static readonly int width= 12;
+        public static readonly int height= 22; //refer to player rectangle not to the sprite size
+        public static readonly int width= 12; //refer to player rectangle not to the sprite size
         static Vector2 velocity= Vector2.Zero;
         static bool isFacingRight=true;
         public static readonly float walkingSpeed= 100; //movement speed
@@ -34,7 +34,9 @@ namespace _999AD
         static bool canDoubleJump = true;
         public static readonly float maxTimeStuckOnwal = 0.2f;
         static float elapsedTimeStuckOnWall=0f;
-        public static readonly Vector2 projectileInitialVelocity = new Vector2(500, -300);
+        public static readonly Vector2 projectileInitialVelocity = new Vector2(500, -100);
+        public static readonly float timeBetweenShots = 0.4f; //minimum time between shots
+        static float elapsedShotTime = 0f;
         public static readonly int maxHealthPoints = 3;
         static int healthPoints = 3;
         static int deaths = 0;
@@ -58,12 +60,16 @@ namespace _999AD
         //return the player's collision rectangle
         public static Rectangle CollisionRectangle
         {
-            get { return new Rectangle((int)position.X, (int)position.Y, width, height); }
+            get { return new Rectangle((int)position.X, (int)position.Y, width, height-2); }//-2 magic number: improve?
         }
         //return the center of the player's rectangle
         public static Vector2 Center
         {
             get { return new Vector2(position.X+width/2f, position.Y + height / 2f); }
+        }
+        public static Vector2 Velocity
+        {
+            get { return velocity; }
         }
         //return the initial velocity of the projectile based on the direction the player is facing
         static Vector2 ProjectileInitialVelocity
@@ -83,12 +89,12 @@ namespace _999AD
         #region METHODS
         public static void Update(float elapsedTime)
         {
-            getPlayerInput();
+            getPlayerInput(elapsedTime);
             Move(elapsedTime);
             animations[(int)currentAnimation].Update(elapsedTime);
         }
         //check input for movement
-        static void getPlayerInput()
+        static void getPlayerInput(float elapsedTime)
         {
             currentAnimation = AnimationTypes.idle;
             if (Game1.currentKeyboard.IsKeyDown(Keys.W) && !Game1.previousKeyboard.IsKeyDown(Keys.W))
@@ -103,16 +109,16 @@ namespace _999AD
                     isTouchingTheGround = false;
                     isOnMovingPlatform = false;
                 }
-                else if(isOnTheWall)
+                else if (isOnTheWall)
                 {
                     velocity.Y = jumpingSpeed;
                     elapsedTimeStuckOnWall = 0;
                     canDoubleJump = false;
                     isOnTheWall = false;
                     if (!isFacingRight)
-                        wallJumpXSpeed= maxWallJumpXSpeed;
+                        wallJumpXSpeed = maxWallJumpXSpeed;
                     else
-                        wallJumpXSpeed= -maxWallJumpXSpeed;
+                        wallJumpXSpeed = -maxWallJumpXSpeed;
                     isFacingRight = !isFacingRight;
                 }
                 else if (canDoubleJump)
@@ -131,10 +137,16 @@ namespace _999AD
                 currentAnimation = AnimationTypes.walk;
                 velocity.X -= walkingSpeed;
             }
-            if (Game1.currentKeyboard.IsKeyDown(Keys.Space) && !Game1.previousKeyboard.IsKeyDown(Keys.Space))
+            if (elapsedShotTime > timeBetweenShots)
             {
-                ProjectilesManager.Shoot(isFacingRight ? (position + new Vector2(width, 0)) : position, ProjectileInitialVelocity);
+                if (Game1.currentKeyboard.IsKeyDown(Keys.Space) && !Game1.previousKeyboard.IsKeyDown(Keys.Space))
+                {
+                    ProjectilesManager.ShootPlayerProjectile(isFacingRight ? (position + new Vector2(width, 0)) : position, ProjectileInitialVelocity);
+                    elapsedShotTime = 0;
+                }
             }
+            else
+                elapsedShotTime += elapsedTime;
         }
         //move player based on his current velocity and check for collisions
         static void Move(float elapsedTime)
@@ -166,12 +178,7 @@ namespace _999AD
             }
             #endregion
             #region CALCULATE VELOCITIES
-            if (isOnMovingPlatform)
-            {
-                velocity.X += PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[PlatformsManager.platformIndex].Shift.X / elapsedTime;
-                velocity.Y= PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[PlatformsManager.platformIndex].Shift.Y / elapsedTime;
-            }
-            else
+            if(!isOnMovingPlatform)
             {
                 if (Math.Abs(wallJumpXSpeed) > walkingSpeed)
                     velocity.X = wallJumpXSpeed;
@@ -212,6 +219,8 @@ namespace _999AD
             else if (velocity.X < 0)
                 isFacingRight = false;
             position.X += velocity.X * elapsedTime;
+            if (isOnMovingPlatform)
+                position.X += PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[PlatformsManager.platformIndex].Shift.X;
             #region CHECK COLLISION WITH SOLID TILES
             leftCol = (int)MathHelper.Clamp(position.X / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
             rightCol = (int)MathHelper.Clamp((position.X + width - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
@@ -258,6 +267,8 @@ namespace _999AD
                 velocity.X *= 0.4f; //0.4f magic number
             #endregion
             position.Y += velocity.Y * elapsedTime;
+            if (isOnMovingPlatform)
+                position.Y += PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[PlatformsManager.platformIndex].Shift.Y;
             #region CHECK COLLISIONS WITH TILES
             topRow = (int)MathHelper.Clamp(position.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
             btmRow = (int)MathHelper.Clamp((position.Y + height - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
@@ -337,6 +348,20 @@ namespace _999AD
                 #endregion
             }
             #endregion
+        }
+        public static void Rebound(float ratioReboundToNormalJump,bool right)
+        {
+            velocity.Y = jumpingSpeed * ratioReboundToNormalJump;
+            velocity.X = right ? wallJumpXSpeed : -wallJumpXSpeed;
+            canDoubleJump = true;
+        }
+        public static void takeDamage(int damage=1)
+        {
+            healthPoints -= damage;
+            if (healthPoints<=0)
+            {
+                //do something
+            }
         }
         public static void Draw(SpriteBatch spriteBatch)
         {

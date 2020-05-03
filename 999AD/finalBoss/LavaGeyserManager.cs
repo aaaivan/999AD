@@ -91,6 +91,15 @@ namespace _999AD
                     lavaGeysers.RemoveAt(i);
             }
         }
+        public static bool LavaGeyserIntersectsRectangle(Rectangle collisionRect)
+        {
+            foreach (LavaGeyser lg in lavaGeysers)
+            {
+                if (lg.CollisionRectangle.Intersects(collisionRect))
+                    return true;
+            }
+            return false;
+        }
         public static void Draw(SpriteBatch spriteBatch)
         {
             foreach (LavaGeyser lg in lavaGeysers)

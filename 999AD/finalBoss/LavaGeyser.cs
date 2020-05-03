@@ -44,9 +44,9 @@ namespace _999AD
         public Rectangle CollisionRectangle
         {
             get { return new Rectangle((int)position.X,
-                (int)position.Y,
+                (int)position.Y+size/3,
                 size,
-                MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomHeightPx- (int)position.Y); }
+                MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomHeightPx- (int)position.Y-size/3); }
         }
         #endregion
         #region METHODS

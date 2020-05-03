@@ -59,7 +59,7 @@ namespace _999AD
                 return true;
             return false;
         }
-        public bool isDeadly()
+        public bool isHarmful()
         {
             if ((int)tileType >= 39 && (int)tileType < 42)
                 return true;

@@ -11,33 +11,45 @@ namespace _999AD
 {
     class Projectile
     {
+        public enum SpriteType
+        {
+            holyWater, broccoli, total
+        }
         #region DECLARATION
-        public static Texture2D spritesheet;
+        static Texture2D spritesheet;
+        static Animation[] animations;
         Animation animation;
-        public readonly static int width = 10;
-        public readonly static int height = 10;
+        public readonly int width;
+        public readonly int height;
         Vector2 position;
         Vector2 velocity;
-        bool active;
+        public bool active;
         #endregion
         #region CONSTRUCTOR
-        public Projectile(Vector2 _position, Vector2 _initialVelocity)
+        public Projectile(Vector2 _position, Vector2 _initialVelocity, SpriteType _spriteType)
         {
             position = _position;
             velocity = _initialVelocity;
-            animation = new Animation(new Rectangle(0, 0, spritesheet.Width, spritesheet.Height), width, height, spritesheet.Width/width, 0.1f, true);
+            animation = animations[(int)_spriteType].DeepCopy();
             active = true;
+            width = animation.Frame.Width;
+            height = animation.Frame.Height;
+        }
+        public static void Inizialize(Texture2D _spritesheet)
+        {
+            spritesheet = _spritesheet;
+            animations = new Animation[(int)SpriteType.total]
+                {
+                    new Animation(new Rectangle(0,0,32,8), 8,8, 4, 0.3f, true),
+                    new Animation(new Rectangle(0,8,64,16), 16,16, 4, 0.3f, true),
+                };
         }
         #endregion
         #region PROPERTIES
         //return the rectangle of the projectile
-        Rectangle Rectangle
+        public Rectangle Rectangle
         {
             get { return new Rectangle((int)position.X, (int)position.Y, width, height); }
-        }
-        public bool Active
-        {
-            get { return active; }
         }
         #endregion
         #region METHODS

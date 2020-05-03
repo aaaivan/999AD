@@ -12,39 +12,32 @@ namespace _999AD
     static class ProjectilesManager
     {
         #region DECLARATIONS
-        static List<Projectile> projectiles= new List<Projectile>(); //list of projectiles
-        public static readonly float timeBetweenShots = 0.2f; //minimum time between shots
-        static float elapsedShotTime=0f;
+        public static List<Projectile> playerProjectiles= new List<Projectile>(); //list of the projectiles thrown by the player
         #endregion
         #region CONSTRUCTOR
-        public static void Inizialize(Texture2D _spritesheet)
+        public static void Inizialize(Texture2D spritesheet)
         {
-            Projectile.spritesheet = _spritesheet;
+            Projectile.Inizialize(spritesheet);
         }
         #endregion
         #region METHODS
-        public static void Shoot(Vector2 position, Vector2 initialVelocity)
+        public static void ShootPlayerProjectile(Vector2 position, Vector2 initialVelocity)
         {
-            if (elapsedShotTime>timeBetweenShots)
-            {
-                projectiles.Add(new Projectile(position, initialVelocity));
-                elapsedShotTime = 0;
-            }
+                playerProjectiles.Add(new Projectile(position, initialVelocity, Projectile.SpriteType.holyWater));
         }
         public static void Update(float elapsedTime)
         {
-            elapsedShotTime += elapsedTime;
-            for (int index = projectiles.Count-1; index>=0; index--)
+            for (int index = playerProjectiles.Count-1; index>=0; index--)
             {
-                if (projectiles[index].Active)
-                    projectiles[index].Update(elapsedTime);
+                if (playerProjectiles[index].active)
+                    playerProjectiles[index].Update(elapsedTime);
                 else
-                    projectiles.RemoveAt(index);
+                    playerProjectiles.RemoveAt(index);
             }
         }
         public static void Draw(SpriteBatch spriteBatch)
         {
-            foreach (Projectile p in projectiles)
+            foreach (Projectile p in playerProjectiles)
             {
                 p.Draw(spriteBatch);
             }

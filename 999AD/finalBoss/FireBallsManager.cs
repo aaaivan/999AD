@@ -14,12 +14,12 @@ namespace _999AD
         #region DECLARATIONS
         static public readonly Vector2 fireballsCenter = new Vector2(384, 400);
         static Texture2D laser;
-        static int[] targetedPlatforms= new int[] { };
+        static List<int> targetedPlatforms= new List<int>();
         static float relativeLaserProgression=0;
         static float laserVelocity = 2f;
         static float persistanceTime = 4;
         static float elapsedPersistanceTime = 0;
-        static int targetPlatformAmount = 0;
+        static int fireballsPerPlatform = 0;
         static float targetPlatformLifetime = 0;
         static List<FireBall> fireballs = new List<FireBall>();
         static Random rand = new Random();
@@ -104,14 +104,14 @@ namespace _999AD
                     new float[] { timeBetweenShots*i, 4 }
                     ));
         }
-        public static void TargetPlatform(int[] platformIndexes, int amount, float lifetime)
+        public static void TargetPlatform(int[] platformIndexes, int fireballsPerPlatform, float lifetime)
         {
-            if (targetedPlatforms.Length != 0)
+            if (targetedPlatforms.Count != 0)
                 return;
             elapsedPersistanceTime = 0;
-            targetedPlatforms = platformIndexes;
+            targetedPlatforms = new List<int>(platformIndexes);
             relativeLaserProgression = 0;
-            targetPlatformAmount = amount;
+            fireballsPerPlatform = fireballsPerPlatform;
             targetPlatformLifetime = lifetime;
         }
         static void TargetPlatformGo(int amount, float lifetime)
@@ -150,6 +150,7 @@ namespace _999AD
         public static void Clear()
         {
             fireballs.Clear();
+            targetedPlatforms.Clear();
         }
         public static void Update(float elapsedTime)
         {
@@ -160,7 +161,7 @@ namespace _999AD
                 else
                     fireballs.RemoveAt(i);
             }
-            if (targetedPlatforms.Length!=0)
+            if (targetedPlatforms.Count!=0)
             {
                 if (relativeLaserProgression < 1)
                 {
@@ -173,12 +174,21 @@ namespace _999AD
                     elapsedPersistanceTime += elapsedTime;
                     if (elapsedPersistanceTime> persistanceTime)
                     {
-                        TargetPlatformGo(targetPlatformAmount, targetPlatformLifetime);
-                        targetedPlatforms = new int[] { };
+                        TargetPlatformGo(fireballsPerPlatform, targetPlatformLifetime);
+                        targetedPlatforms.Clear();
                     }
                 }
             }
 
+        }
+        public static bool FireballIntersectsRectangle(Rectangle collisionRect)
+        {
+            foreach(FireBall fb in fireballs)
+            {
+                if (fb.CollisionRectangle.Intersects(collisionRect))
+                    return true;
+            }
+            return false;
         }
         public static void Draw(SpriteBatch spriteBatch)
         {
