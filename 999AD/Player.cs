@@ -13,7 +13,7 @@ namespace _999AD
     {
         enum AnimationTypes
         {
-            idle, walk, jump, attck, fall, hurt, total
+            idle, walk, jump, attack, fall, die, total
         }
         #region DECLARATIONS
         static Texture2D spritesheet;
@@ -24,9 +24,9 @@ namespace _999AD
         public static readonly int width= 12; //refer to player rectangle not to the sprite size
         static Vector2 jumpSpeed= Vector2.Zero;
         static bool isFacingRight=true;
-        public static readonly float maxWalkingSpeed= 100; //movement speed
+        public static readonly float maxHorizontalMovementSpeed= 100; //movement speed
+        public static float horizontalMovementSpeed = 0;
         public static readonly Vector2 initialJumpSpeed= new Vector2(190, -400); //jumping initial speed
-        public static float walkingSpeed= 0;
         static bool isTouchingTheGround=false;
         static bool isOnTheWall= false;
         static bool isOnMovingPlatform = false;
@@ -39,7 +39,10 @@ namespace _999AD
         static float elapsedShotTime = 0f;
         public static readonly int maxHealthPoints = 3;
         public static int healthPoints = 3;
-        static int deaths = 0;
+        static readonly float invulnerabilityTime = 3;
+        static float elapsedInvulnerabilityTime = 0;
+        static bool invulnerable = false;
+        static float alphaValue = 1;
         #endregion
         #region CONSTRUCTOR
         public static void Inizialize(Texture2D _spritesheet, Vector2 _position)
@@ -49,18 +52,18 @@ namespace _999AD
             //fill following statements with sprite info
             animations.Add(new Animation(new Rectangle(0, 0, 128, 24), 16, 24, 8, 0.3f, true));
             animations.Add( new Animation( new Rectangle(0, 24, 160,24), 16, 24, 10, 0.06f, true));
-            animations.Add(new Animation( new Rectangle(0, 48, 80, 24), 16, 24, 5, 0f, false, true));
-            animations.Add(new Animation( new Rectangle(0, 72, 112, 24), 16, 24, 7, 0f, true));
-            animations.Add(new Animation( new Rectangle(0, 96, 64, 24), 16, 24, 4, 0f, true));
-            animations.Add(new Animation( new Rectangle(0, 120, 96, 24), 16, 24, 6, 0f, true));
-            currentAnimation = AnimationTypes.walk;
+            animations.Add(new Animation( new Rectangle(0, 48, 80, 24), 16, 24, 5, 0.06f, false, true));
+            animations.Add(new Animation( new Rectangle(0, 72, 112, 24), 16, 24, 7, 0.06f, false, false));
+            animations.Add(new Animation( new Rectangle(0, 96, 64, 24), 16, 24, 4, 0.1f, true));
+            animations.Add(new Animation( new Rectangle(0, 120, 96, 24), 16, 24, 5, 0.1f, false, true));
+            currentAnimation = AnimationTypes.idle;
         }
         #endregion
         #region PROPERTIES
         //return the player's collision rectangle
         public static Rectangle CollisionRectangle
         {
-            get { return new Rectangle((int)position.X, (int)position.Y, width, height-2); }//-2 magic number: improve?
+            get { return new Rectangle((int)position.X, (int)position.Y+2, width, height-4); }//-2 magic number: improve?
         }
         //return the center of the player's rectangle
         public static Vector2 Center
@@ -89,18 +92,82 @@ namespace _999AD
         #region METHODS
         public static void Update(float elapsedTime)
         {
-            getPlayerInput(elapsedTime);
+            CheckMovementInput();
+            CheckAttackInput(elapsedTime);
             Move(elapsedTime);
+            AnimationStateMachine(elapsedTime);
+            if (invulnerable)
+            {
+                elapsedInvulnerabilityTime += elapsedTime;
+                alphaValue = (alphaValue + 0.1f) - (int)(alphaValue + 0.1f);
+                if (elapsedInvulnerabilityTime > invulnerabilityTime)
+                {
+                    invulnerable = false;
+                    alphaValue = 1;
+                }
+            }
+        }
+        static void AnimationStateMachine(float elapsedTime)
+        {
+            switch (currentAnimation)
+            {
+                case AnimationTypes.idle:
+                    animations[(int)AnimationTypes.jump].Reset();
+                    break;
+                case AnimationTypes.die:
+                    if (!animations[(int)currentAnimation].Active)
+                    {
+                        animations[(int)AnimationTypes.attack].Reset();
+                        animations[(int)AnimationTypes.jump].Reset();
+                        animations[(int)AnimationTypes.die].Reset();
+                        currentAnimation = AnimationTypes.idle;
+                        //deal with death
+                    }
+                    break;
+                case AnimationTypes.attack:
+                    if (!animations[(int)currentAnimation].Active)
+                    {
+                        animations[(int)AnimationTypes.attack].Reset();
+                        animations[(int)AnimationTypes.jump].Reset();
+                        currentAnimation = AnimationTypes.idle;
+                    }
+                    break;
+                case AnimationTypes.jump:
+                    break;
+                case AnimationTypes.fall:
+                    animations[(int)AnimationTypes.jump].Reset();
+                    break;
+                case AnimationTypes.walk:
+                    animations[(int)AnimationTypes.jump].Reset();
+                    break;
+            }
             animations[(int)currentAnimation].Update(elapsedTime);
         }
-        //check input for movement
-        static void getPlayerInput(float elapsedTime)
+        //check input for shooting
+        static void CheckAttackInput(float elapsedTime)
         {
-            currentAnimation = AnimationTypes.idle;
+            if (elapsedShotTime > timeBetweenShots)
+            {
+                if (Game1.currentKeyboard.IsKeyDown(Keys.Space) && !Game1.previousKeyboard.IsKeyDown(Keys.Space))
+                {
+                    ProjectilesManager.ShootPlayerProjectile(isFacingRight ? (position + new Vector2(width, 0)) : position, ProjectileInitialVelocity);
+                    elapsedShotTime = 0;
+                    if (currentAnimation != AnimationTypes.die)
+                        currentAnimation = AnimationTypes.attack;
+                }
+            }
+            else
+                elapsedShotTime += elapsedTime;
+        }
+        //check input for movement
+        static void CheckMovementInput()
+        {
             if (Game1.currentKeyboard.IsKeyDown(Keys.W) && !Game1.previousKeyboard.IsKeyDown(Keys.W))
             {
                 if (isTouchingTheGround)
                 {
+                    if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack)
+                        currentAnimation = AnimationTypes.jump;
                     jumpSpeed.Y = initialJumpSpeed.Y;
                     if (Game1.currentKeyboard.IsKeyDown(Keys.D))
                         jumpSpeed.X = initialJumpSpeed.X;
@@ -112,6 +179,8 @@ namespace _999AD
                 }
                 else if (isOnTheWall)
                 {
+                    if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack)
+                        currentAnimation = AnimationTypes.jump;
                     jumpSpeed.Y = initialJumpSpeed.Y;
                     elapsedTimeStuckOnWall = 0;
                     canDoubleJump = false;
@@ -125,6 +194,8 @@ namespace _999AD
                 }
                 else if (canDoubleJump)
                 {
+                    if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack)
+                        currentAnimation = AnimationTypes.jump;
                     jumpSpeed.Y = initialJumpSpeed.Y;
                     canDoubleJump = false;
                     return;
@@ -132,22 +203,21 @@ namespace _999AD
             }
             if (Game1.currentKeyboard.IsKeyDown(Keys.D))
             {
-                walkingSpeed = maxWalkingSpeed;
+                horizontalMovementSpeed += maxHorizontalMovementSpeed;
+                if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack && isTouchingTheGround)
+                    currentAnimation = AnimationTypes.walk;
             }
             if (Game1.currentKeyboard.IsKeyDown(Keys.A))
             {
-                walkingSpeed =- maxWalkingSpeed;
+                horizontalMovementSpeed -= maxHorizontalMovementSpeed;
+                if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack && isTouchingTheGround)
+                    currentAnimation = AnimationTypes.walk;
             }
-            if (elapsedShotTime > timeBetweenShots)
-            {
-                if (Game1.currentKeyboard.IsKeyDown(Keys.Space) && !Game1.previousKeyboard.IsKeyDown(Keys.Space))
-                {
-                    ProjectilesManager.ShootPlayerProjectile(isFacingRight ? (position + new Vector2(width, 0)) : position, ProjectileInitialVelocity);
-                    elapsedShotTime = 0;
-                }
-            }
-            else
-                elapsedShotTime += elapsedTime;
+            if (isTouchingTheGround &&
+                horizontalMovementSpeed == 0 &&
+                currentAnimation != AnimationTypes.die &&
+                currentAnimation != AnimationTypes.attack)
+                currentAnimation = AnimationTypes.idle;
         }
         //move player based on his current velocity and check for collisions
         static void Move(float elapsedTime)
@@ -182,46 +252,46 @@ namespace _999AD
             #region CALCULATE VELOCITIES
             if (isWallJumping)
             {
-                if (-2*Math.Abs(jumpSpeed.X)< maxWalkingSpeed* Math.Sign(jumpSpeed.X) &&
-                    maxWalkingSpeed * Math.Sign(jumpSpeed.X)< Math.Abs(jumpSpeed.X))
+                if (-2*Math.Abs(jumpSpeed.X)< maxHorizontalMovementSpeed* Math.Sign(jumpSpeed.X) &&
+                    maxHorizontalMovementSpeed * Math.Sign(jumpSpeed.X)< Math.Abs(jumpSpeed.X))
                     totalSpeed.X = jumpSpeed.X;
                 else
                 {
-                    if (Math.Sign(jumpSpeed.X) == -Math.Sign(walkingSpeed))
+                    if (Math.Sign(jumpSpeed.X) == -Math.Sign(horizontalMovementSpeed))
                     {
                         isWallJumping = false;
                         jumpSpeed.X = 0;
-                        totalSpeed.X = walkingSpeed;
+                        totalSpeed.X = horizontalMovementSpeed;
                     }
                     else
                     {
-                        totalSpeed.X = jumpSpeed.X+walkingSpeed;
-                        totalSpeed.X = MathHelper.Clamp(totalSpeed.X, -maxWalkingSpeed, maxWalkingSpeed);
+                        totalSpeed.X = jumpSpeed.X+horizontalMovementSpeed;
+                        totalSpeed.X = MathHelper.Clamp(totalSpeed.X, -maxHorizontalMovementSpeed, maxHorizontalMovementSpeed);
                     }
                 }
                 jumpSpeed.X -= 2f * jumpSpeed.X * Gravity.airFrictionCoeff * elapsedTime;//2 is a magic number
             }
             else if (!isTouchingTheGround)
             {
-                if (Math.Sign(jumpSpeed.X) == -Math.Sign(walkingSpeed))
-                    totalSpeed.X = walkingSpeed;
-                else if (Math.Abs(jumpSpeed.X) > maxWalkingSpeed)
+                if (Math.Sign(jumpSpeed.X) == -Math.Sign(horizontalMovementSpeed))
+                    totalSpeed.X = horizontalMovementSpeed;
+                else if (Math.Abs(jumpSpeed.X) > maxHorizontalMovementSpeed)
                 {
                     totalSpeed.X = jumpSpeed.X;
                     jumpSpeed.X -= 2 * jumpSpeed.X * Gravity.airFrictionCoeff * elapsedTime;//2 is a magic number
                 }
                 else
                 {
-                    totalSpeed.X = jumpSpeed.X+walkingSpeed;
-                    totalSpeed.X = MathHelper.Clamp(totalSpeed.X, -maxWalkingSpeed, maxWalkingSpeed);
-                    jumpSpeed.X -= 5 * jumpSpeed.X * Gravity.airFrictionCoeff * elapsedTime;//5 is a magic number
+                    totalSpeed.X = jumpSpeed.X+horizontalMovementSpeed;
+                    totalSpeed.X = MathHelper.Clamp(totalSpeed.X, -maxHorizontalMovementSpeed, maxHorizontalMovementSpeed);
+                    jumpSpeed.X -= 4 * jumpSpeed.X * Gravity.airFrictionCoeff * elapsedTime;//5 is a magic number
                 }
             }
             else
             {
-                totalSpeed.X = walkingSpeed;
+                totalSpeed.X = horizontalMovementSpeed;
             }
-            walkingSpeed = 0;
+            horizontalMovementSpeed = 0;
             if (totalSpeed.X > 0)
                 isFacingRight = true;
             else if (totalSpeed.X < 0)
@@ -245,10 +315,12 @@ namespace _999AD
                     if (Gravity.gravityAcceleration - jumpSpeed.Y * Gravity.airFrictionCoeff > 0)
                         jumpSpeed.Y += (Gravity.gravityAcceleration - jumpSpeed.Y * Gravity.airFrictionCoeff) * elapsedTime;
                 }
-                if (jumpSpeed.Y > Gravity.gravityAcceleration * elapsedTime * 20)
+                if (jumpSpeed.Y > Gravity.gravityAcceleration * elapsedTime * 15)
                 {
                     isTouchingTheGround = false;
                     isOnMovingPlatform = false;
+                    if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack)
+                        currentAnimation = AnimationTypes.fall;
                 }
                 totalSpeed.Y = jumpSpeed.Y;
             }
@@ -381,18 +453,24 @@ namespace _999AD
             }
             #endregion
         }
-        public static void Rebound(float ratioReboundToNormalJump,bool right)
+        public static void Rebound(float ratioReboundToNormalJump)
         {
             jumpSpeed.Y = initialJumpSpeed.Y * ratioReboundToNormalJump;
-            jumpSpeed.X = right ? initialJumpSpeed.X : -initialJumpSpeed.X;
             canDoubleJump = true;
         }
         public static void takeDamage(int damage=1)
         {
+            if (invulnerable)
+                return;
             healthPoints -= damage;
             if (healthPoints<=0)
             {
-                //do something
+                currentAnimation = AnimationTypes.die;
+            }
+            else
+            {
+                invulnerable = true;
+                elapsedInvulnerabilityTime = 0;
             }
         }
         public static void Draw(SpriteBatch spriteBatch)
@@ -402,7 +480,7 @@ namespace _999AD
                                                      position.Y - animations[(int)currentAnimation].Frame.Height + height),
                                          animations[(int)currentAnimation].Frame.Width,
                                          animations[(int)currentAnimation].Frame.Height),
-                animations[(int)currentAnimation].Frame, Color.White, 0f, Vector2.Zero,
+                animations[(int)currentAnimation].Frame, Color.White*(invulnerable?alphaValue:1), 0f, Vector2.Zero,
                 isFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
         }
         #endregion

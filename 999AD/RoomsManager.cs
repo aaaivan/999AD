@@ -16,7 +16,7 @@ namespace _999AD
         {
             tutorial0, tutorial1, tutorial2, tutorial3, finalBoss, escape0, escape1, total
         }
-        static Rooms currentRoom = Rooms.escape0;
+        static Rooms currentRoom = Rooms.escape1;
         #endregion
         #region CONSTRUCTOR
         public static void Inizialize()
@@ -77,8 +77,6 @@ namespace _999AD
             MapsManager.maps[(int)currentRoom].Update(elapsedTime);
             if (currentRoom== Rooms.finalBoss)
             {
-                Camera.pointLocked.X = Player.Center.X;
-                Camera.pointLocked.Y = (Player.Center.Y + 2 * FireBallsManager.fireballsCenter.Y) / 3f;
                 FinalBoss.Update(elapsedTime);
             }
             FireBallsManager.Update(elapsedTime);

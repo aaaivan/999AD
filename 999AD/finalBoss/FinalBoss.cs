@@ -36,6 +36,7 @@ namespace _999AD
         static float elapsedRecoveryTime = 0;
         static public readonly int bossWidth = 180;
         static public readonly int bossHeight = 280;
+        static public readonly Vector2 fireballsCenter = new Vector2(384, 400);
         static Vector2 bossInitialMidPoint;
         static public Vector2 bossMidPoint;
         static public readonly int wingsRelativeYPosition = 100;
@@ -60,7 +61,7 @@ namespace _999AD
         #region CONSTRUCTOR
         public static void Inizialize(Texture2D _bossSpritesheet, Texture2D[] _wingSpritesheets)
         {
-            bossInitialMidPoint = new Vector2(FireBallsManager.fireballsCenter.X, FireBallsManager.fireballsCenter.Y - 30);
+            bossInitialMidPoint = new Vector2(fireballsCenter.X, fireballsCenter.Y - 30);
             bossSpritesheet = _bossSpritesheet;
             wingSpritesheets = _wingSpritesheets;
             bossHP = maxBossHp;
@@ -449,7 +450,7 @@ namespace _999AD
                                         LavaGeyserManager.EquallySpaced(LavaGeyser.size * 1.5f, 2, 0);
                                     else
                                         LavaGeyserManager.ShootGeyser(
-                                        new float[] { rand.Next((int)FireBallsManager.fireballsCenter.X - 350, (int)FireBallsManager.fireballsCenter.X + 350) },
+                                        new float[] { rand.Next((int)fireballsCenter.X - 350, (int)fireballsCenter.X + 350) },
                                         3);
                                     bossAnimation = BossAnimations.attack;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
@@ -742,7 +743,7 @@ namespace _999AD
             spriteBatch.Draw(wingSpritesheets[(int)rightWingTexture], Camera.RelativeRectangle(RightWingDrawRectangle), wingAnimations[(int)rightWingAnimation].Frame, Color.White);
             spriteBatch.Draw(wingSpritesheets[(int)leftWingTexture], Camera.RelativeRectangle(LeftWingDrawRectangle), wingAnimations[(int)leftWingAnimation].Frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 1); ;
             spriteBatch.Draw(bossSpritesheet, Camera.RelativeRectangle(BossDrawRectangle), bossAnimations[(int)bossAnimation].Frame, bossColor);
-            if (frameCount >= 5)
+            if (frameCount >= framesOfDifferentColor)
             {
                 frameCount = 0;
                 bossColor = Color.White;
