@@ -42,7 +42,7 @@ namespace _999AD
             #region COLLISION PLAYER-FINAL BOSS WINGS
             if(RoomsManager.CurrentRoom==RoomsManager.Rooms.finalBoss)
             {
-                if (FinalBoss.WingHitByReactangle(Player.CollisionRectangle, Player.Velocity.Y, elapsedTime))
+                if (FinalBoss.WingHitByReactangle(Player.CollisionRectangle, Player.JumpSpeed.Y, elapsedTime))
                     Player.Rebound(2, Player.Center.X > FireBallsManager.fireballsCenter.X);
             }
             #endregion

@@ -25,6 +25,7 @@ namespace _999AD
                 (
                     new MovingPlatform[]
                     {
+                        new MovingPlatform(MovingPlatform.TextureType.platform40_8, 20, new Vector2(80,100), new Vector2(0,0), 0.8f, 0)
                     }
                 ),
                 new PlatformsRoomManager //tutorial1

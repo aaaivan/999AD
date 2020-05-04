@@ -22,23 +22,23 @@ namespace _999AD
         public static Vector2 position;
         public static readonly int height= 22; //refer to player rectangle not to the sprite size
         public static readonly int width= 12; //refer to player rectangle not to the sprite size
-        static Vector2 velocity= Vector2.Zero;
+        static Vector2 jumpSpeed= Vector2.Zero;
         static bool isFacingRight=true;
-        public static readonly float walkingSpeed= 100; //movement speed
-        public static readonly float jumpingSpeed= -400; //jumping initial vertical speed
-        public static readonly float maxWallJumpXSpeed = 180; //wall jump initial horizontal speed
-        static float wallJumpXSpeed = 0;
+        public static readonly float maxWalkingSpeed= 100; //movement speed
+        public static readonly Vector2 initialJumpSpeed= new Vector2(190, -400); //jumping initial speed
+        public static float walkingSpeed= 0;
         static bool isTouchingTheGround=false;
         static bool isOnTheWall= false;
         static bool isOnMovingPlatform = false;
         static bool canDoubleJump = true;
+        static bool isWallJumping = false;
         public static readonly float maxTimeStuckOnwal = 0.2f;
         static float elapsedTimeStuckOnWall=0f;
         public static readonly Vector2 projectileInitialVelocity = new Vector2(500, -100);
         public static readonly float timeBetweenShots = 0.4f; //minimum time between shots
         static float elapsedShotTime = 0f;
         public static readonly int maxHealthPoints = 3;
-        static int healthPoints = 3;
+        public static int healthPoints = 3;
         static int deaths = 0;
         #endregion
         #region CONSTRUCTOR
@@ -67,17 +67,17 @@ namespace _999AD
         {
             get { return new Vector2(position.X+width/2f, position.Y + height / 2f); }
         }
-        public static Vector2 Velocity
+        public static Vector2 JumpSpeed
         {
-            get { return velocity; }
+            get { return jumpSpeed; }
         }
         //return the initial velocity of the projectile based on the direction the player is facing
         static Vector2 ProjectileInitialVelocity
         {
             get
             {
-                return ( new Vector2((isFacingRight ? projectileInitialVelocity.X : -projectileInitialVelocity.X)+velocity.X,
-                                    projectileInitialVelocity.Y+ 0.5f*velocity.Y)
+                return ( new Vector2((isFacingRight ? projectileInitialVelocity.X : -projectileInitialVelocity.X)+jumpSpeed.X,
+                                    projectileInitialVelocity.Y+ 0.5f*jumpSpeed.Y)
                         );
             }
         }
@@ -101,41 +101,46 @@ namespace _999AD
             {
                 if (isTouchingTheGround)
                 {
-                    velocity.Y = jumpingSpeed;
+                    jumpSpeed.Y = initialJumpSpeed.Y;
                     if (Game1.currentKeyboard.IsKeyDown(Keys.D))
-                        wallJumpXSpeed = maxWallJumpXSpeed;
+                        jumpSpeed.X = initialJumpSpeed.X;
                     else if (Game1.currentKeyboard.IsKeyDown(Keys.A))
-                        wallJumpXSpeed = -maxWallJumpXSpeed;
+                        jumpSpeed.X = -initialJumpSpeed.X;
                     isTouchingTheGround = false;
                     isOnMovingPlatform = false;
+                    return;
                 }
                 else if (isOnTheWall)
                 {
-                    velocity.Y = jumpingSpeed;
+                    jumpSpeed.Y = initialJumpSpeed.Y;
                     elapsedTimeStuckOnWall = 0;
                     canDoubleJump = false;
                     isOnTheWall = false;
+                    isWallJumping = true;
                     if (!isFacingRight)
-                        wallJumpXSpeed = maxWallJumpXSpeed;
+                        jumpSpeed.X = initialJumpSpeed.X;
                     else
-                        wallJumpXSpeed = -maxWallJumpXSpeed;
+                        jumpSpeed.X = -initialJumpSpeed.X;
                     isFacingRight = !isFacingRight;
                 }
                 else if (canDoubleJump)
                 {
-                    velocity.Y = jumpingSpeed;
+                    jumpSpeed.Y = initialJumpSpeed.Y;
                     canDoubleJump = false;
+                    return;
                 }
             }
             if (Game1.currentKeyboard.IsKeyDown(Keys.D))
             {
-                currentAnimation = AnimationTypes.walk;
-                velocity.X += walkingSpeed;
+                walkingSpeed = maxWalkingSpeed;
+                if (!isFacingRight)
+                    isOnTheWall = false;
             }
             if (Game1.currentKeyboard.IsKeyDown(Keys.A))
             {
-                currentAnimation = AnimationTypes.walk;
-                velocity.X -= walkingSpeed;
+                walkingSpeed =- maxWalkingSpeed;
+                if (isFacingRight)
+                    isOnTheWall = false;
             }
             if (elapsedShotTime > timeBetweenShots)
             {
@@ -151,134 +156,138 @@ namespace _999AD
         //move player based on his current velocity and check for collisions
         static void Move(float elapsedTime)
         {
-            #region CHECK IF THE PLAYER IS ON THE WALL
-            int topRow = (int)MathHelper.Clamp(position.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
-            int btmRow = (int)MathHelper.Clamp((position.Y + height - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
-            int leftCol = (int)MathHelper.Clamp(position.X / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
-            int rightCol = (int)MathHelper.Clamp((position.X + width - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
-            if (isOnTheWall)
-            {
-                isOnTheWall = false;
-                if (isFacingRight)
-                {
-                    for (int row = topRow; row <= btmRow; row++)
-                    {
-                        if (MapsManager.maps[(int)RoomsManager.CurrentRoom].array[row, rightCol + 1].isSolid())
-                            isOnTheWall = true;
-                    }
-                }
-                else
-                {
-                    for (int row = topRow; row <= btmRow; row++)
-                    {
-                        if (MapsManager.maps[(int)RoomsManager.CurrentRoom].array[row, leftCol - 1].isSolid())
-                            isOnTheWall = true;
-                    }
-                }
-            }
-            #endregion
+            Vector2 totalSpeed = new Vector2();
             #region CALCULATE VELOCITIES
-            if(!isOnMovingPlatform)
+            if (isWallJumping)
             {
-                if (Math.Abs(wallJumpXSpeed) > walkingSpeed)
-                    velocity.X = wallJumpXSpeed;
+                if (-2*Math.Abs(jumpSpeed.X)< maxWalkingSpeed* Math.Sign(jumpSpeed.X) &&
+                    maxWalkingSpeed * Math.Sign(jumpSpeed.X)< Math.Abs(jumpSpeed.X))
+                    totalSpeed.X = jumpSpeed.X;
                 else
                 {
-                    if (Math.Sign(wallJumpXSpeed) == -Math.Sign(velocity.X))
-                        wallJumpXSpeed = 0;
+                    if (Math.Sign(jumpSpeed.X) == -Math.Sign(walkingSpeed))
+                    {
+                        isWallJumping = false;
+                        jumpSpeed.X = 0;
+                        totalSpeed.X = walkingSpeed;
+                    }
                     else
                     {
-                        velocity.X += wallJumpXSpeed;
-                        velocity.X = MathHelper.Clamp(velocity.X, -walkingSpeed, walkingSpeed);
+                        totalSpeed.X = jumpSpeed.X+walkingSpeed;
+                        totalSpeed.X = MathHelper.Clamp(totalSpeed.X, -maxWalkingSpeed, maxWalkingSpeed);
                     }
                 }
-                wallJumpXSpeed -= 2*wallJumpXSpeed*Gravity.airFrictionCoeff*elapsedTime;//2 is a magic number
+                jumpSpeed.X -= 2f * jumpSpeed.X * Gravity.airFrictionCoeff * elapsedTime;//2 is a magic number
+            }
+            else if (!isTouchingTheGround)
+            {
+                if (Math.Sign(jumpSpeed.X) == -Math.Sign(walkingSpeed))
+                    totalSpeed.X = walkingSpeed;
+                else if (Math.Abs(jumpSpeed.X) > maxWalkingSpeed)
+                {
+                    totalSpeed.X = jumpSpeed.X;
+                    jumpSpeed.X -= 2 * jumpSpeed.X * Gravity.airFrictionCoeff * elapsedTime;//2 is a magic number
+                }
+                else
+                {
+                    totalSpeed.X = jumpSpeed.X+walkingSpeed;
+                    totalSpeed.X = MathHelper.Clamp(totalSpeed.X, -maxWalkingSpeed, maxWalkingSpeed);
+                    jumpSpeed.X -= 5 * jumpSpeed.X * Gravity.airFrictionCoeff * elapsedTime;//5 is a magic number
+                }
+            }
+            else
+            {
+                totalSpeed.X = walkingSpeed;
+            }
+            walkingSpeed = 0;
+            if (totalSpeed.X > 0)
+                isFacingRight = true;
+            else if (totalSpeed.X < 0)
+                isFacingRight = false;
+            if (!isOnMovingPlatform)
+            {
                 if (isOnTheWall)
                 {
                     if (elapsedTimeStuckOnWall < maxTimeStuckOnwal)
                     {
                         elapsedTimeStuckOnWall += elapsedTime;
-                        velocity.Y = 0;
+                        jumpSpeed.Y = 0;
                     }
-                    else if (Gravity.gravityAcceleration - velocity.Y * Gravity.wallFrictionCoeff > 0)
+                    else if (Gravity.gravityAcceleration - jumpSpeed.Y * Gravity.wallFrictionCoeff > 0)
                     {
-                        velocity.Y += (Gravity.gravityAcceleration - velocity.Y * Gravity.wallFrictionCoeff)*elapsedTime;
+                        jumpSpeed.Y += (Gravity.gravityAcceleration - jumpSpeed.Y * Gravity.wallFrictionCoeff) * elapsedTime;
                     }
                 }
                 else
                 {
-                    if (Gravity.gravityAcceleration - velocity.Y * Gravity.airFrictionCoeff>0)
-                    velocity.Y += (Gravity.gravityAcceleration-velocity.Y*Gravity.airFrictionCoeff) * elapsedTime;
+                    if (Gravity.gravityAcceleration - jumpSpeed.Y * Gravity.airFrictionCoeff > 0)
+                        jumpSpeed.Y += (Gravity.gravityAcceleration - jumpSpeed.Y * Gravity.airFrictionCoeff) * elapsedTime;
                 }
-                if (velocity.Y > Gravity.gravityAcceleration * elapsedTime * 20)
+                if (jumpSpeed.Y > Gravity.gravityAcceleration * elapsedTime * 20)
+                {
                     isTouchingTheGround = false;
+                    isOnMovingPlatform = false;
+                }
+                totalSpeed.Y = jumpSpeed.Y;
+            }
+            else
+            {
+                totalSpeed += PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[PlatformsManager.platformIndex].Shift / elapsedTime;
             }
             #endregion
-            if (velocity.X > 0)
-                isFacingRight = true;
-            else if (velocity.X < 0)
-                isFacingRight = false;
-            position.X += velocity.X * elapsedTime;
-            if (isOnMovingPlatform)
-                position.X += PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[PlatformsManager.platformIndex].Shift.X;
+            position.X += totalSpeed.X * elapsedTime;
             #region CHECK COLLISION WITH SOLID TILES
-            leftCol = (int)MathHelper.Clamp(position.X / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
-            rightCol = (int)MathHelper.Clamp((position.X + width - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
-            topRow = (int)MathHelper.Clamp(position.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
-            btmRow = (int)MathHelper.Clamp((position.Y + height - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
-
+            int topRow = (int)MathHelper.Clamp(position.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
+            int btmRow = (int)MathHelper.Clamp((position.Y + height - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
+            int leftCol = (int)MathHelper.Clamp(position.X / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
+            int rightCol = (int)MathHelper.Clamp((position.X + width - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
             //check right-hand side
-            if (velocity.X > 0)
+            if (totalSpeed.X > 0)
             {
                 for (int row = topRow; row <= btmRow; row++)
                 {
                     if (MapsManager.maps[(int)RoomsManager.CurrentRoom].array[row, rightCol].isSolid())
                     {
                         position.X = rightCol * Tile.tileSize - width;
-                        if (!isTouchingTheGround && velocity.Y > -10) //improve
+                        if (!isTouchingTheGround && totalSpeed.Y > -10) //improve
                         {
                             isOnTheWall = true;
-                            wallJumpXSpeed = 0;
+                            isWallJumping = false;
+                            jumpSpeed.X = 0;
                         }
                         break;
                     }
                 }
             }
             //check left-hand side
-            else if (velocity.X < 0)
+            else if (totalSpeed.X < 0)
             {
                 for (int row = topRow; row <= btmRow; row++)
                 {
                     if (MapsManager.maps[(int)RoomsManager.CurrentRoom].array[row, leftCol].isSolid())
                     {
                         position.X = (leftCol + 1) * Tile.tileSize;
-                        if (!isTouchingTheGround && velocity.Y > -10) //improve
+                        if (!isTouchingTheGround && totalSpeed.Y > -10) //improve
                         {
                             isOnTheWall = true;
-                            wallJumpXSpeed = 0;
+                            isWallJumping = false;
+                            jumpSpeed.X = 0;
                         }
                         break;
                     }
                 }
             }
-            if (isTouchingTheGround)
-                velocity.X = 0;
-            else
-                velocity.X *= 0.4f; //0.4f magic number
             #endregion
-            position.Y += velocity.Y * elapsedTime;
-            if (isOnMovingPlatform)
-                position.Y += PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[PlatformsManager.platformIndex].Shift.Y;
+            position.Y += totalSpeed.Y * elapsedTime;
             #region CHECK COLLISIONS WITH TILES
             topRow = (int)MathHelper.Clamp(position.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
             btmRow = (int)MathHelper.Clamp((position.Y + height - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
             leftCol = (int)MathHelper.Clamp(position.X / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
             rightCol = (int)MathHelper.Clamp((position.X + width - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
-
             //check bottom
-            if (velocity.Y > 0)
+            if (totalSpeed.Y > 0)
             {
-                int span= ((int)(velocity.Y*elapsedTime+Tile.tileSize)/ Tile.tileSize);
+                int span= ((int)(totalSpeed.Y*elapsedTime+Tile.tileSize)/ Tile.tileSize);
                 for (int i = span - 1; i >= 0; i--)
                 {
                     for (int col = leftCol; col <= rightCol; col++)
@@ -288,12 +297,12 @@ namespace _999AD
                         if (MapsManager.maps[(int)RoomsManager.CurrentRoom].array[btmRow-i, col].isSolid())
                         {
                             position.Y = (btmRow-i) * Tile.tileSize - height;
-                            velocity.Y = 0;
-                            wallJumpXSpeed = 0;
+                            jumpSpeed.Y = 0;
+                            jumpSpeed.X = 0;
                             isTouchingTheGround = true;
-                            isOnMovingPlatform = false;
                             canDoubleJump = true;
                             isOnTheWall = false;
+                            isWallJumping = false;
                             elapsedTimeStuckOnWall = 0;
                             i = 0;
                             break;
@@ -302,14 +311,14 @@ namespace _999AD
                 }
             }
             //check top
-            else if (velocity.Y < 0)
+            else if (totalSpeed.Y < 0)
             {
                 for (int col = leftCol; col <= rightCol; col++)
                 {
                     if (MapsManager.maps[(int)RoomsManager.CurrentRoom].array[topRow, col].isSolid())
                     {
                         position.Y = (topRow + 1) * Tile.tileSize;
-                        velocity.Y = 0;
+                        jumpSpeed.Y = 0;
                         break;
                     }
                 }
@@ -324,16 +333,17 @@ namespace _999AD
                     if (position.X+width>p.Position.X &&
                         position.X<p.Position.X+p.width &&
                         position.Y+height- p.Position.Y>0 &&
-                        position.Y + height - p.Position.Y < velocity.Y*elapsedTime - p.Shift.Y)
+                        position.Y + height - p.Position.Y < totalSpeed.Y*elapsedTime - p.Shift.Y)
                     {
                         isOnMovingPlatform = true;
                         position.Y = p.Position.Y - height + 1;
-                        velocity.Y = 0;
-                        wallJumpXSpeed = 0;
+                        jumpSpeed.Y = 0;
+                        jumpSpeed.X = 0;
                         PlatformsManager.platformIndex = i;
                         isTouchingTheGround = true;
                         canDoubleJump = true;
                         isOnTheWall = false;
+                        isWallJumping = false;
                         elapsedTimeStuckOnWall = 0;
                         return;
                     }
@@ -351,8 +361,8 @@ namespace _999AD
         }
         public static void Rebound(float ratioReboundToNormalJump,bool right)
         {
-            velocity.Y = jumpingSpeed * ratioReboundToNormalJump;
-            velocity.X = right ? wallJumpXSpeed : -wallJumpXSpeed;
+            jumpSpeed.Y = initialJumpSpeed.Y * ratioReboundToNormalJump;
+            jumpSpeed.X = right ? initialJumpSpeed.X : -initialJumpSpeed.X;
             canDoubleJump = true;
         }
         public static void takeDamage(int damage=1)

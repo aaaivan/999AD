@@ -83,9 +83,9 @@ namespace _999AD
         public bool HarmfulTileIntersectsRectangle(Rectangle collisionRect)
         {
             int topRow = MathHelper.Clamp(collisionRect.Y / Tile.tileSize, 0, roomHeightTiles - 1);
-            int btmRow = MathHelper.Clamp((collisionRect.Bottom - 1) / Tile.tileSize, 0, roomHeightTiles - 1);
+            int btmRow = MathHelper.Clamp((collisionRect.Bottom -1) / Tile.tileSize, 0, roomHeightTiles - 1);
             int leftCol = MathHelper.Clamp(collisionRect.X / Tile.tileSize, 0, roomWidthTiles - 1);
-            int rightCol = MathHelper.Clamp((collisionRect.Right - 1) / Tile.tileSize, 0, roomWidthTiles - 1);
+            int rightCol = MathHelper.Clamp((collisionRect.Right -1) / Tile.tileSize, 0, roomWidthTiles - 1);
             for (int row = topRow; row <= btmRow; row++)
             {
                 for (int col = leftCol; col <= rightCol; col++)

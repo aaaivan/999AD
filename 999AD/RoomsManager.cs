@@ -16,7 +16,7 @@ namespace _999AD
         {
             tutorial0, tutorial1, tutorial2, tutorial3, finalBoss, escape0, escape1, total
         }
-        static Rooms currentRoom = Rooms.finalBoss;
+        static Rooms currentRoom = Rooms.escape0;
         #endregion
         #region CONSTRUCTOR
         public static void Inizialize()
