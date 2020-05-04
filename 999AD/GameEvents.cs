@@ -116,6 +116,7 @@ namespace _999AD
                             tilesToRemove.Add(new int[2] { 56, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - col - 1 });
                         }
                         CameraManager.shakeForTime(eventsDuration[(int)Events.terrainCollapseFinalBoss]);
+                        CameraManager.MoveCamera(0.3f, FinalBoss.fireballsCenter, 1);
                         MapsManager.maps[(int)RoomsManager.CurrentRoom].RemoveGroupOfTiles(tilesToRemove, 0.03f, 3);
                         happening = Events.terrainCollapseFinalBoss;
                         elapsedEventsDuration = 0;
@@ -134,6 +135,7 @@ namespace _999AD
                         break;
                     case Events.escapeFinalBossRoom:
                         PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[6].active = true;
+                        CameraManager.MoveCamera(1, FinalBoss.fireballsCenter, 1);
                         LavaGeyserManager.SweepAcross(2, 0.7f, 1, 0, 24, false);
                         happening = Events.escapeFinalBossRoom;
                         elapsedEventsDuration = 0;
@@ -145,7 +147,7 @@ namespace _999AD
                 switch (_event)
                 {
                     case Events.lavaEruption1_escape0:
-                        LavaGeyserManager.ShootGeyser(new float[] { MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomWidthtPx -308 }, 0);
+                        LavaGeyserManager.ShootGeyser(new float[] { MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomWidthtPx -308 }, 0, -1000);
                         List<int[]> tilesToRemove= new List<int[]>();
                         for (int i=0; i<10; i++)
                         {
@@ -194,8 +196,8 @@ namespace _999AD
                     case Events.lavaEruption4_escape0:
                         LavaGeyserManager.ShootGeyser(new float[]
                         {
-                            MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomWidthtPx - 968,
-                            MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomWidthtPx - 944
+                            MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomWidthtPx - 972,
+                            MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomWidthtPx - 948
                         }, 0, -600);
                         happening = Events.lavaEruption4_escape0;
                         elapsedEventsDuration = 0;

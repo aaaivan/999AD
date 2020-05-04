@@ -43,7 +43,7 @@ namespace _999AD
             if(RoomsManager.CurrentRoom==RoomsManager.Rooms.finalBoss)
             {
                 if (FinalBoss.WingHitByReactangle(Player.CollisionRectangle, Player.JumpSpeed.Y, elapsedTime))
-                    Player.Rebound(2, Player.Center.X > FireBallsManager.fireballsCenter.X);
+                    Player.Rebound(2);
             }
             #endregion
         }

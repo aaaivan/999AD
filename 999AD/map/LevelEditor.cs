@@ -42,7 +42,7 @@ namespace _999AD
             arial32 = _arial32;
             arial14 = _arial16;
             whiteTexture = _whiteTexture;
-            CameraManager.SwitchCamera((RoomsManager.Rooms)currentRoomNumber, false);
+            CameraManager.SwitchCamera((RoomsManager.Rooms)currentRoomNumber, 0);
         }
         #endregion
         //save maps to file
@@ -341,8 +341,8 @@ namespace _999AD
                     else if (Game1.currentKeyboard.IsKeyDown(Keys.Enter))
                     {
                         currentRoomNumber = userInputInt < (int)RoomsManager.Rooms.total ? userInputInt : ((int)RoomsManager.Rooms.total - 1);
-                        CameraManager.SwitchCamera((RoomsManager.Rooms)currentRoomNumber, false);
-                        Camera.pointLocked = new Vector2(0, 0);
+                        CameraManager.SwitchCamera((RoomsManager.Rooms)currentRoomNumber, 0);
+                        CameraManager.pointLocked = new Vector2(0, 0);
                         userInputInt = 0;
                         menu = MenuState.none;
                         message = "";
@@ -412,7 +412,7 @@ namespace _999AD
                             }
                         }
                         MapsManager.maps[currentRoomNumber] = newMap;
-                        CameraManager.SwitchCamera((RoomsManager.Rooms)currentRoomNumber, false);
+                        CameraManager.SwitchCamera((RoomsManager.Rooms)currentRoomNumber, 0);
                         menu = MenuState.none;
                         message = "";
                         userInputString = "";
@@ -494,13 +494,20 @@ namespace _999AD
             if (menu== MenuState.none)
             {
                 if (Game1.currentKeyboard.IsKeyDown(Keys.Up))
-                    Camera.pointLocked.Y -= 10;
+                    CameraManager.pointLocked.Y -= 10;
                 if (Game1.currentKeyboard.IsKeyDown(Keys.Down))
-                    Camera.pointLocked.Y += 10;
+                    CameraManager.pointLocked.Y += 10;
                 if (Game1.currentKeyboard.IsKeyDown(Keys.Right))
-                    Camera.pointLocked.X += 10;
+                    CameraManager.pointLocked.X += 10;
                 if (Game1.currentKeyboard.IsKeyDown(Keys.Left))
-                    Camera.pointLocked.X -= 10;
+                    CameraManager.pointLocked.X -= 10;
+                CameraManager.pointLocked.X = MathHelper.Clamp(CameraManager.pointLocked.X,
+                                Game1.gameWidth / (2f * Camera.Scale),
+                                MapsManager.maps[currentRoomNumber].RoomWidthtPx - Game1.gameWidth / (2f * Camera.Scale));
+                CameraManager.pointLocked.Y = MathHelper.Clamp(CameraManager.pointLocked.Y,
+                                Game1.gameHeight / (2f * Camera.Scale),
+                                MapsManager.maps[currentRoomNumber].RoomHeightPx - Game1.gameHeight / (2f * Camera.Scale));
+
                 if (mouseState.X >= 0 && mouseState.X < Game1.gameWidth*Game1.scale &&
                     mouseState.Y >= 0 && mouseState.Y < Game1.gameHeight * Game1.scale)
                 {

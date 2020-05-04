@@ -12,7 +12,7 @@ namespace _999AD
     public static class FireBallsManager
     {
         #region DECLARATIONS
-        static public readonly Vector2 fireballsCenter = new Vector2(384, 400);
+        static public Vector2 fireballsCenter = new Vector2(384, 400);
         static Texture2D laser;
         static List<int> targetedPlatforms= new List<int>();
         static float relativeLaserProgression=0;
@@ -28,6 +28,7 @@ namespace _999AD
         public static void Inizialize(Texture2D spritesheet, Texture2D _laser)
         {
             laser = _laser;
+            fireballsCenter = FinalBoss.fireballsCenter;
             FireBall.Inizialize(spritesheet);
         }
         #endregion
@@ -104,14 +105,14 @@ namespace _999AD
                     new float[] { timeBetweenShots*i, 4 }
                     ));
         }
-        public static void TargetPlatform(int[] platformIndexes, int fireballsPerPlatform, float lifetime)
+        public static void TargetPlatform(int[] platformIndexes, int _fireballsPerPlatform, float lifetime)
         {
             if (targetedPlatforms.Count != 0)
                 return;
             elapsedPersistanceTime = 0;
             targetedPlatforms = new List<int>(platformIndexes);
             relativeLaserProgression = 0;
-            fireballsPerPlatform = fireballsPerPlatform;
+            fireballsPerPlatform = _fireballsPerPlatform;
             targetPlatformLifetime = lifetime;
         }
         static void TargetPlatformGo(int amount, float lifetime)

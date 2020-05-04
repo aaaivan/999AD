@@ -27,12 +27,14 @@ namespace _999AD
         int currentLength = 0;
         bool endOfSentence = false;
         public bool active = false;
+        bool playAutomatically;
         #endregion
         #region CONSTRUCTOR
-        public Monologue(Rectangle _interactionRectangle, string[] _sentences)
+        public Monologue(Rectangle _interactionRectangle, string[] _sentences, bool _playAutomatically=false)
         {
             interactionRectangle = _interactionRectangle;
             sentences = _sentences;
+            playAutomatically = _playAutomatically;
         }
         public static void Inizialize(Texture2D _dialogueBox, Texture2D _arrow, SpriteFont _spriteFont)
         {
@@ -42,6 +44,12 @@ namespace _999AD
             boxRectangle= new Rectangle((Game1.gameWidth - dialogueBox.Width) / 2, 10, dialogueBox.Width, dialogueBox.Height);
             stringPosition = new Vector2(boxRectangle.X + 50, boxRectangle.Y + 4);
             arrowRectangle = new Rectangle(boxRectangle.Right-4-arrow.Width, boxRectangle.Bottom - 4 - arrow.Height, arrow.Width, arrow.Height);
+        }
+        #endregion
+        #region PROPERTIES
+        public bool PlayAutomatically
+        {
+            get { return playAutomatically; }
         }
         #endregion
         #region METHODS
