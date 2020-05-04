@@ -133,14 +133,10 @@ namespace _999AD
             if (Game1.currentKeyboard.IsKeyDown(Keys.D))
             {
                 walkingSpeed = maxWalkingSpeed;
-                if (!isFacingRight)
-                    isOnTheWall = false;
             }
             if (Game1.currentKeyboard.IsKeyDown(Keys.A))
             {
                 walkingSpeed =- maxWalkingSpeed;
-                if (isFacingRight)
-                    isOnTheWall = false;
             }
             if (elapsedShotTime > timeBetweenShots)
             {
@@ -157,6 +153,32 @@ namespace _999AD
         static void Move(float elapsedTime)
         {
             Vector2 totalSpeed = new Vector2();
+            #region CHECK IF IS STILL ON THE WALL
+            int topRow = (int)MathHelper.Clamp(position.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
+            int btmRow = (int)MathHelper.Clamp((position.Y + height - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
+            int leftCol = (int)MathHelper.Clamp(position.X / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
+            int rightCol = (int)MathHelper.Clamp((position.X + width - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
+            if (isOnTheWall)
+            {
+                isOnTheWall = false;
+                if (isFacingRight)
+                {
+                    for (int row = topRow; row <= btmRow; row++)
+                    {
+                        if (MapsManager.maps[(int)RoomsManager.CurrentRoom].array[row, rightCol + 1].isSolid())
+                            isOnTheWall = true;
+                    }
+                }
+                else
+                {
+                    for (int row = topRow; row <= btmRow; row++)
+                    {
+                        if (MapsManager.maps[(int)RoomsManager.CurrentRoom].array[row, leftCol - 1].isSolid())
+                            isOnTheWall = true;
+                    }
+                }
+            }
+            #endregion
             #region CALCULATE VELOCITIES
             if (isWallJumping)
             {
@@ -237,10 +259,10 @@ namespace _999AD
             #endregion
             position.X += totalSpeed.X * elapsedTime;
             #region CHECK COLLISION WITH SOLID TILES
-            int topRow = (int)MathHelper.Clamp(position.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
-            int btmRow = (int)MathHelper.Clamp((position.Y + height - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
-            int leftCol = (int)MathHelper.Clamp(position.X / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
-            int rightCol = (int)MathHelper.Clamp((position.X + width - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
+            topRow = (int)MathHelper.Clamp(position.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
+            btmRow = (int)MathHelper.Clamp((position.Y + height - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
+            leftCol = (int)MathHelper.Clamp(position.X / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
+            rightCol = (int)MathHelper.Clamp((position.X + width - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
             //check right-hand side
             if (totalSpeed.X > 0)
             {

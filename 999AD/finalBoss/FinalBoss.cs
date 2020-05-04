@@ -739,9 +739,9 @@ namespace _999AD
         {
             if (dead)
                 return;
-            spriteBatch.Draw(wingSpritesheets[(int)rightWingTexture], Camera.RelativeRect(RightWingDrawRectangle), wingAnimations[(int)rightWingAnimation].Frame, Color.White);
-            spriteBatch.Draw(wingSpritesheets[(int)leftWingTexture], Camera.RelativeRect(LeftWingDrawRectangle), wingAnimations[(int)leftWingAnimation].Frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 1); ;
-            spriteBatch.Draw(bossSpritesheet, Camera.RelativeRect(BossDrawRectangle), bossAnimations[(int)bossAnimation].Frame, bossColor);
+            spriteBatch.Draw(wingSpritesheets[(int)rightWingTexture], Camera.RelativeRectangle(RightWingDrawRectangle), wingAnimations[(int)rightWingAnimation].Frame, Color.White);
+            spriteBatch.Draw(wingSpritesheets[(int)leftWingTexture], Camera.RelativeRectangle(LeftWingDrawRectangle), wingAnimations[(int)leftWingAnimation].Frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 1); ;
+            spriteBatch.Draw(bossSpritesheet, Camera.RelativeRectangle(BossDrawRectangle), bossAnimations[(int)bossAnimation].Frame, bossColor);
             if (frameCount >= 5)
             {
                 frameCount = 0;

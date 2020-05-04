@@ -561,7 +561,7 @@ namespace _999AD
                     for (int col = Camera.Rectangle.X / Tile.tileSize; col <= (Camera.Rectangle.Right - 1) / Tile.tileSize; col++)
                     {
                         if (MapsManager.maps[currentRoomNumber].array[row, col].isSolid())
-                            spriteBatch.Draw(whiteTexture, Camera.RelativeRect(new Rectangle(col * Tile.tileSize, row * Tile.tileSize, Tile.tileSize, Tile.tileSize)), Color.Red * 0.3f);
+                            spriteBatch.Draw(whiteTexture, Camera.RelativeRectangle(new Rectangle(col * Tile.tileSize, row * Tile.tileSize, Tile.tileSize, Tile.tileSize)), Color.Red * 0.3f);
                     }
                 }
             }
@@ -572,7 +572,7 @@ namespace _999AD
                     for (int col = Camera.Rectangle.X / Tile.tileSize; col <= (Camera.Rectangle.Right - 1) / Tile.tileSize; col++)
                     {
                         if (MapsManager.maps[currentRoomNumber].array[row, col].isHarmful())
-                            spriteBatch.Draw(whiteTexture, Camera.RelativeRect(new Rectangle(col * Tile.tileSize, row * Tile.tileSize, Tile.tileSize, Tile.tileSize)), Color.Purple * 0.3f);
+                            spriteBatch.Draw(whiteTexture, Camera.RelativeRectangle(new Rectangle(col * Tile.tileSize, row * Tile.tileSize, Tile.tileSize, Tile.tileSize)), Color.Purple * 0.3f);
                     }
                 }
             }

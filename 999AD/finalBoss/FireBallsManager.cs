@@ -195,7 +195,7 @@ namespace _999AD
             foreach (int i in targetedPlatforms)
             {
                 spriteBatch.Draw(laser,
-                    Camera.RelativeRect( new Rectangle((int)fireballsCenter.X,
+                    Camera.RelativeRectangle( new Rectangle((int)fireballsCenter.X,
                                   (int)(fireballsCenter.Y - laser.Width / 2),
                                   laser.Width,
                                   (int)(PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[i].radius * relativeLaserProgression))

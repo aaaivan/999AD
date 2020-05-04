@@ -52,7 +52,7 @@ namespace _999AD
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-                spriteBatch.Draw(spritesheet, Camera.RelativeRect(rectangle), animation.Frame, Color.White);
+                spriteBatch.Draw(spritesheet, Camera.RelativeRectangle(rectangle), animation.Frame, Color.White);
         }
         #endregion
 

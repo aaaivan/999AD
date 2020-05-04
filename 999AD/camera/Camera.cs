@@ -55,7 +55,7 @@ namespace _999AD
                                  (int)(_width * scale),
                                  (int)(_height * scale));
         }
-        public static Rectangle RelativeRect(Rectangle rect)
+        public static Rectangle RelativeRectangle(Rectangle rect)
         {
             return new Rectangle((int)((rect.X - position.X) * scale),
                                  (int)((rect.Y - position.Y) * scale),

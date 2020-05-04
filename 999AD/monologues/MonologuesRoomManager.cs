@@ -64,7 +64,7 @@ namespace _999AD
             if (indexPlaying != -1)
                 monologues[indexPlaying].Draw(spriteBatch);
             else if (drawInteractSymbol)
-                spriteBatch.Draw(interactSymbol, Camera.RelativeRect(interactSymbolRectangle), Color.White);
+                spriteBatch.Draw(interactSymbol, Camera.RelativeRectangle(interactSymbolRectangle), Color.White);
         }
         #endregion
     }

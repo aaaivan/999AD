@@ -61,7 +61,7 @@ namespace _999AD
         }
         public bool isHarmful()
         {
-            if ((int)tileType >= 39 && (int)tileType < 42)
+            if ((int)tileType >= 39 && (int)tileType <= 42)
                 return true;
             return false;
         }
@@ -69,7 +69,7 @@ namespace _999AD
         {
             if (tileType == TileType.empty || tileType == TileType.solidEmpty)
                 return;
-            spriteBatch.Draw(spritesheet,Camera.RelativeRect(Rectangle), sourceRectangles[(int)tileType], Color.White);
+            spriteBatch.Draw(spritesheet,Camera.RelativeRectangle(Rectangle), sourceRectangles[(int)tileType], Color.White);
         }
         public static void DrawAtLocation(SpriteBatch spriteBatch, int tileType, Vector2 screenPosition)
         {
