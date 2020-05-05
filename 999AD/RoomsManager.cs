@@ -16,7 +16,7 @@ namespace _999AD
         {
             tutorial0, tutorial1, tutorial2, tutorial3, finalBoss, escape0, escape1, total
         }
-        static Rooms currentRoom = Rooms.escape0;
+        static Rooms currentRoom = Rooms.tutorial0;
         #endregion
         #region CONSTRUCTOR
         public static void Inizialize()
@@ -86,6 +86,8 @@ namespace _999AD
             PlatformsManager.platformsRoomManagers[(int)currentRoom].Update(elapsedTime);
             CollectablesManager.collectablesRoomManagers[(int)currentRoom].Update(elapsedTime);
             MonologuesManager.monologuesRoomManagers[(int)currentRoom].Update(elapsedTime);
+            DoorsManager.doorsRoomManagers[(int)currentRoom].Update();
+            AnimatedSpritesManager.animatedSpritesRoomManagers[(int)currentRoom].Update(elapsedTime);
         }
         public static void Draw(SpriteBatch spriteBatch)
         {
@@ -101,6 +103,8 @@ namespace _999AD
             FireBallsManager.Draw(spriteBatch);
             LavaGeyserManager.Draw(spriteBatch);
             MonologuesManager.monologuesRoomManagers[(int)currentRoom].Draw(spriteBatch);
+            DoorsManager.doorsRoomManagers[(int)currentRoom].Draw(spriteBatch);
+            AnimatedSpritesManager.animatedSpritesRoomManagers[(int)currentRoom].Draw(spriteBatch);
         }
         #endregion
     }

@@ -41,13 +41,19 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="animated sprites\AnimatedSprite.cs" />
+    <Compile Include="animated sprites\AnimatedSpritesManager.cs" />
+    <Compile Include="animated sprites\AnimatedSpritesRoomManager.cs" />
     <Compile Include="Animation.cs" />
     <Compile Include="camera\Camera.cs" />
     <Compile Include="camera\CameraManager.cs" />
-    <Compile Include="Collectables\CollectablesRoomManager.cs" />
-    <Compile Include="Collectables\Collectable.cs" />
-    <Compile Include="Collectables\CollectablesManager.cs" />
+    <Compile Include="collectables\CollectablesRoomManager.cs" />
+    <Compile Include="collectables\Collectable.cs" />
+    <Compile Include="collectables\CollectablesManager.cs" />
     <Compile Include="Collisions.cs" />
+    <Compile Include="doors\Door.cs" />
+    <Compile Include="doors\DoorsRoomManager.cs" />
+    <Compile Include="doors\DoorsManager.cs" />
     <Compile Include="finalBoss\FinalBoss.cs" />
     <Compile Include="finalBoss\FireBall.cs" />
     <Compile Include="finalBoss\FireBallsManager.cs" />

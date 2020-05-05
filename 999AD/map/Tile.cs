@@ -55,7 +55,7 @@ namespace _999AD
         #region METHODS
         public bool isSolid()
         {
-            if ((int)tileType > 0 && (int)tileType < 39)
+            if ((int)tileType >= 1 && (int)tileType < 39)
                 return true;
             return false;
         }

@@ -118,7 +118,7 @@ namespace _999AD
 
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
             ProjectilesManager.Inizialize(Content.Load<Texture2D>("projectile"));
-            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(1600,40));
+            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(40,40));
             RoomsManager.Inizialize();
             GameEvents.Inizialize();
             FireBallsManager.Inizialize(Content.Load<Texture2D>("fireball"), Content.Load<Texture2D>("laser"));
@@ -134,6 +134,8 @@ namespace _999AD
                                          Content.Load<Texture2D>("arrowDialogue"),
                                          Content.Load<Texture2D>("interact"),
                                          Content.Load<SpriteFont>(@"fonts\monologue"));
+            DoorsManager.Inizialize(Content.Load<Texture2D>("doors"));
+            AnimatedSpritesManager.Inizialize(Content.Load<Texture2D>("animatedSprites"));
 #endif
         }
 
@@ -192,7 +194,7 @@ namespace _999AD
             Camera.Draw(spriteBatch);
             RoomsManager.Draw(spriteBatch);
             //<debug>
-            spriteBatch.Draw(white, Camera.RelativeRectangle(Player.CollisionRectangle), Color.Green);
+            //spriteBatch.Draw(white, Camera.RelativeRectangle(Player.CollisionRectangle), Color.Green);
             MouseState mouseState = Mouse.GetState();
             //spriteBatch.DrawString(spriteFont, (mouseState.X / 5 + (int)Camera.position.X) + "," + (mouseState.Y / 5 + (int)Camera.position.Y), new Vector2(10, 10), Color.Blue);
             spriteBatch.DrawString(spriteFont, Player.healthPoints+"", new Vector2(10, 10), Color.Blue);
