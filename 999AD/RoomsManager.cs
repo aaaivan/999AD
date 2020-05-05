@@ -77,8 +77,6 @@ namespace _999AD
             MapsManager.maps[(int)currentRoom].Update(elapsedTime);
             if (currentRoom== Rooms.finalBoss)
             {
-                Camera.pointLocked.X = Player.Center.X;
-                Camera.pointLocked.Y = (Player.Center.Y + 2 * FireBallsManager.fireballsCenter.Y) / 3f;
                 FinalBoss.Update(elapsedTime);
             }
             FireBallsManager.Update(elapsedTime);

@@ -30,6 +30,11 @@ namespace _999AD
         static float offsetElapsedTime = 0f; //time elapsed since the last change in offsetY
         static float shakingTime; //tells for how many second the framing will shake
         static float elapsedShakingTime; //time elapsed since when the camera started shaking
+        static float playerPositionWeight=1;
+        static float transientPlayerPositionWeight = 1;
+        public static Vector2 pointLocked = new Vector2(0,0);
+        static float cameraTransitionProgression = 1;
+        static float transitionDuration;
         #endregion
         #region CONSTRUCTOR
         public static void Inizialize(Texture2D[] _backgrounds)
@@ -42,9 +47,12 @@ namespace _999AD
         #endregion
         #region METHODS
         //move camera to another room
-        public static void SwitchCamera(RoomsManager.Rooms room, bool lockOnPlayer = true)
+        public static void SwitchCamera(RoomsManager.Rooms room, float _playerPositionWeight=1)
         {
-            Camera.Inizialize(backgrounds[(int)room], room, scaleByRoom[(int)room], lockOnPlayer);
+            playerPositionWeight = _playerPositionWeight;
+            transientPlayerPositionWeight = playerPositionWeight;
+            cameraTransitionProgression = 1;
+            Camera.Inizialize(backgrounds[(int)room], room, scaleByRoom[(int)room]);
         }
         //makes the camera shake for the time (in seconds) passed to the function as parameter
         public static void shakeForTime(float _shakingTime)
@@ -55,7 +63,14 @@ namespace _999AD
         }
         public static void Update(float elapsedTime)
         {
-            Camera.Update(shaking);
+            if (cameraTransitionProgression<1)
+            {
+                cameraTransitionProgression += elapsedTime / transitionDuration;
+                if (cameraTransitionProgression >= 1)
+                    cameraTransitionProgression = 1;
+                transientPlayerPositionWeight = transientPlayerPositionWeight+(playerPositionWeight - transientPlayerPositionWeight) * cameraTransitionProgression;
+            }
+            Camera.Update(shaking, Player.Center*transientPlayerPositionWeight+pointLocked*(1-transientPlayerPositionWeight));
             if (shaking)
             {
                 Camera.position.Y += offsetY;
@@ -72,6 +87,14 @@ namespace _999AD
                     }
                 }
             }
+        }
+        public static void MoveCamera(float _playerPositionWeight, Vector2 _pointLocked, float _transitionDuration)
+        {
+            transientPlayerPositionWeight = playerPositionWeight;
+            playerPositionWeight = _playerPositionWeight;
+            pointLocked = _pointLocked;
+            cameraTransitionProgression = 0;
+            transitionDuration = _transitionDuration;
         }
         #endregion
     }
