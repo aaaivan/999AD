@@ -118,7 +118,7 @@ namespace _999AD
 
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
             ProjectilesManager.Inizialize(Content.Load<Texture2D>("projectile"));
-            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(1550,40));
+            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(40,40));
             RoomsManager.Inizialize();
             GameEvents.Inizialize();
             FireBallsManager.Inizialize(Content.Load<Texture2D>("fireball"), Content.Load<Texture2D>("laser"));
@@ -134,6 +134,8 @@ namespace _999AD
                                          Content.Load<Texture2D>("arrowDialogue"),
                                          Content.Load<Texture2D>("interact"),
                                          Content.Load<SpriteFont>(@"fonts\monologue"));
+            DoorsManager.Inizialize(Content.Load<Texture2D>("doors"));
+            AnimatedSpritesManager.Inizialize(Content.Load<Texture2D>("animatedSprites"));
 #endif
         }
 
