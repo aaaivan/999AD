@@ -25,13 +25,22 @@ namespace _999AD
                 (
                     new MovingPlatform[]
                     {
-                        new MovingPlatform(MovingPlatform.TextureType.platform40_8, 20, new Vector2(80,100), new Vector2(0,0), 0.8f, 0)
+                        new MovingPlatform(MovingPlatform.TextureType.platform40_8, 0, new Vector2(172,180), new Vector2(0,0), 0, 0, false),
+                        new MovingPlatform(MovingPlatform.TextureType.platform40_8, 0, new Vector2(172,220), new Vector2(0,0), 0, 0, false),
+                        new MovingPlatform(MovingPlatform.TextureType.platform40_8, 40, new Vector2(632,160), new Vector2(0,0), 1f, 0, true, 0),
+                        new MovingPlatform(MovingPlatform.TextureType.platform40_8, 40, new Vector2(632,160), new Vector2(0,0), 1f, 0, true, 180),
+                        new MovingPlatform(MovingPlatform.TextureType.platform40_8, 5, new Vector2(856,181), new Vector2(720,181), 3, 70),
                     }
                 ),
                 new PlatformsRoomManager //tutorial1
                 (
                     new MovingPlatform[]
                     {
+                        new MovingPlatform(MovingPlatform.TextureType.platform40_8, 0, new Vector2(180, 112), new Vector2(180, 220), 0, 50, true, 0, 0),
+                        new MovingPlatform(MovingPlatform.TextureType.platform40_8, 0, new Vector2(252, 112), new Vector2(252, 220), 0, 50, true, 0, 0.2f),
+                        new MovingPlatform(MovingPlatform.TextureType.platform40_8, 0, new Vector2(324, 112), new Vector2(324, 220), 0, 50, true, 0, 0.4f),
+                        new MovingPlatform(MovingPlatform.TextureType.platform40_8, 0, new Vector2(396, 112), new Vector2(396, 220), 0, 50, true, 0, 0.6f),
+                        new MovingPlatform(MovingPlatform.TextureType.platform40_8, 0, new Vector2(468, 112), new Vector2(468, 220), 0, 50, true, 0, 0.8f),
                     }
                 ),
                 new PlatformsRoomManager //tutorial2
@@ -41,6 +50,19 @@ namespace _999AD
                     }
                 ),
                 new PlatformsRoomManager //tutorial3
+                (
+                    new MovingPlatform[]
+                    {
+                    }
+                ),
+                new PlatformsRoomManager //tutorial4
+                (
+                    new MovingPlatform[]
+                    {
+                        new MovingPlatform(MovingPlatform.TextureType.platform40_8, 0, new Vector2(164, 132), new Vector2(164, 20), 0, 50, true, 0, 0),
+                    }
+                ),
+                new PlatformsRoomManager //church
                 (
                     new MovingPlatform[]
                     {

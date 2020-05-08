@@ -28,8 +28,7 @@ namespace _999AD
             {
                 new CollectablesRoomManager(new Collectable[]   //tutorial0
                 {
-                    new Collectable(new Rectangle(100, 150,16,16), Collectable.ItemType.coin),
-                    new Collectable(new Rectangle(150, 150, 16, 16), Collectable.ItemType.key)
+                    new Collectable(new Rectangle(624, 126, 16, 16), Collectable.ItemType.key)
                 }),
                 new CollectablesRoomManager(new Collectable[]   //tutorial1
                 {
@@ -38,6 +37,12 @@ namespace _999AD
                 {
                 }),
                 new CollectablesRoomManager(new Collectable[]   //tutorial3
+                {
+                }),
+                new CollectablesRoomManager(new Collectable[]   //tutorial4
+                {
+                }),
+                new CollectablesRoomManager(new Collectable[]   //church
                 {
                 }),
                 new CollectablesRoomManager(new Collectable[]   //finaleBoss

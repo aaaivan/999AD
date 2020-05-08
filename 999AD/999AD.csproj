@@ -78,6 +78,7 @@
     <Compile Include="RoomsManager.cs" />
     <Compile Include="platforms\MovingPlatform.cs" />
     <Compile Include="map\Tile.cs" />
+    <Compile Include="SoundEffects.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

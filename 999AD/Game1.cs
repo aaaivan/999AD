@@ -101,6 +101,8 @@ namespace _999AD
                     Content.Load<Texture2D>(@"backgrounds\room1"),
                     Content.Load<Texture2D>(@"backgrounds\room1"),
                     Content.Load<Texture2D>(@"backgrounds\room1"),
+                    Content.Load<Texture2D>(@"backgrounds\room1"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
                     Content.Load<Texture2D>(@"backgrounds\room2"),
                     Content.Load<Texture2D>(@"backgrounds\finalBoss"),
                     Content.Load<Texture2D>(@"backgrounds\escape"),
@@ -118,7 +120,7 @@ namespace _999AD
 
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
             ProjectilesManager.Inizialize(Content.Load<Texture2D>("projectile"));
-            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(40,40));
+            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(0,160));
             RoomsManager.Inizialize();
             GameEvents.Inizialize();
             FireBallsManager.Inizialize(Content.Load<Texture2D>("fireball"), Content.Load<Texture2D>("laser"));

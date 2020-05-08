@@ -14,7 +14,7 @@ namespace _999AD
         #region DECLARATIONS
         public enum Rooms
         {
-            tutorial0, tutorial1, tutorial2, tutorial3, finalBoss, escape0, escape1, total
+            tutorial0, tutorial1, tutorial2, tutorial3, tutorial4, church, finalBoss, escape0, escape1, total
         }
         static Rooms currentRoom = Rooms.tutorial0;
         #endregion
@@ -37,35 +37,78 @@ namespace _999AD
             switch (currentRoom)
             {
                 case Rooms.tutorial0:
-                    if (Player.position.X > MapsManager.maps[(int)Rooms.tutorial0].RoomWidthtPx)
-                    {//move to room2
+                    if (Player.position.X > MapsManager.maps[(int)currentRoom].RoomWidthtPx)
+                    {//move to tutorial1
                         currentRoom = Rooms.tutorial1;
                         CameraManager.SwitchCamera(Rooms.tutorial1);
                         Player.position.X = 0;
                     }
                     break;
                 case Rooms.tutorial1:
-                    if (Player.position.X >= MapsManager.maps[(int)currentRoom].RoomWidthtPx)
-                    {//move to finalBoss room
-                        currentRoom = Rooms.finalBoss;
-                        CameraManager.SwitchCamera(Rooms.finalBoss);
-                        Player.position.X = MapsManager.maps[(int)Rooms.finalBoss].RoomWidthtPx-Player.width;
+                    if (Player.position.Y > MapsManager.maps[(int)currentRoom].RoomHeightPx+20)
+                    {//move to tutorial2
+                        currentRoom = Rooms.tutorial2;
+                        CameraManager.SwitchCamera(Rooms.tutorial2);
                         Player.position.Y = 0;
                     }
-                    else if (Player.position.X + Player.width <= 0)
-                    {//move to room1
+                    else if (Player.position.X + Player.width < 0)
+                    {//move to tutorial0
                         currentRoom = Rooms.tutorial0;
                         CameraManager.SwitchCamera(Rooms.tutorial0);
                         Player.position.X = MapsManager.maps[(int)currentRoom].RoomWidthtPx - Player.width;
                     }
+                    else if (Player.position.X > MapsManager.maps[(int)currentRoom].RoomWidthtPx)
+                    {//move to tutorial3
+                        currentRoom = Rooms.tutorial3;
+                        CameraManager.SwitchCamera(Rooms.tutorial3);
+                        Player.position.X = 0;
+                    }
                     break;
-                case Rooms.finalBoss:
-                    if (Player.position.X + Player.width <= 0)
-                    {//move to room2
-                        currentRoom = Rooms.tutorial1;
-                        CameraManager.SwitchCamera(Rooms.tutorial1);
-                        Player.position.X = MapsManager.maps[(int)Rooms.tutorial1].RoomWidthtPx - Player.width;
-                        Player.position.Y -= 9 * Tile.tileSize;
+                case Rooms.tutorial2:
+                    if (Player.position.Y+Player.height<0)
+                    {
+                        if (Player.position.X>= MapsManager.maps[(int)Rooms.tutorial1].RoomWidthtPx)
+                        {//move to tutorial3
+                            currentRoom = Rooms.tutorial3;
+                            CameraManager.SwitchCamera(Rooms.tutorial3);
+                            Player.position.Y = MapsManager.maps[(int)currentRoom].RoomHeightPx-Player.height;
+                            Player.position.X -= MapsManager.maps[(int)Rooms.tutorial1].RoomWidthtPx;
+                        }
+                        else
+                        {//move to tutorial1
+                            currentRoom = Rooms.tutorial1;
+                            CameraManager.SwitchCamera(Rooms.tutorial1);
+                            Player.position.Y = MapsManager.maps[(int)currentRoom].RoomHeightPx - Player.height;
+                        }
+                    }
+                    else if (Player.position.X+Player.width<0)
+                    {
+                        currentRoom = Rooms.tutorial4;
+                        CameraManager.SwitchCamera(Rooms.tutorial4);
+                        Player.position.X = MapsManager.maps[(int)currentRoom].RoomWidthtPx - Player.width;
+                    }
+                    break;
+                case Rooms.tutorial3:
+                    if (Player.position.Y> MapsManager.maps[(int)currentRoom].RoomHeightPx)
+                    {//move to tutorial2
+                        currentRoom = Rooms.tutorial2;
+                        CameraManager.SwitchCamera(Rooms.tutorial2);
+                        Player.position.X += MapsManager.maps[(int)Rooms.tutorial1].RoomWidthtPx;
+                        Player.position.Y = -10;
+                    }
+                    break;
+                case Rooms.tutorial4:
+                    if (Player.position.X > MapsManager.maps[(int)Rooms.tutorial4].RoomWidthtPx)
+                    {//move to tutorial2
+                        currentRoom = Rooms.tutorial2;
+                        CameraManager.SwitchCamera(Rooms.tutorial2);
+                        Player.position.X = 0;
+                    }
+                    else if (Player.position.Y+Player.height<0)
+                    {
+                        currentRoom = Rooms.tutorial0;
+                        CameraManager.SwitchCamera(Rooms.tutorial0);
+                        Player.position.Y = MapsManager.maps[(int)currentRoom].RoomHeightPx-Player.height;
                     }
                     break;
             }

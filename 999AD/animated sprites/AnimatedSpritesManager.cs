@@ -36,6 +36,14 @@ namespace _999AD
                 {
 
                 }),
+                new AnimatedSpritesRoomManager(new AnimatedSprite[] //tutorial4
+                {
+
+                }),
+                new AnimatedSpritesRoomManager(new AnimatedSprite[] //church
+                {
+
+                }),
                 new AnimatedSpritesRoomManager(new AnimatedSprite[] //finalBoss
                 {
 

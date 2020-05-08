@@ -22,7 +22,6 @@ namespace _999AD
                 {
                     new DoorsRoomManager(new Door[] //tutorial0
                     {
-                        new Door(new Point(200, 176), Door.TextureType.greenDoor, Collectable.ItemType.coin)
                     }
                     ),
                     new DoorsRoomManager(new Door[] //tutorial1
@@ -34,6 +33,14 @@ namespace _999AD
                     }
                     ),
                     new DoorsRoomManager(new Door[] //tutorial3
+                    {
+                    }
+                    ),
+                    new DoorsRoomManager(new Door[] //tutorial4
+                    {
+                    }
+                    ),
+                    new DoorsRoomManager(new Door[] //church
                     {
                     }
                     ),

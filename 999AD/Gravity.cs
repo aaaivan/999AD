@@ -17,7 +17,7 @@ namespace _999AD
         public static float wallFrictionCoeff = 4f;
         #endregion
         #region METHODS
-        public static void MoveDestructableObject(ref Vector2 velocity, ref Vector2 position, int width, int height, ref bool active, float elapsedTime, float maxYVelocity=2000)
+        public static void MoveDestructableObject(ref Vector2 velocity, ref Vector2 position, int width, int height, ref bool active, float elapsedTime)
         {
             #region MOVE HORIZONTALLY
             position.X += velocity.X * elapsedTime;
@@ -53,9 +53,7 @@ namespace _999AD
             }
             #endregion
             #region MOVE VERTICALLY
-            velocity.Y += gravityAcceleration * elapsedTime;
-            if (velocity.Y > maxYVelocity)
-                velocity.Y = maxYVelocity;
+            velocity.Y += (gravityAcceleration - velocity.Y * airFrictionCoeff) * elapsedTime;
             position.Y += velocity.Y * elapsedTime;
             topRow = (int)MathHelper.Clamp(position.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
             btmRow = (int)MathHelper.Clamp((position.Y + height - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);

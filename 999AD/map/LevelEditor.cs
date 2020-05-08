@@ -48,9 +48,9 @@ namespace _999AD
         //save maps to file
         void saveMaps()
         {
-            for (int room=0; room< (int)RoomsManager.Rooms.total; room++)
-            {
-            //int room = currentRoomNumber;
+            //for (int room=0; room< (int)RoomsManager.Rooms.total; room++)
+            //{
+            int room = currentRoomNumber;
                 StreamWriter outputStream = new StreamWriter("mapRoom_" + (RoomsManager.Rooms)room + ".txt");
                 try
                 {
@@ -70,7 +70,7 @@ namespace _999AD
                 {
                     message = "Save FAILED!\nAsk Ivan.";
                 }
-            }
+            //}
         }
         //return the coordinates of the tile hovered by the pointer
         Point TileFromPointerLocation(MouseState mouseState)

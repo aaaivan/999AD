@@ -426,11 +426,11 @@ namespace _999AD
                     MovingPlatform p = PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[i];
                     if (position.X+width>p.Position.X &&
                         position.X<p.Position.X+p.width &&
-                        position.Y+height- p.Position.Y>0 &&
-                        position.Y + height - p.Position.Y < totalSpeed.Y*elapsedTime - p.Shift.Y)
+                        position.Y+height- p.Position.Y>=0 &&
+                        position.Y + height - p.Position.Y <= totalSpeed.Y*elapsedTime - p.Shift.Y)
                     {
                         isOnMovingPlatform = true;
-                        position.Y = p.Position.Y - height + 1;
+                        position.Y = p.Position.Y - height;
                         jumpSpeed.Y = 0;
                         jumpSpeed.X = 0;
                         PlatformsManager.platformIndex = i;
