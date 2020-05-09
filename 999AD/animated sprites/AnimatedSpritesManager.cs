@@ -36,6 +36,10 @@ namespace _999AD
                 {
 
                 }),
+                new AnimatedSpritesRoomManager(new AnimatedSprite[] //midboss
+                {
+
+                }),
                 new AnimatedSpritesRoomManager(new AnimatedSprite[] //finalBoss
                 {
 

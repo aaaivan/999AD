@@ -13,6 +13,7 @@ namespace _999AD
     {
         #region DECLARATIONS
         public static List<Projectile> playerProjectiles= new List<Projectile>(); //list of the projectiles thrown by the player
+        public static List<Projectile> midbossProjectiles = new List<Projectile>(); //list of the projectiles thrown by midboss
         #endregion
         #region CONSTRUCTOR
         public static void Inizialize(Texture2D spritesheet)
@@ -25,6 +26,14 @@ namespace _999AD
         {
                 playerProjectiles.Add(new Projectile(position, initialVelocity, Projectile.SpriteType.holyWater));
         }
+
+        //Function to make the midboss shoot a projectile
+        public static void ShootBossProjectile(Vector2 position, Vector2 initialVelocity)
+        {
+            midbossProjectiles.Add(new Projectile(position, initialVelocity, Projectile.SpriteType.broccoli));
+            //Broccoli - Placeholder
+        }
+
         public static void Update(float elapsedTime)
         {
             for (int index = playerProjectiles.Count-1; index>=0; index--)
@@ -34,10 +43,24 @@ namespace _999AD
                 else
                     playerProjectiles.RemoveAt(index);
             }
+
+            //Updates for midboss projectiles
+            for(int index = midbossProjectiles.Count-1;index>=0;index--)
+            {
+                if (midbossProjectiles[index].active)
+                    midbossProjectiles[index].Update(elapsedTime);
+                else
+                    midbossProjectiles.RemoveAt(index);
+            }
         }
         public static void Draw(SpriteBatch spriteBatch)
         {
             foreach (Projectile p in playerProjectiles)
+            {
+                p.Draw(spriteBatch);
+            }
+
+            foreach(Projectile p in midbossProjectiles)
             {
                 p.Draw(spriteBatch);
             }

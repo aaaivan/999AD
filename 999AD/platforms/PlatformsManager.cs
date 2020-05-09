@@ -46,6 +46,12 @@ namespace _999AD
                     {
                     }
                 ),
+                new PlatformsRoomManager //midboss
+                (
+                    new MovingPlatform[]
+                    {
+                    }
+                ),
                 new PlatformsRoomManager //finalBossRoom
                 (
                     new MovingPlatform[]

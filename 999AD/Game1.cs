@@ -102,6 +102,7 @@ namespace _999AD
                     Content.Load<Texture2D>(@"backgrounds\room1"),
                     Content.Load<Texture2D>(@"backgrounds\room1"),
                     Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\midboss"),
                     Content.Load<Texture2D>(@"backgrounds\finalBoss"),
                     Content.Load<Texture2D>(@"backgrounds\escape"),
                     Content.Load<Texture2D>(@"backgrounds\escape"),
@@ -118,12 +119,15 @@ namespace _999AD
 
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
             ProjectilesManager.Inizialize(Content.Load<Texture2D>("projectile"));
-            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(40,40));
+            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(40,80));
             RoomsManager.Inizialize();
             GameEvents.Inizialize();
             FireBallsManager.Inizialize(Content.Load<Texture2D>("fireball"), Content.Load<Texture2D>("laser"));
             LavaGeyserManager.Inizialize(Content.Load<Texture2D>("lavaGeyser"),
                                          Content.Load<Texture2D>("whiteTile"));
+            //
+            MidBoss.Initialise(Content.Load<Texture2D>(@"characters\midboss"));
+            //
             FinalBoss.Inizialize(Content.Load<Texture2D>(@"characters\finalBoss"),
                                  new Texture2D[] { Content.Load<Texture2D>(@"characters\stoneWing"),
                                                    Content.Load<Texture2D>(@"characters\healthyWing"),

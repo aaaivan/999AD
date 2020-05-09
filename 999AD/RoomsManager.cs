@@ -14,9 +14,9 @@ namespace _999AD
         #region DECLARATIONS
         public enum Rooms
         {
-            tutorial0, tutorial1, tutorial2, tutorial3, finalBoss, escape0, escape1, total
+            tutorial0, tutorial1, tutorial2, tutorial3, midboss, finalBoss, escape0, escape1, total
         }
-        static Rooms currentRoom = Rooms.tutorial0;
+        static Rooms currentRoom = Rooms.midboss;
         #endregion
         #region CONSTRUCTOR
         public static void Inizialize()
@@ -79,6 +79,9 @@ namespace _999AD
             {
                 FinalBoss.Update(elapsedTime);
             }
+            //
+            MidBoss.Update(elapsedTime);
+            //
             FireBallsManager.Update(elapsedTime);
             LavaGeyserManager.Update(elapsedTime);
             PlatformsManager.platformsRoomManagers[(int)currentRoom].Update(elapsedTime);
@@ -97,6 +100,10 @@ namespace _999AD
             if (currentRoom == Rooms.finalBoss)
             {
                 FinalBoss.Draw(spriteBatch);
+            }
+            if(currentRoom==Rooms.midboss)
+            {
+                MidBoss.Draw(spriteBatch);
             }
             FireBallsManager.Draw(spriteBatch);
             LavaGeyserManager.Draw(spriteBatch);

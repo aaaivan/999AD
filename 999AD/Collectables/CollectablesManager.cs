@@ -40,6 +40,9 @@ namespace _999AD
                 new CollectablesRoomManager(new Collectable[]   //tutorial3
                 {
                 }),
+                new CollectablesRoomManager(new Collectable[]   //midboss
+                {
+                }),
                 new CollectablesRoomManager(new Collectable[]   //finaleBoss
                 {
                 }),

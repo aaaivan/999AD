@@ -37,6 +37,10 @@ namespace _999AD
                     {
                     }
                     ),
+                    new DoorsRoomManager(new Door[] //midboss
+                    {
+                    }
+                    ),
                     new DoorsRoomManager(new Door[] //finalBoss
                     {
                     }

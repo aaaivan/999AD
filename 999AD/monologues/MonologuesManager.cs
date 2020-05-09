@@ -45,6 +45,10 @@ namespace _999AD
                     new Monologue[]
                     {
                     }),
+                new MonologuesRoomManager(  //midboss
+                    new Monologue[]
+                    {
+                    }),
                 new MonologuesRoomManager(  //finalBoss
                     new Monologue[]
                     {

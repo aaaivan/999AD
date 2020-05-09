@@ -19,6 +19,7 @@ namespace _999AD
             1, //tutorial1
             1, //tutorial2
             1, //tutorial3
+            1, //midboss
             0.5f, //finalBoss
             1, //escape0
             1 //escape1

@@ -15,6 +15,7 @@ namespace _999AD
         {
             PlayerCollisions(elapsedTiem);
             PlayerProjectilesCollisions();
+            BossProjectilesCollisions();
         }
         static void PlayerCollisions(float elapsedTime)
         {
@@ -46,6 +47,15 @@ namespace _999AD
                     Player.Rebound(2);
             }
             #endregion
+            #region COLLISION PLAYER-MIDBOSS
+            //If the player is in the midboss room, and comes into contact with the midboss whilst it is moving
+            //Player will take damage
+            if(RoomsManager.CurrentRoom==RoomsManager.Rooms.midboss)
+            {
+                if (MidBoss.bossState == MidBoss.BossState.move && Player.CollisionRectangle.Intersects(MidBoss.BossCollisionRect))
+                    Player.takeDamage();
+            }
+            #endregion
         }
         static void PlayerProjectilesCollisions()
         {
@@ -55,6 +65,26 @@ namespace _999AD
                 {
                     if (FinalBoss.BossHitByRectangle(projectile.Rectangle))
                         projectile.active = false;
+                }
+
+                if(RoomsManager.CurrentRoom==RoomsManager.Rooms.midboss)
+                {
+                    if (MidBoss.BossHitByRect(projectile.Rectangle))
+                        projectile.active = false;
+                }
+            }
+        }
+
+        static void BossProjectilesCollisions()
+        {
+            foreach(Projectile projectile in ProjectilesManager.midbossProjectiles)
+            {
+                if(RoomsManager.CurrentRoom==RoomsManager.Rooms.midboss)
+                {
+                    if(MidBoss.PlayerHitByRect(projectile.Rectangle))
+                    {
+                        projectile.active = false;
+                    }
                 }
             }
         }
