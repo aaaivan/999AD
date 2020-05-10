@@ -34,7 +34,7 @@ namespace _999AD
         static bool isWallJumping = false;
         public static readonly float maxTimeStuckOnwal = 0.2f;
         static float elapsedTimeStuckOnWall=0f;
-        public static readonly Vector2 projectileInitialVelocity = new Vector2(500, -100);
+        public static readonly Vector2 projectileInitialVelocity = new Vector2(200, -200);
         public static readonly float timeBetweenShots = 0.4f; //minimum time between shots
         static float elapsedShotTime = 0f;
         public static readonly int maxHealthPoints = 3;
@@ -252,16 +252,20 @@ namespace _999AD
             #region CALCULATE VELOCITIES
             if (isWallJumping)
             {
-                if (-2*Math.Abs(jumpSpeed.X)< maxHorizontalMovementSpeed* Math.Sign(jumpSpeed.X) &&
-                    maxHorizontalMovementSpeed * Math.Sign(jumpSpeed.X)< Math.Abs(jumpSpeed.X))
+                if (Math.Abs(jumpSpeed.X)> maxHorizontalMovementSpeed)
                     totalSpeed.X = jumpSpeed.X;
                 else
                 {
                     if (Math.Sign(jumpSpeed.X) == -Math.Sign(horizontalMovementSpeed))
                     {
-                        isWallJumping = false;
-                        jumpSpeed.X = 0;
-                        totalSpeed.X = horizontalMovementSpeed;
+                        if (Math.Abs(jumpSpeed.X) >= maxHorizontalMovementSpeed / 2f)
+                            totalSpeed.X = jumpSpeed.X;
+                        else
+                        {
+                            isWallJumping = false;
+                            jumpSpeed.X = 0;
+                            totalSpeed.X = horizontalMovementSpeed;
+                        }
                     }
                     else
                     {
@@ -284,7 +288,7 @@ namespace _999AD
                 {
                     totalSpeed.X = jumpSpeed.X+horizontalMovementSpeed;
                     totalSpeed.X = MathHelper.Clamp(totalSpeed.X, -maxHorizontalMovementSpeed, maxHorizontalMovementSpeed);
-                    jumpSpeed.X -= 4 * jumpSpeed.X * Gravity.airFrictionCoeff * elapsedTime;//5 is a magic number
+                    jumpSpeed.X = 0;
                 }
             }
             else
@@ -413,6 +417,7 @@ namespace _999AD
                     {
                         position.Y = (topRow + 1) * Tile.tileSize;
                         jumpSpeed.Y = 0;
+                        isOnMovingPlatform = false;
                         break;
                     }
                 }
@@ -424,7 +429,8 @@ namespace _999AD
                 for (int i = 0; i < PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length; i++)
                 {
                     MovingPlatform p = PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[i];
-                    if (position.X+width>p.Position.X &&
+                    if (!p.Transparent &&
+                        position.X+width>p.Position.X &&
                         position.X<p.Position.X+p.width &&
                         position.Y+height- p.Position.Y>=0 &&
                         position.Y + height - p.Position.Y <= totalSpeed.Y*elapsedTime - p.Shift.Y)
@@ -445,11 +451,9 @@ namespace _999AD
             }
             else
             {
-                #region MOVE WITH PLATFORM
                 MovingPlatform p = PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[PlatformsManager.platformIndex];
-                if (position.X - p.Position.X <= -width || position.X - p.Position.X >= p.width)
+                if (position.X - p.Position.X <= -width || position.X - p.Position.X >= p.width||p.Transparent)
                     isOnMovingPlatform = false;
-                #endregion
             }
             #endregion
         }

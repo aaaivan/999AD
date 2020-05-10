@@ -86,6 +86,21 @@ namespace _999AD
                 }
             }
             #endregion
+            for (int i = 0; i < PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length; i++)
+            {
+                MovingPlatform p = PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[i];
+                if (!p.Transparent &&
+                    position.X + width > p.Position.X &&
+                    position.X < p.Position.X + p.width &&
+                    position.Y + height - p.Position.Y >= 0 &&
+                    position.Y + height - p.Position.Y <= velocity.Y * elapsedTime - p.Shift.Y)
+                {
+                    position.Y = p.Position.Y - height;
+                    active = false;
+                    return;
+                }
+            }
+
         }
         #endregion
     }

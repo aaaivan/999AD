@@ -41,7 +41,35 @@ namespace _999AD
                     new Monologue[]
                     {
                     }),
-                new MonologuesRoomManager(  //church
+                new MonologuesRoomManager(  //churchBellTower0
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(  //churchBellTower1
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(  //churchBellTower2
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(  //midBoss
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(  //churchGroundFloor0
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(  //churchAltarRoom
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(  //church1stFloor0
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(  //church2ndFloor0
                     new Monologue[]
                     {
                     }),

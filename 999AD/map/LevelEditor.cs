@@ -18,7 +18,7 @@ namespace _999AD
         }
         int currentTileType=0; //tile type selected for drawing
         int hoveredTileType = 0; //tile type hovered
-        int currentRoomNumber = 0; //index of the current room
+        public int currentRoomNumber = 0; //index of the current room
         int widthTiles=0; //width of the room in tiles (used as temp. variable when resizing the room)
         int heightTiles=0; //height of the room in tiles (used as temp. variable when resizing the room)
         MenuState menu= MenuState.start; //current location in the menu loop

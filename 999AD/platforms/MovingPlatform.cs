@@ -15,6 +15,7 @@ namespace _999AD
         public enum TextureType
         {
             platform40_8,
+            platform24_8,
             fallingFloor272_40,
             fallingFloor296_40,
             fallingFloor112_216,
@@ -34,17 +35,26 @@ namespace _999AD
         Vector2 platformMidpointPreviousPosition=Vector2.Zero;
         float angleRadiants;
         readonly float angularSpeed; //radiants per second. positive->clockwise
-        float normalizedLinearProgression; //0->rotationCenter is at the starting point, 1->rotationCenter is at the ending point, else platform it is somewhere in between
+        double normalizedLinearProgression; //0->rotationCenter is at the starting point, 1->rotationCenter is at the ending point, else platform it is somewhere in between
         float linearSpeed; //fraction of the total distance travelled every second
         readonly float centerRestingTime; //indicates for how many seconds the rotatationCenter rests at the starting and ending points
         float elapsedRestingTime = 0;
         public bool active; //if false the platform does not move
         bool moveOnce;
+        bool disappearing;
+        bool transparent = false;
+        float maxTransparentTime;
+        float maxSolidTime;
+        float elapsedPltaformTime;
+        static float minAlpha = 0.15f;
+        static float alphaChangeSpeed = 3;//seconds^(-1)
+        float alphaValue = 1;
         #endregion
         #region CONSTRUCTOR
         public MovingPlatform(TextureType _textureType, int _radius,
             Vector2 _centerStartingPoint, Vector2 _centerEndingPoint, float _angularSpeed, float _linearSpeed_pixelsPerSecond,
-            bool _active=true, float _startingAngleDegrees=0, float _normalizedLinearProression = 0, float _centerRestingTime = 0f, bool _moveOnce=false)
+            bool _active=true, float _startingAngleDegrees=0, float _normalizedLinearProression = 0, float _centerRestingTime = 0f, bool _moveOnce=false,
+            bool _disappearing=false, float _maxTransparentTime=0, float _maxSolidTime=0, float _delay = 0)
         {
             textureType = _textureType;
             radius = _radius;
@@ -59,10 +69,14 @@ namespace _999AD
             elapsedRestingTime = centerRestingTime;
             normalizedLinearProgression = MathHelper.Clamp(_normalizedLinearProression, 0, 1);
             active = _active;
-            rotationCenter = Vector2.Lerp(centerStartingPoint, centerEndingPoint, normalizedLinearProgression);
+            rotationCenter = Vector2.Lerp(centerStartingPoint, centerEndingPoint, (float)normalizedLinearProgression);
             platformMidpointPosition = new Vector2(rotationCenter.X + radius * (float)Math.Sin(angleRadiants),
                 rotationCenter.Y - radius * (float)Math.Cos(angleRadiants));
             moveOnce = _moveOnce;
+            disappearing = _disappearing;
+            maxTransparentTime = _maxTransparentTime;
+            maxSolidTime = _maxSolidTime;
+            elapsedPltaformTime = -_delay;
         }
         public static void loadTextures(Texture2D _spritesheet)
         {
@@ -70,6 +84,7 @@ namespace _999AD
             sourceRectangles = new Rectangle[(int)TextureType.total]
             { 
               new Rectangle(0, 0, 40, 8),
+              new Rectangle(0, 40, 24, 8),
               new Rectangle(0, 8, 272, 40),
               new Rectangle(0, 48, 296, 40),
               new Rectangle(0, 88, 112, 224),
@@ -105,6 +120,10 @@ namespace _999AD
         {
             get { return new Rectangle((int)(platformMidpointPosition.X-0.5*width), (int)(platformMidpointPosition.Y - 0.5 * height), width, height); }
         }
+        public bool Transparent
+        {
+            get { return transparent; }
+        }
         #endregion
         #region METHODS
         public void Update(float elapsedTime)
@@ -134,15 +153,49 @@ namespace _999AD
                     if (moveOnce)
                         active = false;
                 }
-                rotationCenter = Vector2.Lerp(centerStartingPoint, centerEndingPoint, normalizedLinearProgression);
+                rotationCenter = Vector2.Lerp(centerStartingPoint, centerEndingPoint, (float)normalizedLinearProgression);
                 angleRadiants += angularSpeed * elapsedTime;
                 if (angleRadiants >= MathHelper.Pi * 2)
                     angleRadiants -= MathHelper.Pi * 2;
                 else if (angleRadiants<0)
                     angleRadiants += MathHelper.Pi * 2;
                 platformMidpointPosition.X = rotationCenter.X + radius * (float)Math.Sin(angleRadiants);
-                platformMidpointPosition.Y = rotationCenter.Y - radius * (float)Math.Cos(angleRadiants);
             }
+            platformMidpointPosition.Y = rotationCenter.Y - radius * (float)Math.Cos(angleRadiants);
+            if (disappearing)
+            {
+                if (transparent)
+                {
+                    elapsedPltaformTime += elapsedTime;
+                    if (alphaValue>minAlpha)
+                    {
+                        alphaValue -= alphaChangeSpeed * elapsedTime;
+                        if (alphaValue < minAlpha)
+                            alphaValue = minAlpha;
+                    }
+                    if (elapsedPltaformTime >= maxTransparentTime)
+                    {
+                        elapsedPltaformTime = 0;
+                        transparent = false;
+                    }
+                }
+                else
+                {
+                    elapsedPltaformTime += elapsedTime;
+                    if (alphaValue <1)
+                    {
+                        alphaValue += alphaChangeSpeed * elapsedTime;
+                        if (alphaValue > 1)
+                            alphaValue = 1;
+                    }
+                    if (elapsedPltaformTime >= maxSolidTime)
+                    {
+                            elapsedPltaformTime = 0;
+                            transparent = true;
+                    }
+                }
+            }
+
         }
         public void RemovePlatform()
         {
@@ -153,7 +206,7 @@ namespace _999AD
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(spritesheet, Camera.RelativeRectangle(Position, width, height),
-                sourceRectangles[(int)textureType], Color.White);
+                sourceRectangles[(int)textureType], Color.White*alphaValue);
         }
         #endregion
     }

@@ -42,7 +42,28 @@ namespace _999AD
                 new CollectablesRoomManager(new Collectable[]   //tutorial4
                 {
                 }),
-                new CollectablesRoomManager(new Collectable[]   //church
+                new CollectablesRoomManager(new Collectable[]   //churchBellTower0
+                {
+                }),
+                new CollectablesRoomManager(new Collectable[]   //churchBellTower1
+                {
+                }),
+                new CollectablesRoomManager(new Collectable[]   //churchBellTower2
+                {
+                }),
+                new CollectablesRoomManager(new Collectable[]   //midBoss
+                {
+                }),
+                new CollectablesRoomManager(new Collectable[]   //churchGroundFloor0
+                {
+                }),
+                new CollectablesRoomManager(new Collectable[]   //churchAltarRoom
+                {
+                }),
+                new CollectablesRoomManager(new Collectable[]   //church1stFloor0
+                {
+                }),
+                new CollectablesRoomManager(new Collectable[]   //church2ndFloor0
                 {
                 }),
                 new CollectablesRoomManager(new Collectable[]   //finaleBoss

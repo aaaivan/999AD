@@ -102,8 +102,12 @@ namespace _999AD
         {
             for (int row = Camera.Rectangle.Y/Tile.tileSize; row <= (Camera.Rectangle.Bottom-1) / Tile.tileSize; row++)
             {
-                for (int col = Camera.Rectangle.X/Tile.tileSize; col <= (Camera.Rectangle.Right-1) / Tile.tileSize; col++)
+                for (int col = Camera.Rectangle.X / Tile.tileSize; col <= (Camera.Rectangle.Right - 1) / Tile.tileSize; col++)
+                {
+                    if (row < 0 || row >= roomHeightTiles || col < 0 || col >= roomWidthTiles)
+                        continue;
                     array[row, col].Draw(spriteBatch);
+                }
             }
         }
         #endregion

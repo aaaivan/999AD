@@ -40,7 +40,35 @@ namespace _999AD
                     {
                     }
                     ),
-                    new DoorsRoomManager(new Door[] //church
+                    new DoorsRoomManager(new Door[] //churchBellTower0
+                    {
+                    }
+                    ),
+                    new DoorsRoomManager(new Door[] //churchBellTower1
+                    {
+                    }
+                    ),
+                    new DoorsRoomManager(new Door[] //churchBellTower2
+                    {
+                    }
+                    ),
+                    new DoorsRoomManager(new Door[] //midBoss
+                    {
+                    }
+                    ),
+                    new DoorsRoomManager(new Door[] //churchGroundFloor0
+                    {
+                    }
+                    ),
+                    new DoorsRoomManager(new Door[] //churchAltarRoom
+                    {
+                    }
+                    ),
+                    new DoorsRoomManager(new Door[] //church1stFloor0
+                    {
+                    }
+                    ),
+                    new DoorsRoomManager(new Door[] //church2ndFloor0
                     {
                     }
                     ),
