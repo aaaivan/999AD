@@ -23,6 +23,9 @@ namespace _999AD
         public static readonly float timeUntilShot = 2f;
         static float elapsedShotTime;
 
+        static readonly float timeUntilChange = 0.5f;
+        static float elapsedChangeTime;
+
         //Size Variables
         public static readonly int bossWidth = 20;
         public static readonly int bossHeight = 26;
@@ -131,18 +134,7 @@ namespace _999AD
             switch(bossState)
             {
                 case BossState.idle:
-                    if(Math.Abs(bossPoint.X-Player.CollisionRectangle.X)<75)
-                    {
-                        int randomNum = random.Next(0, 2);
-                        if(randomNum==0)
-                        {
-                            bossState = BossState.move;
-                        }
-                        else if(randomNum==1)
-                        {
-                            bossState = BossState.attack;
-                        }
-                    }
+                    ChangeFromIdle(elapsedTime);
                     break;
                 case BossState.move:
                     Move(elapsedTime);
@@ -151,14 +143,7 @@ namespace _999AD
                     Attack(elapsedTime);
                     break;
                 case BossState.death:
-                    if(bossAnimations[(int)bossState]!=bossAnimations[(int)BossState.death])
-                    {
-                        bossAnimations[(int)bossState] = bossAnimations[(int)BossState.death];
-                    }
-                    else if(!bossAnimations[(int)bossState].Active)
-                    {
-                        dead = true;
-                    }
+                    Death();
                     break;
             }
         }
@@ -263,6 +248,51 @@ namespace _999AD
                 return true;
             }
             return false;
+        }
+
+        //Function to change states from idle
+        //Takes elapsed time as a parameter to produce a delay when states are changed
+        public static void ChangeFromIdle(float elapsedTime)
+        {
+            if (elapsedChangeTime > timeUntilChange)
+                {
+                    ChangeState();
+                    elapsedChangeTime = 0;
+                }
+                else
+                {
+                    elapsedChangeTime += elapsedTime;
+                }
+        }
+
+        //Function to change states
+        public static void ChangeState()
+        {
+            if (Math.Abs(bossPoint.X - Player.CollisionRectangle.X) < 75)
+            {
+                int randomNum = random.Next(0, 2);
+                if (randomNum == 0)
+                {
+                    bossState = BossState.move;
+                }
+                else if (randomNum == 1)
+                {
+                    bossState = BossState.attack;
+                }
+            }
+        }
+
+        //Function to handle the boss death
+        public static void Death()
+        {
+            if (bossAnimations[(int)bossState] != bossAnimations[(int)BossState.death])
+            {
+                bossAnimations[(int)bossState] = bossAnimations[(int)BossState.death];
+            }
+            else if (!bossAnimations[(int)bossState].Active)
+            {
+                dead = true;
+            }
         }
 
         #endregion
