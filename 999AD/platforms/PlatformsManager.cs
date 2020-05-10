@@ -484,6 +484,12 @@ namespace _999AD
                                             0,512,true, 0,0,1),
                     }
                 ),
+                new PlatformsRoomManager //descent
+                (
+                    new MovingPlatform[]
+                    {
+                    }
+                ),
                 new PlatformsRoomManager //finalBossRoom
                 (
                     new MovingPlatform[]
@@ -513,7 +519,7 @@ namespace _999AD
                                         0,5, false, 0,0,0, true),
                         new MovingPlatform(MovingPlatform.TextureType.fallingFloor112_216, 0,
                                         new Vector2(MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomWidthtPx-1280, MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomHeightPx+108),
-                                        new Vector2(MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomWidthtPx-1280, MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomHeightPx-116),
+                                        new Vector2(MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomWidthtPx-1280, MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomHeightPx-112),
                                         0,25, false, 0,0,0, true),
                         new MovingPlatform(MovingPlatform.TextureType.fallingFloor272_40, 0,
                                         new Vector2(MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomWidthtPx-1568, MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomHeightPx+5),
@@ -536,6 +542,30 @@ namespace _999AD
                                         new Vector2(MapsManager.maps[(int)RoomsManager.Rooms.escape1].RoomWidthtPx-1156, MapsManager.maps[(int)RoomsManager.Rooms.escape1].RoomHeightPx+24),
                                         new Vector2(MapsManager.maps[(int)RoomsManager.Rooms.escape1].RoomWidthtPx-1156, MapsManager.maps[(int)RoomsManager.Rooms.escape1].RoomHeightPx-8),
                                         0,10, false, 0,0,0, true)
+                    }
+                ),
+                new PlatformsRoomManager //escape2
+                (
+                    new MovingPlatform[]
+                    {
+                          new MovingPlatform(MovingPlatform.TextureType.platform24_8, 0,
+                                              new Vector2(396, 100), new Vector2(0,0),
+                                              0,0,false, 0,0,0,false, true, 2f, 1, 0),
+                          new MovingPlatform(MovingPlatform.TextureType.platform24_8, 0,
+                                              new Vector2(356, 116), new Vector2(0,0),
+                                              0,0,false, 0,0,0,false, true, 2f, 1, 0.4f),
+                          new MovingPlatform(MovingPlatform.TextureType.platform24_8, 0,
+                                              new Vector2(316, 132), new Vector2(0,0),
+                                              0,0,false, 0,0,0,false, true, 2f, 1, 0.8f),
+                          new MovingPlatform(MovingPlatform.TextureType.platform24_8, 0,
+                                              new Vector2(276, 148), new Vector2(0,0),
+                                              0,0,false, 0,0,0,false, true, 2f, 1, 1.2f),
+                          new MovingPlatform(MovingPlatform.TextureType.platform24_8, 0,
+                                              new Vector2(236, 164), new Vector2(0,0),
+                                              0,0,false, 0,0,0,false, true, 2f, 1, 1.6f),
+                          new MovingPlatform(MovingPlatform.TextureType.platform24_8, 0,
+                                              new Vector2(196, 180), new Vector2(0,0),
+                                              0,0,false, 0,0,0,false, true, 2f, 1, 2f),
                     }
                 )
             };

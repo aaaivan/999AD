@@ -73,6 +73,10 @@ namespace _999AD
                     new Monologue[]
                     {
                     }),
+                new MonologuesRoomManager(  //descent
+                    new Monologue[]
+                    {
+                    }),
                 new MonologuesRoomManager(  //finalBoss
                     new Monologue[]
                     {
@@ -82,6 +86,10 @@ namespace _999AD
                     {
                     }),
                 new MonologuesRoomManager(  //escape1
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(  //escape2
                     new Monologue[]
                     {
                     }),

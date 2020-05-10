@@ -72,6 +72,10 @@ namespace _999AD
                 {
 
                 }),
+                new AnimatedSpritesRoomManager(new AnimatedSprite[] //descent
+                {
+
+                }),
                 new AnimatedSpritesRoomManager(new AnimatedSprite[] //finalBoss
                 {
 
@@ -81,6 +85,10 @@ namespace _999AD
 
                 }),
                 new AnimatedSpritesRoomManager(new AnimatedSprite[] //escape1
+                {
+
+                }),
+                new AnimatedSpritesRoomManager(new AnimatedSprite[] //escape2
                 {
 
                 })

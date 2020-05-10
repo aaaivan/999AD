@@ -72,6 +72,10 @@ namespace _999AD
                     {
                     }
                     ),
+                    new DoorsRoomManager(new Door[] //descent
+                    {
+                    }
+                    ),
                     new DoorsRoomManager(new Door[] //finalBoss
                     {
                     }
@@ -81,6 +85,10 @@ namespace _999AD
                     }
                     ),
                     new DoorsRoomManager(new Door[] //escape1
+                    {
+                    }
+                    ),
+                    new DoorsRoomManager(new Door[] //escape2
                     {
                     }
                     )

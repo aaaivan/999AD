@@ -17,10 +17,11 @@ namespace _999AD
             tutorial0, tutorial1, tutorial2, tutorial3, tutorial4,
             churchBellTower0, churchBellTower1, churchBellTower2, midBoss,
             churchGroundFloor0, churchAltarRoom,
-            church1stFloor0, church2ndFloor0,
-            finalBoss, escape0, escape1, total
+            church1stFloor0, church2ndFloor0, descent,
+            finalBoss, escape0, escape1, escape2,
+            total
         }
-        static Rooms currentRoom = Rooms.churchBellTower0;
+        static Rooms currentRoom = Rooms.escape2;
         #endregion
         #region CONSTRUCTOR
         public static void Inizialize()
@@ -46,26 +47,45 @@ namespace _999AD
                         currentRoom = Rooms.tutorial1;
                         CameraManager.SwitchCamera(Rooms.tutorial1);
                         Player.position.X = 0;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+                    }
+                    else if (Player.position.Y > MapsManager.maps[(int)currentRoom].RoomHeightPx)
+                    {//move to tutorial4
+                        currentRoom = Rooms.tutorial4;
+                        CameraManager.SwitchCamera(Rooms.tutorial4);
+                        Player.position.X = 0;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
                     }
                     break;
                 case Rooms.tutorial1:
-                    if (Player.position.Y > MapsManager.maps[(int)currentRoom].RoomHeightPx+20)
+                    if (Player.position.Y > MapsManager.maps[(int)currentRoom].RoomHeightPx)
                     {//move to tutorial2
                         currentRoom = Rooms.tutorial2;
                         CameraManager.SwitchCamera(Rooms.tutorial2);
                         Player.position.Y = 0;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     else if (Player.position.X + Player.width < 0)
                     {//move to tutorial0
                         currentRoom = Rooms.tutorial0;
                         CameraManager.SwitchCamera(Rooms.tutorial0);
                         Player.position.X = MapsManager.maps[(int)currentRoom].RoomWidthtPx - Player.width;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     else if (Player.position.X > MapsManager.maps[(int)currentRoom].RoomWidthtPx)
                     {//move to tutorial3
                         currentRoom = Rooms.tutorial3;
                         CameraManager.SwitchCamera(Rooms.tutorial3);
                         Player.position.X = 0;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     break;
                 case Rooms.tutorial2:
@@ -77,12 +97,18 @@ namespace _999AD
                             CameraManager.SwitchCamera(Rooms.tutorial3);
                             Player.position.Y = MapsManager.maps[(int)currentRoom].RoomHeightPx-Player.height;
                             Player.position.X -= MapsManager.maps[(int)Rooms.tutorial1].RoomWidthtPx;
+                            FireBallsManager.Clear();
+                            LavaGeyserManager.Clear();
+
                         }
                         else
                         {//move to tutorial1
                             currentRoom = Rooms.tutorial1;
                             CameraManager.SwitchCamera(Rooms.tutorial1);
                             Player.position.Y = MapsManager.maps[(int)currentRoom].RoomHeightPx - Player.height;
+                            FireBallsManager.Clear();
+                            LavaGeyserManager.Clear();
+
                         }
                     }
                     else if (Player.position.X+Player.width<0)
@@ -90,6 +116,9 @@ namespace _999AD
                         currentRoom = Rooms.tutorial4;
                         CameraManager.SwitchCamera(Rooms.tutorial4);
                         Player.position.X = MapsManager.maps[(int)currentRoom].RoomWidthtPx - Player.width;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     break;
                 case Rooms.tutorial3:
@@ -99,12 +128,18 @@ namespace _999AD
                         CameraManager.SwitchCamera(Rooms.tutorial2);
                         Player.position.X += MapsManager.maps[(int)Rooms.tutorial1].RoomWidthtPx;
                         Player.position.Y = -10;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     else if (Player.position.X<0)
                     {//move to tutorial1
                         currentRoom = Rooms.tutorial1;
                         CameraManager.SwitchCamera(Rooms.tutorial1);
                         Player.position.X = MapsManager.maps[(int)currentRoom].RoomWidthtPx-Player.width;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     else if (Player.position.X> MapsManager.maps[(int)currentRoom].RoomWidthtPx)
                     {//move to churchBellTower0
@@ -112,6 +147,9 @@ namespace _999AD
                         CameraManager.SwitchCamera(Rooms.churchBellTower0);
                         Player.position.X = 0;
                         Player.position.Y += MapsManager.maps[(int)currentRoom].RoomHeightPx- MapsManager.maps[(int)Rooms.tutorial3].RoomHeightPx;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     break;
                 case Rooms.tutorial4:
@@ -120,12 +158,27 @@ namespace _999AD
                         currentRoom = Rooms.tutorial2;
                         CameraManager.SwitchCamera(Rooms.tutorial2);
                         Player.position.X = 0;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     else if (Player.position.Y+Player.height<0)
                     {//move to tutorial0
                         currentRoom = Rooms.tutorial0;
                         CameraManager.SwitchCamera(Rooms.tutorial0);
                         Player.position.Y = MapsManager.maps[(int)currentRoom].RoomHeightPx-Player.height;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
+                    }
+                    else if (Player.position.Y> MapsManager.maps[(int)currentRoom].RoomHeightPx)
+                    {//move to escape2
+                        currentRoom = Rooms.escape2;
+                        CameraManager.SwitchCamera(Rooms.escape2);
+                        Player.position.Y = 0;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     break;
                 case Rooms.churchBellTower0:
@@ -135,12 +188,18 @@ namespace _999AD
                         CameraManager.SwitchCamera(Rooms.tutorial3);
                         Player.position.X= MapsManager.maps[(int)currentRoom].RoomWidthtPx - Player.width;
                         Player.position.Y += MapsManager.maps[(int)currentRoom].RoomHeightPx - MapsManager.maps[(int)Rooms.churchBellTower0].RoomHeightPx;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     else if (Player.position.Y+Player.height<0)
                     {//move up to churchBellTower1
                         currentRoom = Rooms.churchBellTower1;
                         CameraManager.SwitchCamera(Rooms.churchBellTower1);
                         Player.position.Y = MapsManager.maps[(int)currentRoom].RoomHeightPx - Player.height;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     else if (Player.position.X> MapsManager.maps[(int)currentRoom].RoomWidthtPx)
                     {
@@ -150,6 +209,9 @@ namespace _999AD
                             CameraManager.SwitchCamera(Rooms.churchGroundFloor0);
                             Player.position.Y += MapsManager.maps[(int)currentRoom].RoomHeightPx - MapsManager.maps[(int)Rooms.churchBellTower0].RoomHeightPx;
                             Player.position.X = 0;
+                            FireBallsManager.Clear();
+                            LavaGeyserManager.Clear();
+
                         }
                         else if (Player.position.Y>248)
                         {//church1stFloor0
@@ -157,6 +219,9 @@ namespace _999AD
                             CameraManager.SwitchCamera(Rooms.church1stFloor0);
                             Player.position.Y += MapsManager.maps[(int)currentRoom].RoomHeightPx + MapsManager.maps[(int)Rooms.churchGroundFloor0].RoomHeightPx - MapsManager.maps[(int)Rooms.churchBellTower0].RoomHeightPx;
                             Player.position.X = 0;
+                            FireBallsManager.Clear();
+                            LavaGeyserManager.Clear();
+
                         }
                         else
                         {//church2ndFloor0
@@ -167,6 +232,9 @@ namespace _999AD
                                                  + MapsManager.maps[(int)Rooms.churchGroundFloor0].RoomHeightPx
                                                  - MapsManager.maps[(int)Rooms.churchBellTower0].RoomHeightPx;
                             Player.position.X = 0;
+                            FireBallsManager.Clear();
+                            LavaGeyserManager.Clear();
+
                         }
 
                     }
@@ -177,12 +245,18 @@ namespace _999AD
                         currentRoom = Rooms.churchBellTower0;
                         CameraManager.SwitchCamera(Rooms.churchBellTower0);
                         Player.position.Y = 0;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     else if (Player.position.Y + Player.height < 0)
                     {//move up to chirchBellTower2
                         currentRoom = Rooms.churchBellTower2;
                         CameraManager.SwitchCamera(Rooms.churchBellTower2);
                         Player.position.Y = MapsManager.maps[(int)currentRoom].RoomHeightPx - Player.height;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     break;
                 case Rooms.churchBellTower2:
@@ -191,12 +265,18 @@ namespace _999AD
                         currentRoom = Rooms.churchBellTower1;
                         CameraManager.SwitchCamera(Rooms.churchBellTower1);
                         Player.position.Y = 0;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     else if (Player.position.Y + Player.height < 0)
                     {//move up to midBoss
                         currentRoom = Rooms.midBoss;
                         CameraManager.SwitchCamera(Rooms.midBoss);
                         Player.position.Y = MapsManager.maps[(int)currentRoom].RoomHeightPx - Player.height;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     break;
                 case Rooms.midBoss:
@@ -205,6 +285,9 @@ namespace _999AD
                         currentRoom = Rooms.churchBellTower2;
                         CameraManager.SwitchCamera(Rooms.churchBellTower2);
                         Player.position.Y = 0;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     break;
                 case Rooms.churchGroundFloor0:
@@ -214,12 +297,18 @@ namespace _999AD
                         CameraManager.SwitchCamera(Rooms.churchBellTower0);
                         Player.position.X = MapsManager.maps[(int)currentRoom].RoomWidthtPx - Player.width;
                         Player.position.Y += MapsManager.maps[(int)currentRoom].RoomHeightPx - MapsManager.maps[(int)Rooms.churchGroundFloor0].RoomHeightPx;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     else if (Player.position.X> MapsManager.maps[(int)currentRoom].RoomWidthtPx)
                     {//move to churchAltarRoom
                         currentRoom = Rooms.churchAltarRoom;
                         CameraManager.SwitchCamera(Rooms.churchAltarRoom);
                         Player.position.X = 0;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     break;
                 case Rooms.churchAltarRoom:
@@ -228,6 +317,9 @@ namespace _999AD
                         currentRoom = Rooms.churchGroundFloor0;
                         CameraManager.SwitchCamera(Rooms.churchGroundFloor0);
                         Player.position.X = MapsManager.maps[(int)currentRoom].RoomWidthtPx - Player.width;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     else if (Player.position.Y+Player.height<0)
                     {//move to church1stFloor0
@@ -235,6 +327,18 @@ namespace _999AD
                         CameraManager.SwitchCamera(Rooms.church1stFloor0);
                         Player.position.Y = MapsManager.maps[(int)currentRoom].RoomHeightPx - Player.height;
                         Player.position.X += MapsManager.maps[(int)Rooms.churchGroundFloor0].RoomWidthtPx;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
+                    }
+                    else if (Player.position.Y> MapsManager.maps[(int)currentRoom].RoomHeightPx)
+                    {//move to descent
+                        currentRoom = Rooms.descent;
+                        CameraManager.SwitchCamera(Rooms.descent);
+                        Player.position.Y = 0;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     break;
                 case Rooms.church1stFloor0:
@@ -244,12 +348,18 @@ namespace _999AD
                         CameraManager.SwitchCamera(Rooms.churchAltarRoom);
                         Player.position.Y = 0;
                         Player.position.X -= MapsManager.maps[(int)Rooms.churchGroundFloor0].RoomWidthtPx;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     else if (Player.position.Y +Player.height <0)
                     {//move to church2ndFloor0
                         currentRoom = Rooms.church2ndFloor0;
                         CameraManager.SwitchCamera(Rooms.church2ndFloor0);
                         Player.position.Y = MapsManager.maps[(int)currentRoom].RoomHeightPx - Player.height;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     else if (Player.position.X+Player.width<0)
                     {//move to churchBellTower0
@@ -259,6 +369,9 @@ namespace _999AD
                                              - MapsManager.maps[(int)Rooms.church1stFloor0].RoomHeightPx
                                              - MapsManager.maps[(int)Rooms.churchGroundFloor0].RoomHeightPx;
                         Player.position.X = MapsManager.maps[(int)currentRoom].RoomWidthtPx-Player.width;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     break;
                 case Rooms.church2ndFloor0:
@@ -271,10 +384,122 @@ namespace _999AD
                                              - MapsManager.maps[(int)Rooms.churchGroundFloor0].RoomHeightPx
                                              -MapsManager.maps[(int)Rooms.church2ndFloor0].RoomHeightPx;
                         Player.position.X = MapsManager.maps[(int)currentRoom].RoomWidthtPx - Player.width;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     else if (Player.position.Y> MapsManager.maps[(int)currentRoom].RoomHeightPx)
-                    {
+                    {//move to church1stFloor0
+                        currentRoom = Rooms.church1stFloor0;
+                        CameraManager.SwitchCamera(Rooms.church1stFloor0);
                         Player.position.Y = 0;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
+                    }
+                    break;
+                case Rooms.descent:
+                    if (Player.position.Y+Player.height<0)
+                    {//move to churchAltarRoom
+                        currentRoom = Rooms.churchAltarRoom;
+                        CameraManager.SwitchCamera(Rooms.churchAltarRoom);
+                        Player.position.Y = MapsManager.maps[(int)currentRoom].RoomHeightPx-Player.height;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
+                    }
+                    else if (Player.position.Y> MapsManager.maps[(int)currentRoom].RoomHeightPx)
+                    {//move to finalBoss
+                        currentRoom = Rooms.finalBoss;
+                        CameraManager.SwitchCamera(Rooms.finalBoss);
+                        Player.position.Y = 0;
+                        Player.position.X += MapsManager.maps[(int)currentRoom].RoomWidthtPx - MapsManager.maps[(int)Rooms.descent].RoomWidthtPx;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
+                    }
+                    break;
+                case Rooms.finalBoss:
+                    if (Player.position.X+Player.width<0)
+                    {//move to escape0
+                        currentRoom = Rooms.escape0;
+                        CameraManager.SwitchCamera(Rooms.escape0);
+                        Player.position.X = MapsManager.maps[(int)currentRoom].RoomWidthtPx-Player.width;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
+                    }
+                    else if(Player.position.Y+Player.height<0) 
+                    {//move to descent
+                        currentRoom = Rooms.descent;
+                        CameraManager.SwitchCamera(Rooms.descent);
+                        Player.position.Y = MapsManager.maps[(int)currentRoom].RoomHeightPx - Player.height;
+                        Player.position.X += MapsManager.maps[(int)currentRoom].RoomWidthtPx - MapsManager.maps[(int)Rooms.finalBoss].RoomWidthtPx;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
+                    }
+                    break;
+                case Rooms.escape0:
+                    if (Player.position.X > MapsManager.maps[(int)currentRoom].RoomWidthtPx)
+                    {//move to finalBoss
+                        currentRoom = Rooms.finalBoss;
+                        CameraManager.SwitchCamera(Rooms.finalBoss);
+                        Player.position.X = 0;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
+                    }
+                    else if (Player.position.X + Player.width<0)
+                    {//move to escape1
+                        currentRoom = Rooms.escape1;
+                        CameraManager.SwitchCamera(Rooms.escape1);
+                        Player.position.X = MapsManager.maps[(int)currentRoom].RoomWidthtPx - Player.width;
+                        Player.position.Y += MapsManager.maps[(int)Rooms.descent].RoomHeightPx - MapsManager.maps[(int)Rooms.tutorial2].RoomHeightPx;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
+                    }
+                    break;
+                case Rooms.escape1:
+                    if (Player.position.X> MapsManager.maps[(int)currentRoom].RoomWidthtPx)
+                    {//move to escape0
+                        currentRoom = Rooms.escape0;
+                        CameraManager.SwitchCamera(Rooms.escape0);
+                        Player.position.X = 0;
+                        Player.position.Y-= MapsManager.maps[(int)Rooms.descent].RoomHeightPx - MapsManager.maps[(int)Rooms.tutorial2].RoomHeightPx;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
+                    }
+                    else if (Player.position.X+Player.width<0)
+                    {//move to escape2
+                        currentRoom = Rooms.escape2;
+                        CameraManager.SwitchCamera(Rooms.escape2);
+                        Player.position.X = MapsManager.maps[(int)currentRoom].RoomWidthtPx - Player.width;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
+                    }
+                    break;
+                case Rooms.escape2:
+                    if (Player.position.X> MapsManager.maps[(int)currentRoom].RoomWidthtPx)
+                    {//move to escape1
+                        currentRoom = Rooms.escape1;
+                        CameraManager.SwitchCamera(Rooms.escape1);
+                        Player.position.X = 0;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
+                    }
+                    else if(Player.position.Y+Player.height<0)
+                    {//move to tutorial4
+                        currentRoom = Rooms.tutorial4;
+                        CameraManager.SwitchCamera(Rooms.tutorial4);
+                        Player.position.Y = MapsManager.maps[(int)currentRoom].RoomHeightPx-Player.height;
+                        FireBallsManager.Clear();
+                        LavaGeyserManager.Clear();
+
                     }
                     break;
             }
