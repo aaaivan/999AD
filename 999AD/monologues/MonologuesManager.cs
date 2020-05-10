@@ -24,14 +24,6 @@ namespace _999AD
                 new MonologuesRoomManager(  //tutorial0
                     new Monologue[]
                     {
-                        new Monologue(new Rectangle(264, 142, 55, 78),
-                        new string[]
-                        {
-                            "Wha...?!",
-                            "...",
-                            "So... you have been sent here on a quest to\nsave the world, you say..." ,
-                            "I see. I have one teensy-weensy, but ever\nso crucial little, tiny feat for you...",
-                            "GO BACK HOME, YOU FOOL!"})
                     }),
                 new MonologuesRoomManager(  //tutorial1
                     new Monologue[]
@@ -42,6 +34,42 @@ namespace _999AD
                     {
                     }),
                 new MonologuesRoomManager(  //tutorial3
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(  //tutorial4
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(  //churchBellTower0
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(  //churchBellTower1
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(  //churchBellTower2
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(  //midBoss
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(  //churchGroundFloor0
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(  //churchAltarRoom
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(  //church1stFloor0
+                    new Monologue[]
+                    {
+                    }),
+                new MonologuesRoomManager(  //church2ndFloor0
                     new Monologue[]
                     {
                     }),
