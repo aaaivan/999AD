@@ -276,9 +276,10 @@ namespace _999AD
                         LavaGeyserManager.ShootGeyser(new float[] { 216 }, 1.8f);
                         LavaGeyserManager.ShootGeyser(new float[] { 196 }, 2f);
                         LavaGeyserManager.ShootGeyser(new float[] { 176 }, 2.2f);
-                        LavaGeyserManager.ShootGeyser(new float[] { 156 }, 2.7f);
-                        LavaGeyserManager.ShootGeyser(new float[] { 136 }, 2.7f);
-                        LavaGeyserManager.ShootGeyser(new float[] { 116 }, 2.7f);
+                        LavaGeyserManager.ShootGeyser(new float[] { 156 }, 2.4f);
+                        LavaGeyserManager.ShootGeyser(new float[] { 136 }, 2.6f);
+                        LavaGeyserManager.ShootGeyser(new float[] { 116 }, 2.8f);
+                        LavaGeyserManager.ShootGeyser(new float[] { 96 }, 3f);
                         happening = Events.lavaEruption_escape2;
                         elapsedEventsDuration = 0;
                         break;

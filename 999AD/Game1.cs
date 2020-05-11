@@ -38,8 +38,6 @@ namespace _999AD
         public static MouseState previousMouseState;
         public static int tilesPerRow=10;
         public static int infoBoxHeightPx = 20;
-        public static KeyboardState previousKeyboard;
-        public static KeyboardState currentKeyboard;
 #endif
         public Game1()
         {
@@ -160,7 +158,7 @@ namespace _999AD
             );
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
             ProjectilesManager.Inizialize(Content.Load<Texture2D>("projectile"));
-            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(60*8,20));
+            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(500,20));
             RoomsManager.Inizialize();
             GameEvents.Inizialize();
             FireBallsManager.Inizialize(Content.Load<Texture2D>("fireball"), Content.Load<Texture2D>("laser"));
@@ -234,8 +232,6 @@ namespace _999AD
             spriteBatch.Begin();
             levelEditor.Draw(spriteBatch, tilesPerRow, infoBoxHeightPx, editorWidth, editorHeight);
             PlatformsManager.platformsRoomManagers[levelEditor.currentRoomNumber].Draw(spriteBatch);
-            Camera.Draw(spriteBatch);
-            RoomsManager.Draw(spriteBatch);
             spriteBatch.End();
             GraphicsDevice.SetRenderTarget(null);
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
