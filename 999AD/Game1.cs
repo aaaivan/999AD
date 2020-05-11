@@ -119,13 +119,16 @@ namespace _999AD
 
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
             ProjectilesManager.Inizialize(Content.Load<Texture2D>("projectile"));
-            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(40,80));
+            Player.Inizialize(Content.Load<Texture2D>(@"characters\player"), new Vector2(40, 80));
             RoomsManager.Inizialize();
             GameEvents.Inizialize();
             FireBallsManager.Inizialize(Content.Load<Texture2D>("fireball"), Content.Load<Texture2D>("laser"));
             LavaGeyserManager.Inizialize(Content.Load<Texture2D>("lavaGeyser"),
                                          Content.Load<Texture2D>("whiteTile"));
             //
+            EnemyManager.Initialise(Content.Load<Texture2D>(@"characters\enemy1"), Content.Load<Texture2D>(@"characters\enemy2"));
+            //Enemy1.Initialise(Content.Load<Texture2D>(@"characters\enemy1"), new Vector2(150, 185));
+
             MidBoss.Initialise(Content.Load<Texture2D>(@"characters\midboss"));
             //
             FinalBoss.Inizialize(Content.Load<Texture2D>(@"characters\finalBoss"),

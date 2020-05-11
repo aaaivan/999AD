@@ -16,6 +16,7 @@ namespace _999AD
             PlayerCollisions(elapsedTiem);
             PlayerProjectilesCollisions();
             BossProjectilesCollisions();
+            EnemyProjectilesCollisions();
         }
         static void PlayerCollisions(float elapsedTime)
         {
@@ -69,8 +70,24 @@ namespace _999AD
 
                 if(RoomsManager.CurrentRoom==RoomsManager.Rooms.midboss)
                 {
-                    if (MidBoss.BossHitByRect(projectile.Rectangle))
+                    if (!MidBoss.Dead && MidBoss.BossHitByRect(projectile.Rectangle))
                         projectile.active = false;
+                }
+
+                foreach(Enemy1 enemy in EnemyManager.enemyRoomManagers[(int)RoomsManager.CurrentRoom].enemiesType1)
+                {
+                    if(!enemy.Dead && enemy.Enemy1HitByRect(projectile.Rectangle))
+                    {
+                        projectile.active = false;
+                    }
+                }
+
+                foreach(Enemy2 enemy in EnemyManager.enemyRoomManagers[(int)RoomsManager.CurrentRoom].enemiesType2)
+                {
+                    if(!enemy.Dead && enemy.Enemy2HitByRect(projectile.Rectangle))
+                    {
+                        projectile.active = false;
+                    }
                 }
             }
         }
@@ -82,6 +99,20 @@ namespace _999AD
                 if(RoomsManager.CurrentRoom==RoomsManager.Rooms.midboss)
                 {
                     if(MidBoss.PlayerHitByRect(projectile.Rectangle))
+                    {
+                        projectile.active = false;
+                    }
+                }
+            }
+        }
+
+        static void EnemyProjectilesCollisions()
+        {
+            foreach(Projectile projectile in ProjectilesManager.enemyProjectiles)
+            {
+                foreach(Enemy2 enemy in EnemyManager.enemyRoomManagers[(int)RoomsManager.CurrentRoom].enemiesType2)
+                {
+                    if(enemy.PlayerHitByRect(projectile.Rectangle))
                     {
                         projectile.active = false;
                     }
