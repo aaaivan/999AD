@@ -115,7 +115,7 @@ namespace _999AD
                     Content.Load<Texture2D>(@"backgrounds\room2"),
                     Content.Load<Texture2D>(@"backgrounds\room2"),
                     Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\midboss"),
                     Content.Load<Texture2D>(@"backgrounds\room2"),
                     Content.Load<Texture2D>(@"backgrounds\room2"),
                     Content.Load<Texture2D>(@"backgrounds\room2"),
@@ -164,6 +164,9 @@ namespace _999AD
             FireBallsManager.Inizialize(Content.Load<Texture2D>("fireball"), Content.Load<Texture2D>("laser"));
             LavaGeyserManager.Inizialize(Content.Load<Texture2D>("lavaGeyser"),
                                          Content.Load<Texture2D>("whiteTile"));
+            //
+            MidBoss.Initialise(Content.Load<Texture2D>(@"characters\midboss"));
+            //
             FinalBoss.Inizialize(Content.Load<Texture2D>(@"characters\finalBoss"),
                                  new Texture2D[] { Content.Load<Texture2D>(@"characters\stoneWing"),
                                                    Content.Load<Texture2D>(@"characters\healthyWing"),

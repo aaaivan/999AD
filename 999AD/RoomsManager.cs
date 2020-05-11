@@ -22,6 +22,7 @@ namespace _999AD
             total
         }
         static Rooms currentRoom = Rooms.escape2;
+
         #endregion
         #region CONSTRUCTOR
         public static void Inizialize()
@@ -529,6 +530,9 @@ namespace _999AD
             {
                 FinalBoss.Update(elapsedTime);
             }
+            //
+            MidBoss.Update(elapsedTime);
+            //
             FireBallsManager.Update(elapsedTime);
             LavaGeyserManager.Update(elapsedTime);
             PlatformsManager.platformsRoomManagers[(int)currentRoom].Update(elapsedTime);
@@ -547,6 +551,10 @@ namespace _999AD
             if (currentRoom == Rooms.finalBoss)
             {
                 FinalBoss.Draw(spriteBatch);
+            }
+            if(currentRoom==Rooms.midboss)
+            {
+                MidBoss.Draw(spriteBatch);
             }
             FireBallsManager.Draw(spriteBatch);
             LavaGeyserManager.Draw(spriteBatch);

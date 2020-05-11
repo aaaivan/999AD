@@ -63,6 +63,7 @@
     <Compile Include="Gravity.cs" />
     <Compile Include="finalBoss\LavaGeyserManager.cs" />
     <Compile Include="map\LevelEditor.cs" />
+    <Compile Include="midboss\MidBoss.cs" />
     <Compile Include="monologues\Monologue.cs" />
     <Compile Include="monologues\MonologuesManager.cs" />
     <Compile Include="monologues\MonologuesRoomManager.cs" />

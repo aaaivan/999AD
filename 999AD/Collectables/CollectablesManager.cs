@@ -70,6 +70,7 @@ namespace _999AD
                 {
                 }),
                 new CollectablesRoomManager(new Collectable[]   //finalBoss
+
                 {
                 }),
                 new CollectablesRoomManager(new Collectable[]   //escape0
