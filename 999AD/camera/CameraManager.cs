@@ -19,10 +19,20 @@ namespace _999AD
             1, //tutorial1
             1, //tutorial2
             1, //tutorial3
-            1, //midboss
-            0.5f, //finalBoss
+            1, //tutorial4
+            1, //churchBellTower0
+            1, //churchBellTower1
+            1, //churchBellTower2
+            1, //midBoss
+            1, //churchGroundFloor0
+            1, //churchAltarRoom
+            1, //church1stFloor0
+            1, //church2ndFloor0
+            1, //finalBoss
+            0.625f, //finalBoss
             1, //escape0
-            1 //escape1
+            1, //escape1
+            1 //escape2
         };
         public static readonly int maxOffsetY = 2; //amplitude of the rumble
         static bool shaking = false;

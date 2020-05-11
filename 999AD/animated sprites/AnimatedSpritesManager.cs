@@ -22,7 +22,7 @@ namespace _999AD
             {
                 new AnimatedSpritesRoomManager(new AnimatedSprite[] //tutorial0
                 {
-                    new AnimatedSprite(new Vector2(100,100), AnimatedSprite.SpriteType.loading)
+
                 }),
                 new AnimatedSpritesRoomManager(new AnimatedSprite[] //tutorial1
                 {
@@ -36,7 +36,43 @@ namespace _999AD
                 {
 
                 }),
-                new AnimatedSpritesRoomManager(new AnimatedSprite[] //midboss
+                new AnimatedSpritesRoomManager(new AnimatedSprite[] //tutorial4
+                {
+
+                }),
+                new AnimatedSpritesRoomManager(new AnimatedSprite[] //churchBellTower0
+                {
+
+                }),
+                new AnimatedSpritesRoomManager(new AnimatedSprite[] //churchBellTower1
+                {
+
+                }),
+                new AnimatedSpritesRoomManager(new AnimatedSprite[] //churchBellTower2
+                {
+
+                }),
+                new AnimatedSpritesRoomManager(new AnimatedSprite[] //midBoss
+                {
+
+                }),
+                new AnimatedSpritesRoomManager(new AnimatedSprite[] //churchGroundFloor0
+                {
+
+                }),
+                new AnimatedSpritesRoomManager(new AnimatedSprite[] //churchAltarRoom
+                {
+
+                }),
+                new AnimatedSpritesRoomManager(new AnimatedSprite[] //church1stFloor0
+                {
+
+                }),
+                new AnimatedSpritesRoomManager(new AnimatedSprite[] //church2ndFloor0
+                {
+
+                }),
+                new AnimatedSpritesRoomManager(new AnimatedSprite[] //descent
                 {
 
                 }),
@@ -49,6 +85,10 @@ namespace _999AD
 
                 }),
                 new AnimatedSpritesRoomManager(new AnimatedSprite[] //escape1
+                {
+
+                }),
+                new AnimatedSpritesRoomManager(new AnimatedSprite[] //escape2
                 {
 
                 })

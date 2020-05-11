@@ -17,14 +17,17 @@ namespace _999AD
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        public static readonly  int gameWidth = 384; //pixels on the x axis
-        public static readonly int gameHeight = 216; //pixels on the y axis
+        public static readonly  int gameWidth = 1920/5; //pixels on the x axis
+        public static readonly int gameHeight = 1080/5; //pixels on the y axis
         public static Rectangle viewportRectangle;
         RenderTarget2D nativeRenderTarget;
         public static int scale;
+        public static KeyboardState previousKeyboard;
+        public static KeyboardState currentKeyboard;
+        
         //<debug>
-        SpriteFont spriteFont;
-        Texture2D white;
+        //SpriteFont spriteFont;
+        //Texture2D white;
         //</debug>
 
 #if LEVEL_EDITOR
@@ -36,8 +39,6 @@ namespace _999AD
         public static int tilesPerRow=10;
         public static int infoBoxHeightPx = 20;
 #endif
-        public static KeyboardState previousKeyboard;
-        public static KeyboardState currentKeyboard;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -64,8 +65,12 @@ namespace _999AD
             viewportRectangle = new Rectangle(0,0,editorWidth * scale,editorHeight * scale);
             graphics.PreferredBackBufferWidth = viewportRectangle.Width;
             graphics.PreferredBackBufferHeight = viewportRectangle.Height;
+            graphics.ApplyChanges();
+            previousKeyboard = Keyboard.GetState();
+
 #else
             scale = MathHelper.Min(GraphicsDevice.DisplayMode.Width / gameWidth, GraphicsDevice.DisplayMode.Height / gameHeight);
+            //scale = 1;
             nativeRenderTarget = new RenderTarget2D(GraphicsDevice, gameWidth, gameHeight);
             viewportRectangle = new Rectangle(
                 0,
@@ -74,11 +79,9 @@ namespace _999AD
                 gameHeight * scale);
             graphics.PreferredBackBufferWidth = viewportRectangle.Width;
             graphics.PreferredBackBufferHeight = viewportRectangle.Height;
-#endif     
-            //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
             previousKeyboard = Keyboard.GetState();
-
+#endif     
             base.Initialize();
         }
         /// <summary>
@@ -91,35 +94,71 @@ namespace _999AD
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            spriteFont = Content.Load<SpriteFont>(@"fonts\monologue");
 
+            //<debug>
+            //spriteFont = Content.Load<SpriteFont>(@"fonts\monologue");
+            //white = Content.Load<Texture2D>("whiteTile");
+            //</debug>
+
+#if LEVEL_EDITOR
             MapsManager.Inizialize(Content.Load<Texture2D>("tiles"));
             CameraManager.Inizialize
             (
                 new Texture2D[(int)RoomsManager.Rooms.total]
                 {
-                    Content.Load<Texture2D>(@"backgrounds\room1"),
-                    Content.Load<Texture2D>(@"backgrounds\room1"),
-                    Content.Load<Texture2D>(@"backgrounds\room1"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
                     Content.Load<Texture2D>(@"backgrounds\room2"),
                     Content.Load<Texture2D>(@"backgrounds\midboss"),
-                    Content.Load<Texture2D>(@"backgrounds\finalBoss"),
-                    Content.Load<Texture2D>(@"backgrounds\escape"),
-                    Content.Load<Texture2D>(@"backgrounds\escape"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
                 }
             );
-#if LEVEL_EDITOR
+            PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
             levelEditor = new LevelEditor(Content.Load<SpriteFont>(@"fonts\arial32"),
                                           Content.Load<SpriteFont>(@"fonts\arial14"),
                                           Content.Load<Texture2D>("whiteTile"));
 #else
-            //<debug>
-            white = Content.Load<Texture2D>("whiteTile");
-            //</debug>
-
+            MapsManager.Inizialize(Content.Load<Texture2D>("tiles"));
+            CameraManager.Inizialize
+            (
+                new Texture2D[(int)RoomsManager.Rooms.total]
+                {
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                }
+            );
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
             ProjectilesManager.Inizialize(Content.Load<Texture2D>("projectile"));
-            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(40,80));
+            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(500,20));
             RoomsManager.Inizialize();
             GameEvents.Inizialize();
             FireBallsManager.Inizialize(Content.Load<Texture2D>("fireball"), Content.Load<Texture2D>("laser"));
@@ -169,6 +208,7 @@ namespace _999AD
             mouseState = Mouse.GetState();
             levelEditor.Update(mouseState, previousMouseState, tilesPerRow, infoBoxHeightPx);
             CameraManager.Update(elapsedTime);
+            PlatformsManager.platformsRoomManagers[levelEditor.currentRoomNumber].Update(elapsedTime);
             previousMouseState = mouseState;
 #else
             RoomsManager.Update(elapsedTime);
@@ -191,28 +231,34 @@ namespace _999AD
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            spriteBatch.Begin();
 #if LEVEL_EDITOR
+            spriteBatch.Begin();
             levelEditor.Draw(spriteBatch, tilesPerRow, infoBoxHeightPx, editorWidth, editorHeight);
-#else
-            Camera.Draw(spriteBatch);
-            RoomsManager.Draw(spriteBatch);
-            //<debug>
-            //spriteBatch.Draw(white, Camera.RelativeRectangle(Player.CollisionRectangle), Color.Green);
-            MouseState mouseState = Mouse.GetState();
-            spriteBatch.DrawString(spriteFont, (mouseState.X / 5 + (int)Camera.position.X) + "," + (mouseState.Y / 5 + (int)Camera.position.Y), new Vector2(10, 10), Color.Blue);
-            //spriteBatch.DrawString(spriteFont, Player.healthPoints+"", new Vector2(10, 10), Color.Blue);
-            //</debug>
-#endif
+            PlatformsManager.platformsRoomManagers[levelEditor.currentRoomNumber].Draw(spriteBatch);
             spriteBatch.End();
             GraphicsDevice.SetRenderTarget(null);
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             spriteBatch.Draw(nativeRenderTarget, viewportRectangle, Color.White);
-#if LEVEL_EDITOR
             levelEditor.DrawText(spriteBatch, infoBoxHeightPx);
-#endif
             spriteBatch.End();
+#else
+            spriteBatch.Begin();
+            Camera.Draw(spriteBatch);
+            RoomsManager.Draw(spriteBatch);
+            spriteBatch.End();
+            GraphicsDevice.SetRenderTarget(null);
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            spriteBatch.Draw(nativeRenderTarget, viewportRectangle, Color.White);
 
+            //<debug>
+            //spriteBatch.Draw(white, Camera.RelativeRectangle(Player.CollisionRectangle), Color.Green);
+            //MouseState mouseState = Mouse.GetState();
+            //spriteBatch.DrawString(spriteFont, (mouseState.X / 5 + (int)Camera.position.X) + "," + (mouseState.Y / 5 + (int)Camera.position.Y), new Vector2(10, 10), Color.Blue);
+            //spriteBatch.DrawString(spriteFont, Player.healthPoints+"", new Vector2(10, 10), Color.Blue);
+            //</debug>
+
+            spriteBatch.End();
+#endif
             base.Draw(gameTime);
         }
     }

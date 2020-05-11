@@ -22,7 +22,6 @@ namespace _999AD
                 {
                     new DoorsRoomManager(new Door[] //tutorial0
                     {
-                        new Door(new Point(200, 176), Door.TextureType.greenDoor, Collectable.ItemType.coin)
                     }
                     ),
                     new DoorsRoomManager(new Door[] //tutorial1
@@ -37,7 +36,43 @@ namespace _999AD
                     {
                     }
                     ),
-                    new DoorsRoomManager(new Door[] //midboss
+                    new DoorsRoomManager(new Door[] //tutorial4
+                    {
+                    }
+                    ),
+                    new DoorsRoomManager(new Door[] //churchBellTower0
+                    {
+                    }
+                    ),
+                    new DoorsRoomManager(new Door[] //churchBellTower1
+                    {
+                    }
+                    ),
+                    new DoorsRoomManager(new Door[] //churchBellTower2
+                    {
+                    }
+                    ),
+                    new DoorsRoomManager(new Door[] //midBoss
+                    {
+                    }
+                    ),
+                    new DoorsRoomManager(new Door[] //churchGroundFloor0
+                    {
+                    }
+                    ),
+                    new DoorsRoomManager(new Door[] //churchAltarRoom
+                    {
+                    }
+                    ),
+                    new DoorsRoomManager(new Door[] //church1stFloor0
+                    {
+                    }
+                    ),
+                    new DoorsRoomManager(new Door[] //church2ndFloor0
+                    {
+                    }
+                    ),
+                    new DoorsRoomManager(new Door[] //descent
                     {
                     }
                     ),
@@ -50,6 +85,10 @@ namespace _999AD
                     }
                     ),
                     new DoorsRoomManager(new Door[] //escape1
+                    {
+                    }
+                    ),
+                    new DoorsRoomManager(new Door[] //escape2
                     {
                     }
                     )
