@@ -57,8 +57,8 @@ namespace _999AD
         //Takes a spritesheet as a parameter
         public static void Initialise(Texture2D BossSheet)
         {
-            point1 = new Vector2(200,175);
-            point2 = new Vector2(100, 175);
+            point1 = new Vector2(200,200);
+            point2 = new Vector2(100,200);
             bossSheet = BossSheet;
             bossColor = Color.White;
 
@@ -292,6 +292,7 @@ namespace _999AD
             else if (!bossAnimations[(int)bossState].Active)
             {
                 dead = true;
+                bossPoint = new Vector2(-bossWidth, -bossHeight);
             }
         }
 

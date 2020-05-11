@@ -26,8 +26,8 @@ namespace _999AD
         public static KeyboardState currentKeyboard;
         
         //<debug>
-        //SpriteFont spriteFont;
-        //Texture2D white;
+        SpriteFont spriteFont;
+        Texture2D white;
         //</debug>
 
 #if LEVEL_EDITOR
@@ -96,8 +96,8 @@ namespace _999AD
             // TODO: use this.Content to load your game content here
 
             //<debug>
-            //spriteFont = Content.Load<SpriteFont>(@"fonts\monologue");
-            //white = Content.Load<Texture2D>("whiteTile");
+            spriteFont = Content.Load<SpriteFont>(@"fonts\monologue");
+            white = Content.Load<Texture2D>("whiteTile");
             //</debug>
 
 #if LEVEL_EDITOR
@@ -245,17 +245,18 @@ namespace _999AD
             spriteBatch.Begin();
             Camera.Draw(spriteBatch);
             RoomsManager.Draw(spriteBatch);
+
+            //<debug>
+            //spriteBatch.Draw(white, Camera.RelativeRectangle(Player.CollisionRectangle), Color.Green);
+            MouseState mouseState = Mouse.GetState();
+            spriteBatch.DrawString(spriteFont, (mouseState.X / 5 + (int)Camera.position.X) + "," + (mouseState.Y / 5 + (int)Camera.position.Y), new Vector2(10, 10), Color.Blue);
+            //spriteBatch.DrawString(spriteFont, Player.healthPoints+"", new Vector2(10, 10), Color.Blue);
+            //</debug>
+
             spriteBatch.End();
             GraphicsDevice.SetRenderTarget(null);
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             spriteBatch.Draw(nativeRenderTarget, viewportRectangle, Color.White);
-
-            //<debug>
-            //spriteBatch.Draw(white, Camera.RelativeRectangle(Player.CollisionRectangle), Color.Green);
-            //MouseState mouseState = Mouse.GetState();
-            //spriteBatch.DrawString(spriteFont, (mouseState.X / 5 + (int)Camera.position.X) + "," + (mouseState.Y / 5 + (int)Camera.position.Y), new Vector2(10, 10), Color.Blue);
-            //spriteBatch.DrawString(spriteFont, Player.healthPoints+"", new Vector2(10, 10), Color.Blue);
-            //</debug>
 
             spriteBatch.End();
 #endif

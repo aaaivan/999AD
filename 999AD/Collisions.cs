@@ -50,7 +50,7 @@ namespace _999AD
             #region COLLISION PLAYER-MIDBOSS
             //If the player is in the midboss room, and comes into contact with the midboss whilst it is moving
             //Player will take damage
-            if(RoomsManager.CurrentRoom==RoomsManager.Rooms.midboss)
+            if(RoomsManager.CurrentRoom==RoomsManager.Rooms.midBoss)
             {
                 if (MidBoss.bossState == MidBoss.BossState.move && Player.CollisionRectangle.Intersects(MidBoss.BossCollisionRect))
                     Player.takeDamage();
@@ -67,7 +67,7 @@ namespace _999AD
                         projectile.active = false;
                 }
 
-                if(RoomsManager.CurrentRoom==RoomsManager.Rooms.midboss)
+                if(RoomsManager.CurrentRoom==RoomsManager.Rooms.midBoss)
                 {
                     if (MidBoss.BossHitByRect(projectile.Rectangle))
                         projectile.active = false;
@@ -79,7 +79,7 @@ namespace _999AD
         {
             foreach(Projectile projectile in ProjectilesManager.midbossProjectiles)
             {
-                if(RoomsManager.CurrentRoom==RoomsManager.Rooms.midboss)
+                if(RoomsManager.CurrentRoom==RoomsManager.Rooms.midBoss)
                 {
                     if(MidBoss.PlayerHitByRect(projectile.Rectangle))
                     {

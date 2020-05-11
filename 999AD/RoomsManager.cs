@@ -21,7 +21,7 @@ namespace _999AD
             finalBoss, escape0, escape1, escape2,
             total
         }
-        static Rooms currentRoom = Rooms.escape2;
+        static Rooms currentRoom = Rooms.midBoss;
 
         #endregion
         #region CONSTRUCTOR
@@ -552,7 +552,7 @@ namespace _999AD
             {
                 FinalBoss.Draw(spriteBatch);
             }
-            if(currentRoom==Rooms.midboss)
+            if(currentRoom==Rooms.midBoss)
             {
                 MidBoss.Draw(spriteBatch);
             }
