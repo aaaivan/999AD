@@ -14,7 +14,7 @@ namespace _999AD
         #region DECLARATIONS
         public static float gravityAcceleration= 1000;
         public static float airFrictionCoeff = 1.2f;
-        public static float wallFrictionCoeff = 4f;
+        public static float wallFrictionCoeff = 3f;
         #endregion
         #region METHODS
         public static void MoveDestructableObject(ref Vector2 velocity, ref Vector2 position, int width, int height, ref bool active, float elapsedTime)

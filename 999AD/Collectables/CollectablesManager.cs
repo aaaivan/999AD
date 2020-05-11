@@ -66,13 +66,19 @@ namespace _999AD
                 new CollectablesRoomManager(new Collectable[]   //church2ndFloor0
                 {
                 }),
-                new CollectablesRoomManager(new Collectable[]   //finaleBoss
+                new CollectablesRoomManager(new Collectable[]   //descent
+                {
+                }),
+                new CollectablesRoomManager(new Collectable[]   //finalBoss
                 {
                 }),
                 new CollectablesRoomManager(new Collectable[]   //escape0
                 {
                 }),
                 new CollectablesRoomManager(new Collectable[]   //escape1
+                {
+                }),
+                new CollectablesRoomManager(new Collectable[]   //escape2
                 {
                 }),
             };

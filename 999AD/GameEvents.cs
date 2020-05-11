@@ -18,6 +18,8 @@ namespace _999AD
             raiseFloor2_escape0, lavaEruption5_escape0, raiseFloor3_escape0, lavaEruption6_escape0,
 
             activatePlatform_escape1, raiseFloor1_escape1, lavaEruption1_escape1,
+
+            lavaEruption_escape2,
             total
         }
         public static readonly float[] eventsDuration = new float[(int)Events.total]
@@ -27,7 +29,8 @@ namespace _999AD
             0, 3.1f, 0,
             2.5f, 1f, 0,
             0, 0, 4.2f, 0,
-            0,0,0
+            0,0,0,
+            0
         };
         public static float elapsedEventsDuration = 0;
         public static bool[] eventAlreadyHappened = new bool[(int)Events.total];
@@ -97,6 +100,12 @@ namespace _999AD
                         TriggerEvent(Events.raiseFloor1_escape1);
                     if (Player.position.X < 104 && !eventAlreadyHappened[(int)Events.lavaEruption1_escape1])
                         TriggerEvent(Events.lavaEruption1_escape1);
+                    break;
+                case RoomsManager.Rooms.escape2:
+                    if (Player.position.X+Player.width< 424 && !eventAlreadyHappened[(int)Events.lavaEruption_escape2])
+                    {
+                        TriggerEvent(Events.lavaEruption_escape2);
+                    }
                     break;
             }
         }
@@ -246,6 +255,32 @@ namespace _999AD
                     case Events.lavaEruption1_escape1:
                         LavaGeyserManager.SweepAcross(0.2f, 0, 10, 0, 96, true);
                         happening = Events.lavaEruption1_escape1;
+                        elapsedEventsDuration = 0;
+                        break;
+                }
+            }
+            else if (RoomsManager.CurrentRoom == RoomsManager.Rooms.escape2)
+            {
+                switch(_event)
+                {
+                    case Events.lavaEruption_escape2:
+                        LavaGeyserManager.ShootGeyser(new float[] { 396 }, 0f);
+                        LavaGeyserManager.ShootGeyser(new float[] { 376 }, 0.2f);
+                        LavaGeyserManager.ShootGeyser(new float[] { 356 }, 0.4f);
+                        LavaGeyserManager.ShootGeyser(new float[] { 336 }, 0.6f);
+                        LavaGeyserManager.ShootGeyser(new float[] { 316 }, 0.8f);
+                        LavaGeyserManager.ShootGeyser(new float[] { 296 }, 1f);
+                        LavaGeyserManager.ShootGeyser(new float[] { 276 }, 1.2f);
+                        LavaGeyserManager.ShootGeyser(new float[] { 256 }, 1.4f);
+                        LavaGeyserManager.ShootGeyser(new float[] { 236 }, 1.6f);
+                        LavaGeyserManager.ShootGeyser(new float[] { 216 }, 1.8f);
+                        LavaGeyserManager.ShootGeyser(new float[] { 196 }, 2f);
+                        LavaGeyserManager.ShootGeyser(new float[] { 176 }, 2.2f);
+                        LavaGeyserManager.ShootGeyser(new float[] { 156 }, 2.4f);
+                        LavaGeyserManager.ShootGeyser(new float[] { 136 }, 2.6f);
+                        LavaGeyserManager.ShootGeyser(new float[] { 116 }, 2.8f);
+                        LavaGeyserManager.ShootGeyser(new float[] { 96 }, 3f);
+                        happening = Events.lavaEruption_escape2;
                         elapsedEventsDuration = 0;
                         break;
                 }
