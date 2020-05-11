@@ -439,6 +439,10 @@ namespace _999AD
                         LavaGeyserManager.Clear();
 
                     }
+                    else if (Player.position.Y> MapsManager.maps[(int)currentRoom].RoomHeightPx+24)
+                    {
+                        Player.takeDamage(Player.maxHealthPoints);
+                    }
                     break;
                 case Rooms.escape0:
                     if (Player.position.X > MapsManager.maps[(int)currentRoom].RoomWidthtPx)
@@ -459,6 +463,10 @@ namespace _999AD
                         FireBallsManager.Clear();
                         LavaGeyserManager.Clear();
 
+                    }
+                    else if (Player.position.Y > MapsManager.maps[(int)currentRoom].RoomHeightPx + 24)
+                    {
+                        Player.takeDamage(Player.maxHealthPoints, true);
                     }
                     break;
                 case Rooms.escape1:
@@ -481,6 +489,10 @@ namespace _999AD
                         LavaGeyserManager.Clear();
 
                     }
+                    else if (Player.position.Y > MapsManager.maps[(int)currentRoom].RoomHeightPx + 24)
+                    {
+                        Player.takeDamage(Player.maxHealthPoints, true);
+                    }
                     break;
                 case Rooms.escape2:
                     if (Player.position.X> MapsManager.maps[(int)currentRoom].RoomWidthtPx)
@@ -500,6 +512,10 @@ namespace _999AD
                         FireBallsManager.Clear();
                         LavaGeyserManager.Clear();
 
+                    }
+                    else if (Player.position.Y > MapsManager.maps[(int)currentRoom].RoomHeightPx + 24)
+                    {
+                        Player.takeDamage(Player.maxHealthPoints, true);
                     }
                     break;
             }

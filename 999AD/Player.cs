@@ -460,9 +460,9 @@ namespace _999AD
             jumpSpeed.Y = initialJumpSpeed.Y * ratioReboundToNormalJump;
             canDoubleJump = true;
         }
-        public static void takeDamage(int damage=1)
+        public static void takeDamage(int damage=1, bool damageEvenIfInvulnerable=false)
         {
-            if (invulnerable)
+            if (invulnerable && !damageEvenIfInvulnerable)
                 return;
             healthPoints -= damage;
             if (healthPoints<=0)
