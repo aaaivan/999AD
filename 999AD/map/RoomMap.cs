@@ -15,17 +15,22 @@ namespace _999AD
         public readonly int roomHeightTiles; //room width in tiles
         public readonly int roomWidthTiles; //room height in tiles
         public Tile[,] array; //array of all the tiles forming the room
-        static bool removeRowSFX = false;
-        static float timeBoforeRemovingNextTile = 0;
-        static float timer = 0f;
-        static List<int[]> tilesToRemove = new List<int[]>();
-        int removeTogether = 1;
+        static bool removeRowSFX;
+        static float timeBoforeRemovingNextTile;
+        static float timer;
+        static List<int[]> tilesToRemove;
+        int removeTogether;
         #endregion
         #region CONSTRACTOR
         public RoomMap(int _roomHeightTiles, int _roomWidthTiles)
         {
             roomWidthTiles = _roomWidthTiles;
             roomHeightTiles = _roomHeightTiles;
+            removeRowSFX = false;
+            timeBoforeRemovingNextTile = 0;
+            timer = 0f;
+            tilesToRemove = new List<int[]>();
+            removeTogether = 1;
             array = new Tile[roomHeightTiles, roomWidthTiles]; //array of tiles
             for (int row = 0; row < roomHeightTiles; row++) //fill the array with empty tiles
             {

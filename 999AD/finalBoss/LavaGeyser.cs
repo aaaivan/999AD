@@ -15,20 +15,23 @@ namespace _999AD
         static public Texture2D spritesheet;
         static public Texture2D whiteTexture;
         static public readonly int size= 24;
-        static public int heigthBeforeErupting = 40;
+        static public readonly int heigthBeforeErupting = 40;
         float initialYVelocity;
+        float yVelocity;
         Animation geyserTopAnim;
         Animation geyserBodyAnim;
         Vector2 position;
-        float yVelocity = 0;
         float timeBeforeErupting;
-        float elapsedTimeBeforeErupting=0;
-        bool erupted= false;
+        float elapsedTimeBeforeErupting;
+        bool erupted;
         #endregion
         #region CONSTRUCTOR
         public LavaGeyser(float xCenterPosition, float _timeBeforeErupting, int _initialYvelocity=-1400)
         {
+            yVelocity = 0;
             initialYVelocity = _initialYvelocity;
+            elapsedTimeBeforeErupting = 0;
+            erupted = false;
             position = new Vector2(xCenterPosition - 0.5f*size, MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomHeightPx);
             timeBeforeErupting = _timeBeforeErupting;
             geyserTopAnim = new Animation(new Rectangle(0, 0, spritesheet.Width, size), size, size, 2, 0.5f, true);

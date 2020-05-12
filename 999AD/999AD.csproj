@@ -67,6 +67,7 @@
     <Compile Include="monologues\Monologue.cs" />
     <Compile Include="monologues\MonologuesManager.cs" />
     <Compile Include="monologues\MonologuesRoomManager.cs" />
+    <Compile Include="PlayerDeathManager.cs" />
     <Compile Include="projectile\Projectile.cs" />
     <Compile Include="projectile\ProjectilesManager.cs" />
     <Compile Include="map\RoomMap.cs" />

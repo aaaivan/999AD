@@ -15,6 +15,10 @@ namespace _999AD
     /// </summary>
     public class Game1 : Game
     {
+        public enum GameStates
+        {
+            playing, dead, total
+        }
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         public static readonly  int gameWidth = 1920/5; //pixels on the x axis
@@ -24,7 +28,7 @@ namespace _999AD
         public static int scale;
         public static KeyboardState previousKeyboard;
         public static KeyboardState currentKeyboard;
-        
+        public static GameStates currentGameState;
         //<debug>
         SpriteFont spriteFont;
         Texture2D white;
@@ -81,7 +85,7 @@ namespace _999AD
             graphics.PreferredBackBufferHeight = viewportRectangle.Height;
             graphics.ApplyChanges();
             previousKeyboard = Keyboard.GetState();
-#endif     
+#endif
             base.Initialize();
         }
         /// <summary>
@@ -131,6 +135,7 @@ namespace _999AD
                                           Content.Load<SpriteFont>(@"fonts\arial14"),
                                           Content.Load<Texture2D>("whiteTile"));
 #else
+            currentGameState = GameStates.playing;
             MapsManager.Inizialize(Content.Load<Texture2D>("tiles"));
             CameraManager.Inizialize
             (
@@ -158,15 +163,13 @@ namespace _999AD
             );
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
             ProjectilesManager.Inizialize(Content.Load<Texture2D>("projectile"));
-            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(500,20));
+            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(800,44));
             RoomsManager.Inizialize();
             GameEvents.Inizialize();
             FireBallsManager.Inizialize(Content.Load<Texture2D>("fireball"), Content.Load<Texture2D>("laser"));
             LavaGeyserManager.Inizialize(Content.Load<Texture2D>("lavaGeyser"),
                                          Content.Load<Texture2D>("whiteTile"));
-            //
             MidBoss.Initialise(Content.Load<Texture2D>(@"characters\midboss"));
-            //
             FinalBoss.Inizialize(Content.Load<Texture2D>(@"characters\finalBoss"),
                                  new Texture2D[] { Content.Load<Texture2D>(@"characters\stoneWing"),
                                                    Content.Load<Texture2D>(@"characters\healthyWing"),
@@ -211,11 +214,19 @@ namespace _999AD
             PlatformsManager.platformsRoomManagers[levelEditor.currentRoomNumber].Update(elapsedTime);
             previousMouseState = mouseState;
 #else
-            RoomsManager.Update(elapsedTime);
-            Player.Update(elapsedTime);
-            ProjectilesManager.Update(elapsedTime);
-            GameEvents.Update(elapsedTime);
-            Collisions.Update(elapsedTime);
+            switch(currentGameState)
+            {
+                case GameStates.playing:
+                    RoomsManager.Update(elapsedTime);
+                    Player.Update(elapsedTime);
+                    ProjectilesManager.Update(elapsedTime);
+                    GameEvents.Update(elapsedTime);
+                    Collisions.Update(elapsedTime);
+                    break;
+                case GameStates.dead:
+                    PlayerDeathManager.Update(elapsedTime);
+                    break;
+            }
 #endif
             previousKeyboard = currentKeyboard;
             base.Update(gameTime);
@@ -228,7 +239,7 @@ namespace _999AD
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.SetRenderTarget(nativeRenderTarget);
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
 #if LEVEL_EDITOR
@@ -248,8 +259,9 @@ namespace _999AD
 
             //<debug>
             //spriteBatch.Draw(white, Camera.RelativeRectangle(Player.CollisionRectangle), Color.Green);
-            MouseState mouseState = Mouse.GetState();
-            spriteBatch.DrawString(spriteFont, (mouseState.X / 5 + (int)Camera.position.X) + "," + (mouseState.Y / 5 + (int)Camera.position.Y), new Vector2(10, 10), Color.Blue);
+            //MouseState mouseState = Mouse.GetState();
+            //spriteBatch.DrawString(spriteFont, (mouseState.X / 5 + (int)Camera.position.X) + "," + (mouseState.Y / 5 + (int)Camera.position.Y), new Vector2(10, 10), Color.Blue);
+            spriteBatch.DrawString(spriteFont, Player.position.X + "," + Player.position.Y, new Vector2(10, 10), Color.Blue);
             //spriteBatch.DrawString(spriteFont, Player.healthPoints+"", new Vector2(10, 10), Color.Blue);
             //</debug>
 

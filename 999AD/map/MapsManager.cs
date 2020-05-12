@@ -75,6 +75,49 @@ namespace _999AD
                 }
             }
         }
+        public static void resetMap(RoomsManager.Rooms roomName)
+        {
+            string line = "";
+            List<List<int>> tileMap = new List<List<int>>();
+            string[] row;
+            try
+            {
+                StreamReader inputStream = new StreamReader("mapRoom_" + roomName + ".txt");
+                using (inputStream)
+                {
+                    line = inputStream.ReadLine();
+                    int count = 0;
+                    while (line != null)
+                    {
+                        tileMap.Add(new List<int>());
+                        row = line.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        foreach (string tile in row)
+                        {
+                            tileMap[count].Add(int.Parse(tile));
+                        }
+                        line = inputStream.ReadLine();
+                        count++;
+                    }
+                    maps[(int)roomName] = new RoomMap(tileMap.Count, tileMap[0].Count);
+                    for (int i = 0; i < tileMap.Count; i++)
+                    {
+                        for (int j = 0; j < tileMap[0].Count; j++)
+                        {
+                            if (tileMap[i][j] != 0)
+                                maps[(int)roomName].array[i, j].tileType = (Tile.TileType)tileMap[i][j];
+                        }
+                    }
+                }
+            }
+            catch (IOException)
+            {
+                return;          
+            }
+            catch (System.ArgumentOutOfRangeException)
+            {
+                return;
+            }
+        }
         #endregion
     }
 }

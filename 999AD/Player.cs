@@ -17,43 +17,61 @@ namespace _999AD
         }
         #region DECLARATIONS
         static Texture2D spritesheet;
-        static List<Animation> animations= new List<Animation>();
+        static List<Animation> animations;
         static AnimationTypes currentAnimation;
         public static Vector2 position;
         public static readonly int height= 22; //refer to player rectangle not to the sprite size
         public static readonly int width= 12; //refer to player rectangle not to the sprite size
-        static Vector2 jumpSpeed= Vector2.Zero;
-        static bool isFacingRight=true;
+        static Vector2 jumpSpeed;
+        static bool isFacingRight;
         public static readonly float maxHorizontalMovementSpeed= 100; //movement speed
-        public static float horizontalMovementSpeed = 0;
+        public static float horizontalMovementSpeed;
         public static readonly Vector2 initialJumpSpeed= new Vector2(190, -400); //jumping initial speed
-        static bool isTouchingTheGround=false;
-        static bool isOnTheWall= false;
-        static bool isOnMovingPlatform = false;
-        static bool canDoubleJump = true;
-        static bool isWallJumping = false;
+        static bool isTouchingTheGround;
+        static bool isOnTheWall;
+        static bool isOnMovingPlatform;
+        static bool canDoubleJump;
+        static bool isWallJumping;
         public static readonly Vector2 projectileInitialVelocity = new Vector2(200, -200);
         public static readonly float timeBetweenShots = 0.4f; //minimum time between shots
-        static float elapsedShotTime = 0f;
+        static float elapsedShotTime;
         public static readonly int maxHealthPoints = 3;
-        public static int healthPoints = 3;
+        public static int healthPoints;
         static readonly float invulnerabilityTime = 3;
-        static float elapsedInvulnerabilityTime = 0;
-        static bool invulnerable = false;
-        static float alphaValue = 1;
+        static float elapsedInvulnerabilityTime;
+        static bool invulnerable;
+        static float alphaValue;
         #endregion
         #region CONSTRUCTOR
         public static void Inizialize(Texture2D _spritesheet, Vector2 _position)
         {
+            Reset(_position);
             spritesheet = _spritesheet;
-            position = _position;
             //fill following statements with sprite info
+            animations = new List<Animation>();
             animations.Add(new Animation(new Rectangle(0, 0, 128, 24), 16, 24, 8, 0.3f, true));
             animations.Add( new Animation( new Rectangle(0, 24, 160,24), 16, 24, 10, 0.06f, true));
             animations.Add(new Animation( new Rectangle(0, 48, 80, 24), 16, 24, 5, 0.06f, false, true));
             animations.Add(new Animation( new Rectangle(0, 72, 112, 24), 16, 24, 7, 0.06f, false, false));
             animations.Add(new Animation( new Rectangle(0, 96, 64, 24), 16, 24, 4, 0.1f, true));
             animations.Add(new Animation( new Rectangle(0, 120, 96, 24), 16, 24, 5, 0.1f, false, true));
+        }
+        public static void Reset(Vector2 _position)
+        {
+            position = _position;
+            jumpSpeed = Vector2.Zero;
+            isFacingRight = true;
+            horizontalMovementSpeed = 0;
+            isTouchingTheGround = false;
+            isOnTheWall = false;
+            isOnMovingPlatform = false;
+            canDoubleJump = true;
+            isWallJumping = false;
+            elapsedShotTime = 0f;
+            healthPoints = 3;
+            elapsedInvulnerabilityTime = 0;
+            invulnerable = false;
+            alphaValue = 1;
             currentAnimation = AnimationTypes.idle;
         }
         #endregion
@@ -119,7 +137,7 @@ namespace _999AD
                         animations[(int)AnimationTypes.jump].Reset();
                         animations[(int)AnimationTypes.die].Reset();
                         currentAnimation = AnimationTypes.idle;
-                        //deal with death
+                        Game1.currentGameState = Game1.GameStates.dead;
                     }
                     break;
                 case AnimationTypes.attack:
@@ -474,6 +492,11 @@ namespace _999AD
                 invulnerable = true;
                 elapsedInvulnerabilityTime = 0;
             }
+        }
+        public static void ReplenishHealth()
+        {
+            healthPoints = maxHealthPoints;
+            currentAnimation = AnimationTypes.idle;
         }
         public static void Draw(SpriteBatch spriteBatch)
         {

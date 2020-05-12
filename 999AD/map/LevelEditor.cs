@@ -42,7 +42,7 @@ namespace _999AD
             arial32 = _arial32;
             arial14 = _arial16;
             whiteTexture = _whiteTexture;
-            CameraManager.SwitchCamera((RoomsManager.Rooms)currentRoomNumber, 0);
+            CameraManager.SwitchCamera((RoomsManager.Rooms)currentRoomNumber,0);
         }
         #endregion
         //save maps to file
@@ -341,7 +341,7 @@ namespace _999AD
                     else if (Game1.currentKeyboard.IsKeyDown(Keys.Enter))
                     {
                         currentRoomNumber = userInputInt < (int)RoomsManager.Rooms.total ? userInputInt : ((int)RoomsManager.Rooms.total - 1);
-                        CameraManager.SwitchCamera((RoomsManager.Rooms)currentRoomNumber, 0);
+                        CameraManager.SwitchCamera((RoomsManager.Rooms)currentRoomNumber,0);
                         CameraManager.pointLocked = new Vector2(0, 0);
                         userInputInt = 0;
                         menu = MenuState.none;
@@ -412,7 +412,7 @@ namespace _999AD
                             }
                         }
                         MapsManager.maps[currentRoomNumber] = newMap;
-                        CameraManager.SwitchCamera((RoomsManager.Rooms)currentRoomNumber, 0);
+                        CameraManager.SwitchCamera((RoomsManager.Rooms)currentRoomNumber,0);
                         menu = MenuState.none;
                         message = "";
                         userInputString = "";

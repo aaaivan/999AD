@@ -13,7 +13,7 @@ namespace _999AD
     {
         #region DECLARATIONS
         public static CollectablesRoomManager[] collectablesRoomManagers;
-        public static Dictionary<Collectable.ItemType, int> collectedItems= new Dictionary<Collectable.ItemType, int>();
+        public static Dictionary<Collectable.ItemType, int> collectedItems;
         #endregion
         #region CONSTRUCTOR
         public static void Inizialize(Texture2D spritesheet)
@@ -83,6 +83,7 @@ namespace _999AD
                 {
                 }),
             };
+            collectedItems = new Dictionary<Collectable.ItemType, int>();
             for (int i = 0; i < (int)Collectable.ItemType.total; i++)
                 collectedItems.Add((Collectable.ItemType)i, 0);
         }
