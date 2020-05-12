@@ -12,7 +12,7 @@ namespace _999AD
     static class CameraManager
     {
         #region DECLARATIONS
-        static Texture2D[] backgrounds = new Texture2D[(int)RoomsManager.Rooms.total];
+        static Texture2D[] backgrounds;
         public static readonly float[] scaleByRoom = new float[(int)RoomsManager.Rooms.total]
         {
             1, //tutorial0
@@ -35,25 +35,35 @@ namespace _999AD
             1 //escape2
         };
         public static readonly int maxOffsetY = 2; //amplitude of the rumble
-        static bool shaking = false;
+        static bool shaking;
         static int offsetY; //current offset
-        static float timeBetweenOffsets = 0.1f; //tells how ofter the offset is changed in sign (smaller time->faster rumble)
-        static float offsetElapsedTime = 0f; //time elapsed since the last change in offsetY
+        static readonly float timeBetweenOffsets = 0.1f; //tells how ofter the offset is changed in sign (smaller time->faster rumble)
+        static float offsetElapsedTime; //time elapsed since the last change in offsetY
         static float shakingTime; //tells for how many second the framing will shake
         static float elapsedShakingTime; //time elapsed since when the camera started shaking
-        static float playerPositionWeight=1;
-        static float transientPlayerPositionWeight = 1;
-        public static Vector2 pointLocked = new Vector2(0,0);
-        static float cameraTransitionProgression = 1;
+        static float playerPositionWeight;
+        static float transientPlayerPositionWeight;
+        public static Vector2 pointLocked;
+        static float cameraTransitionProgression;
         static float transitionDuration;
         #endregion
         #region CONSTRUCTOR
         public static void Inizialize(Texture2D[] _backgrounds)
         {
-            Camera.Inizialize();
             backgrounds = _backgrounds;
-            offsetY = -maxOffsetY;
+            Reset();
             SwitchCamera(RoomsManager.Rooms.tutorial0);
+        }
+        public static void Reset()
+        {
+            offsetY = -maxOffsetY;
+            shaking = false;
+            cameraTransitionProgression = 1;
+            offsetElapsedTime = 0f;
+            transientPlayerPositionWeight = 1;
+            playerPositionWeight = 1;
+            pointLocked = new Vector2(0, 0);
+            cameraTransitionProgression = 1;
         }
         #endregion
         #region METHODS

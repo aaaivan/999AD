@@ -12,13 +12,18 @@ namespace _999AD
     static class LavaGeyserManager
     {
         #region DECLARATIONS
-        static List<LavaGeyser> lavaGeysers = new List<LavaGeyser>();
-        static Random rand= new Random();
+        static List<LavaGeyser> lavaGeysers;
+        static readonly Random rand= new Random();
         #endregion
         #region CONSTRUCTOR
         static public void Inizialize(Texture2D spritesheet, Texture2D whiteTexture)
         {
             LavaGeyser.Inizialize(spritesheet, whiteTexture);
+            lavaGeysers = new List<LavaGeyser>();
+        }
+        public static void Reset()
+        {
+            lavaGeysers.Clear();
         }
         #endregion
         #region PROPERTIES
@@ -76,10 +81,6 @@ namespace _999AD
             {
                 lavaGeysers.Add(new LavaGeyser((i + 0.5f + offset) * distance, timeBeforeErupting));
             }
-        }
-        public static void Clear()
-        {
-            lavaGeysers.Clear();
         }
         public static void Update(float elapsedTime)
         {

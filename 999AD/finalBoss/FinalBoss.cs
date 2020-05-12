@@ -33,41 +33,37 @@ namespace _999AD
         static Animation[] bossAnimations;
         static Animation[] wingAnimations;
         static public readonly float recoveryTime= 15;
-        static float elapsedRecoveryTime = 0;
+        static float elapsedRecoveryTime;
         static public readonly int bossWidth = 180;
         static public readonly int bossHeight = 280;
         static public readonly Vector2 fireballsCenter = new Vector2(384, 400);
         static Vector2 bossInitialMidPoint;
         static public Vector2 bossMidPoint;
         static public readonly int wingsRelativeYPosition = 100;
-        static float YSpeed = 0;
-        static BossAnimations bossAnimation = BossAnimations.stone;
-        static WingAnimations rightWingAnimation = WingAnimations.idle;
-        static WingAnimations leftWingAnimation = WingAnimations.idle;
-        static WingTextures rightWingTexture = WingTextures.stone;
-        static WingTextures leftWingTexture = WingTextures.stone;
-        static Phases currentPhase = Phases.one;
+        static float YSpeed;
+        static BossAnimations bossAnimation;
+        static WingAnimations rightWingAnimation;
+        static WingAnimations leftWingAnimation;
+        static WingTextures rightWingTexture;
+        static WingTextures leftWingTexture;
+        static Phases currentPhase;
         static readonly int maxBossHp = 10;
         static readonly int maxWingHP = 2;
         static int bossHP;
         static int rightWingHP;
         static int leftWingHP;
-        static Random rand = new Random();
+        static readonly Random rand = new Random();
         static bool dead = false;
-        static Color bossColor = Color.White;
+        static Color bossColor;
         static readonly int framesOfDifferentColor = 5;
-        static int frameCount = 0;
+        static int frameCount;
         #endregion
         #region CONSTRUCTOR
         public static void Inizialize(Texture2D _bossSpritesheet, Texture2D[] _wingSpritesheets)
         {
-            bossInitialMidPoint = new Vector2(fireballsCenter.X, fireballsCenter.Y - 30);
+            Reset();
             bossSpritesheet = _bossSpritesheet;
             wingSpritesheets = _wingSpritesheets;
-            bossHP = maxBossHp;
-            rightWingHP = maxWingHP;
-            leftWingHP = maxWingHP;
-            bossMidPoint = bossInitialMidPoint+new Vector2(0,5);
             bossAnimations = new Animation[(int)BossAnimations.total]
                 {
                     new Animation(new Rectangle(0,0,100, 150),100,150, 1, 0, true),
@@ -78,7 +74,7 @@ namespace _999AD
                     new Animation(new Rectangle(0,600,200, 150),100,150,2, 0.5f, true),
                 };
             wingAnimations = new Animation[(int)WingAnimations.total]
-            {
+                {
                     new Animation(new Rectangle[]{ new Rectangle(0,0,50,100),
                                                    new Rectangle(50,0,50,100),
                                                    new Rectangle(100,0,50,100),
@@ -95,7 +91,25 @@ namespace _999AD
                                                    new Rectangle(200, 300,150,100),
                                                    new Rectangle(350, 300, 100, 100),
                                                    new Rectangle(450, 300, 50, 100)}, 0.3f, false, true),
-            };
+                };
+        }
+        public static void Reset()
+        {
+            elapsedRecoveryTime = 0;
+            YSpeed = 0;
+            bossAnimation = BossAnimations.stone;
+            rightWingAnimation = WingAnimations.idle;
+            leftWingAnimation = WingAnimations.idle;
+            rightWingTexture = WingTextures.stone;
+            leftWingTexture = WingTextures.stone;
+            currentPhase = Phases.one;
+            bossColor = Color.White;
+            frameCount = 0;
+            bossInitialMidPoint = new Vector2(fireballsCenter.X, fireballsCenter.Y - 30);
+            bossHP = maxBossHp;
+            rightWingHP = maxWingHP;
+            leftWingHP = maxWingHP;
+            bossMidPoint = bossInitialMidPoint + new Vector2(0, 5);
         }
         #endregion
         #region PROPERTIES
@@ -227,8 +241,8 @@ namespace _999AD
                                 if (bossHP <= 0)
                                 {
                                     bossAnimation = BossAnimations.recovering;
-                                    LavaGeyserManager.Clear();
-                                    FireBallsManager.Clear();
+                                    LavaGeyserManager.Reset();
+                                    FireBallsManager.Reset();
                                     if (rightWingHP > 0)
                                     {
                                         rightWingAnimation = WingAnimations.spread;
@@ -287,8 +301,8 @@ namespace _999AD
                                 if (bossHP <= 0)
                                 {
                                     bossAnimation = BossAnimations.recovering;
-                                    LavaGeyserManager.Clear();
-                                    FireBallsManager.Clear();
+                                    LavaGeyserManager.Reset();
+                                    FireBallsManager.Reset();
                                     if (rightWingHP > 0)
                                     {
                                         rightWingAnimation = WingAnimations.spread;
@@ -362,8 +376,8 @@ namespace _999AD
                                 if (bossHP <= 0)
                                 {
                                     bossAnimation = BossAnimations.recovering;
-                                    LavaGeyserManager.Clear();
-                                    FireBallsManager.Clear();
+                                    LavaGeyserManager.Reset();
+                                    FireBallsManager.Reset();
                                     if (rightWingHP > 0)
                                     {
                                         rightWingAnimation = WingAnimations.spread;
@@ -462,8 +476,8 @@ namespace _999AD
                                 if (bossHP <= 0)
                                 {
                                     bossAnimation = BossAnimations.recovering;
-                                    LavaGeyserManager.Clear();
-                                    FireBallsManager.Clear();
+                                    LavaGeyserManager.Reset();
+                                    FireBallsManager.Reset();
                                     if (rightWingHP > 0)
                                     {
                                         rightWingAnimation = WingAnimations.spread;
@@ -651,8 +665,8 @@ namespace _999AD
                                     }
                                     bossAnimation = BossAnimations.falling;
                                     elapsedRecoveryTime = 0;
-                                    FireBallsManager.Clear();
-                                    LavaGeyserManager.Clear();
+                                    FireBallsManager.Reset();
+                                    LavaGeyserManager.Reset();
                                 }
                                 break;
                         }

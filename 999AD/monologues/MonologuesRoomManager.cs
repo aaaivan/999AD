@@ -13,14 +13,16 @@ namespace _999AD
     {
         #region DECLARATIONS
         static Texture2D interactSymbol;
-        static bool drawInteractSymbol = false;
+        static bool drawInteractSymbol;
         static Rectangle interactSymbolRectangle;
         Monologue[] monologues;
-        int indexPlaying = -1;
+        int indexPlaying;
         #endregion
         #region CONSTRUCTOR
         public MonologuesRoomManager(Monologue[] _monologues)
         {
+            drawInteractSymbol = false;
+            indexPlaying = -1;
             monologues = _monologues;
         }
         public static void Inizialize(Texture2D _interactSymbol)

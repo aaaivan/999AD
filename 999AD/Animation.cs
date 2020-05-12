@@ -14,18 +14,21 @@ namespace _999AD
         #region DECLARATIONS
         int totalFrames; //number of frames for the animation
         Rectangle[] sourceRectangles;
-        int currentFrame=0;
+        int currentFrame;
         float timePerFrame;
-        float elapsedFrameTime = 0;
+        float elapsedFrameTime;
         bool loop; //false if the animation should only be played once
         bool keepLastFrameWhenInactive; //if true, the last frame is displayed when the animation ends 
-        bool active= true; //becomes false when the animations ends
+        bool active; //becomes false when the animations ends
         #endregion
         #region CONSTRUCTOR
         public Animation(Rectangle _frameLocationOnSpritesheet,
                         int _frameWidth, int _frameHeight, int _totalFrames,
                         float _timePerFrame, bool _loop, bool _keepLastFrameWhenInactive = false)
         {
+            currentFrame = 0;
+            elapsedFrameTime = 0;
+            active = true;
             totalFrames = _totalFrames;
             timePerFrame = _timePerFrame;
             loop = _loop;
@@ -42,6 +45,9 @@ namespace _999AD
         public Animation(Rectangle[] _sourceRectangles,
                         float _timePerFrame, bool _loop, bool _keepLastFrameWhenInactive = false)
         {
+            currentFrame = 0;
+            elapsedFrameTime = 0;
+            active = true;
             sourceRectangles = _sourceRectangles;
             totalFrames = sourceRectangles.Length;
             timePerFrame = _timePerFrame;

@@ -21,7 +21,7 @@ namespace _999AD
         Point position;
         Collectable.ItemType key;
         TextureType textureType;
-        bool closed = true;
+        bool closed;
         #endregion
         #region CONSTRUCTOR
         public Door (Point _position, TextureType _type, Collectable.ItemType _key)
@@ -29,6 +29,7 @@ namespace _999AD
             position = _position;
             key = _key;
             textureType = _type;
+            closed = true;
         }
         public static void Inizialize(Texture2D _spritesheet)
         {

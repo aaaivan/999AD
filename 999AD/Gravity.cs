@@ -86,6 +86,7 @@ namespace _999AD
                 }
             }
             #endregion
+            #region COLLISION WITH MOVING PLATFORMS
             for (int i = 0; i < PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length; i++)
             {
                 MovingPlatform p = PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[i];
@@ -100,6 +101,7 @@ namespace _999AD
                     return;
                 }
             }
+            #endregion
 
         }
         #endregion

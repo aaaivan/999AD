@@ -23,15 +23,18 @@ namespace _999AD
         public float[] radialVelocities;
         public float[] angularVelocities;
         float[] lifeTimes; //seconds
-        int index = 0;
-        float elapsedLifeTime = 0;
+        int phaseIndex;
+        float elapsedLifeTime;
         bool targetPlayer;
-        bool active=true;
+        bool active;
         #endregion
         #region CONSTRUCTOR
         public FireBall(float _angleDegrees, float[] _radialVelocities, float[] _angularVelocities, float[] _lifeTimes,
             bool _targetPlayer = false, float centerOffsetX = 0, float centerOffsetY = 0, float _radialDistance = 0)
         {
+            phaseIndex = 0;
+            elapsedLifeTime = 0;
+            active = true;
             rotationCenter = FireBallsManager.fireballsCenter+new Vector2(centerOffsetX, centerOffsetY);
             radialDistance = _radialDistance;
             angleRadiants = _angleDegrees / 180*(float)Math.PI;
@@ -68,28 +71,28 @@ namespace _999AD
         public void Update(float elapsedTime)
         {
             animation.Update(elapsedTime);
-            if (elapsedLifeTime > lifeTimes[index])
+            if (elapsedLifeTime > lifeTimes[phaseIndex])
             {
                     elapsedLifeTime = 0;
-                    index++;
-                    if (index== lifeTimes.Length)
+                    phaseIndex++;
+                    if (phaseIndex== lifeTimes.Length)
                         active = false;
                     return;
             }
             else
             {
                 elapsedLifeTime += elapsedTime;
-                radialDistance += radialVelocities[index] * elapsedTime;
-                angleRadiants += angularVelocities[index] * elapsedTime;
+                radialDistance += radialVelocities[phaseIndex] * elapsedTime;
+                angleRadiants += angularVelocities[phaseIndex] * elapsedTime;
                 if (angleRadiants >= MathHelper.Pi * 2)
                     angleRadiants -= MathHelper.Pi * 2;
                 else if (angleRadiants < 0)
                     angleRadiants += MathHelper.Pi * 2;
-                if (targetPlayer && index== lifeTimes.Length-2 &&
+                if (targetPlayer && phaseIndex== lifeTimes.Length-2 &&
                     checkPlayerAngle())
                 {
                     targetPlayer = false;
-                    index = 0;
+                    phaseIndex = 0;
                     elapsedLifeTime = 0;
                     angularVelocities= new float[] { 0 };
                     radialVelocities = new float[] {radialShootingVelocity};

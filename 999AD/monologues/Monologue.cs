@@ -20,18 +20,24 @@ namespace _999AD
         static Rectangle arrowRectangle;
         static readonly float timeBetweenChars = 0.05f;
         public readonly Rectangle interactionRectangle;
-        float elapsedTimeBetweenChars = 0;
+        float elapsedTimeBetweenChars;
         string[] sentences;
-        string stringDisplayed = "";
-        int currentSentence = 0;
-        int currentLength = 0;
-        bool endOfSentence = false;
-        public bool active = false;
+        string stringDisplayed;
+        int currentSentence;
+        int currentLength;
+        bool endOfSentence;
+        public bool active;
         bool playAutomatically;
         #endregion
         #region CONSTRUCTOR
         public Monologue(Rectangle _interactionRectangle, string[] _sentences, bool _playAutomatically=false)
         {
+            elapsedTimeBetweenChars = 0;
+            stringDisplayed = "";
+            currentSentence = 0;
+            currentLength = 0;
+            endOfSentence = false;
+            active = false;
             interactionRectangle = _interactionRectangle;
             sentences = _sentences;
             playAutomatically = _playAutomatically;

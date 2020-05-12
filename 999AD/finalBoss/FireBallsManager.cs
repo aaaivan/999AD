@@ -12,24 +12,35 @@ namespace _999AD
     public static class FireBallsManager
     {
         #region DECLARATIONS
-        static public Vector2 fireballsCenter = new Vector2(384, 400);
+        static public Vector2 fireballsCenter;
         static Texture2D laser;
-        static List<int> targetedPlatforms= new List<int>();
+        static List<int> targetedPlatforms;
         static float relativeLaserProgression=0;
-        static float laserVelocity = 2f;
-        static float persistanceTime = 4;
-        static float elapsedPersistanceTime = 0;
-        static int fireballsPerPlatform = 0;
-        static float targetPlatformLifetime = 0;
-        static List<FireBall> fireballs = new List<FireBall>();
-        static Random rand = new Random();
+        static readonly float laserVelocity = 2f;
+        static readonly float laserPersistanceTime = 4;
+        static float elapsedLaserPersistanceTime;
+        static int fireballsPerPlatform;
+        static float targetPlatformLifetime;
+        static List<FireBall> fireballs;
+        static readonly Random rand = new Random();
         #endregion
         #region CONSTRUCTORS
         public static void Inizialize(Texture2D spritesheet, Texture2D _laser)
         {
             laser = _laser;
-            fireballsCenter = FinalBoss.fireballsCenter;
             FireBall.Inizialize(spritesheet);
+            fireballsCenter = FinalBoss.fireballsCenter;
+            targetedPlatforms = new List<int>();
+            fireballs = new List<FireBall>();
+            Reset();
+        }
+        public static void Reset()
+        {
+            targetedPlatforms.Clear();
+            fireballs.Clear();
+            elapsedLaserPersistanceTime = 0;
+            fireballsPerPlatform = 0;
+            targetPlatformLifetime = 0;
         }
         #endregion
         #region PROPERTIES
@@ -109,7 +120,7 @@ namespace _999AD
         {
             if (targetedPlatforms.Count != 0)
                 return;
-            elapsedPersistanceTime = 0;
+            elapsedLaserPersistanceTime = 0;
             targetedPlatforms = new List<int>(platformIndexes);
             relativeLaserProgression = 0;
             fireballsPerPlatform = _fireballsPerPlatform;
@@ -148,11 +159,6 @@ namespace _999AD
         }
         #endregion
         #region METHODS
-        public static void Clear()
-        {
-            fireballs.Clear();
-            targetedPlatforms.Clear();
-        }
         public static void Update(float elapsedTime)
         {
             for (int i=fireballs.Count-1; i>=0; i--)
@@ -172,8 +178,8 @@ namespace _999AD
                 }
                 else
                 {
-                    elapsedPersistanceTime += elapsedTime;
-                    if (elapsedPersistanceTime> persistanceTime)
+                    elapsedLaserPersistanceTime += elapsedTime;
+                    if (elapsedLaserPersistanceTime> laserPersistanceTime)
                     {
                         TargetPlatformGo(fireballsPerPlatform, targetPlatformLifetime);
                         targetedPlatforms.Clear();

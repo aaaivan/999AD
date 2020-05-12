@@ -30,15 +30,64 @@ namespace _999AD
             2.5f, 1f, 0,
             0, 0, 4.2f, 0,
             0,0,0,
-            0
+            2.2f
         };
-        public static float elapsedEventsDuration = 0;
-        public static bool[] eventAlreadyHappened = new bool[(int)Events.total];
-        public static Events happening= Events.none;
+        public static float elapsedEventsDuration;
+        public static bool[] eventAlreadyHappened;
+        public static Events happening;
         public static void Inizialize()
         {
+            elapsedEventsDuration = 0;
+            eventAlreadyHappened = new bool[(int)Events.total];
             for (int i = 0; i < (int)Events.total; i++)
                 eventAlreadyHappened[i] = false;
+            happening = Events.none;
+        }
+        public static void Reset()
+        {
+            elapsedEventsDuration = 0;
+            happening = Events.none;
+            switch (RoomsManager.CurrentRoom)
+            {
+                case RoomsManager.Rooms.finalBoss:
+                    if (!FinalBoss.Dead)
+                    {
+                        eventAlreadyHappened[(int)Events.terrainCollapseFinalBoss] = false;
+                        eventAlreadyHappened[(int)Events.finalBossComesAlive] = false;
+                        eventAlreadyHappened[(int)Events.activatePlatformsFinalBoss] = false;
+                        eventAlreadyHappened[(int)Events.escapeFinalBossRoom] = false;
+                        PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].Reset();
+                        MapsManager.resetMap(RoomsManager.CurrentRoom);
+                        FinalBoss.Reset();
+                    }
+                    break;
+                case RoomsManager.Rooms.escape0:
+                    if (RoomsManager.PreviousRoom== RoomsManager.Rooms.finalBoss)
+                    {
+                        eventAlreadyHappened[(int)Events.lavaEruption1_escape0] = false;
+                        eventAlreadyHappened[(int)Events.lowerFloor1_escape0] = false;
+                        eventAlreadyHappened[(int)Events.removeFloor1_escape0] = false;
+                        eventAlreadyHappened[(int)Events.lavaEruption2_escape0] = false;
+                        eventAlreadyHappened[(int)Events.lavaEruption3_escape0] = false;
+                        eventAlreadyHappened[(int)Events.lavaEruption4_escape0] = false;
+                        eventAlreadyHappened[(int)Events.raiseFloor2_escape0] = false;
+                        eventAlreadyHappened[(int)Events.lavaEruption5_escape0] = false;
+                        eventAlreadyHappened[(int)Events.raiseFloor3_escape0] = false;
+                        eventAlreadyHappened[(int)Events.lavaEruption6_escape0] = false;
+                        PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].Reset();
+                        MapsManager.resetMap(RoomsManager.CurrentRoom);
+                    }
+                    break;
+                case RoomsManager.Rooms.escape1:
+                    if (RoomsManager.PreviousRoom == RoomsManager.Rooms.escape0)
+                    {
+                        eventAlreadyHappened[(int)Events.activatePlatform_escape1] = false;
+                        eventAlreadyHappened[(int)Events.raiseFloor1_escape1] = false;
+                        eventAlreadyHappened[(int)Events.lavaEruption1_escape1] = false;
+                        PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].Reset();
+                    }
+                    break;
+            }
         }
         public static void Update(float elapsedTime)
         {
@@ -102,9 +151,12 @@ namespace _999AD
                         TriggerEvent(Events.lavaEruption1_escape1);
                     break;
                 case RoomsManager.Rooms.escape2:
-                    if (Player.position.X+Player.width< 424 && !eventAlreadyHappened[(int)Events.lavaEruption_escape2])
+                    if (Player.position.X+Player.width< 424)
                     {
-                        TriggerEvent(Events.lavaEruption_escape2);
+                        if (!eventAlreadyHappened[(int)Events.lavaEruption_escape2])
+                            TriggerEvent(Events.lavaEruption_escape2);
+                        else
+                            eventAlreadyHappened[(int)Events.lavaEruption_escape2] = false;
                     }
                     break;
             }

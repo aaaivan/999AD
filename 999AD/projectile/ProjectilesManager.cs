@@ -12,13 +12,15 @@ namespace _999AD
     static class ProjectilesManager
     {
         #region DECLARATIONS
-        public static List<Projectile> playerProjectiles= new List<Projectile>(); //list of the projectiles thrown by the player
-        public static List<Projectile> midbossProjectiles = new List<Projectile>(); //list of the projectiles thrown by midboss
+        public static List<Projectile> playerProjectiles; //list of the projectiles thrown by the player
+        public static List<Projectile> midbossProjectiles; //list of the projectiles thrown by midboss
         #endregion
         #region CONSTRUCTOR
         public static void Inizialize(Texture2D spritesheet)
         {
             Projectile.Inizialize(spritesheet);
+            playerProjectiles = new List<Projectile>();
+            midbossProjectiles = new List<Projectile>();
         }
         #endregion
         #region METHODS
@@ -33,9 +35,9 @@ namespace _999AD
             midbossProjectiles.Add(new Projectile(position, initialVelocity, Projectile.SpriteType.broccoli));
             //Broccoli - Placeholder
         }
-
         public static void Update(float elapsedTime)
         {
+            //update for player projectiles
             for (int index = playerProjectiles.Count-1; index>=0; index--)
             {
                 if (playerProjectiles[index].active)
@@ -52,6 +54,11 @@ namespace _999AD
                 else
                     midbossProjectiles.RemoveAt(index);
             }
+        }
+        public static void Reset()
+        {
+            playerProjectiles.Clear();
+            midbossProjectiles.Clear();
         }
         public static void Draw(SpriteBatch spriteBatch)
         {

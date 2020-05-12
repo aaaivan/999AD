@@ -32,23 +32,25 @@ namespace _999AD
         public readonly int width; //width of the platform
         public readonly int height; //height of the platform
         Vector2 platformMidpointPosition;
-        Vector2 platformMidpointPreviousPosition=Vector2.Zero;
+        Vector2 platformMidpointPreviousPosition;
         float angleRadiants;
         readonly float angularSpeed; //radiants per second. positive->clockwise
         double normalizedLinearProgression; //0->rotationCenter is at the starting point, 1->rotationCenter is at the ending point, else platform it is somewhere in between
         float linearSpeed; //fraction of the total distance travelled every second
         readonly float centerRestingTime; //indicates for how many seconds the rotatationCenter rests at the starting and ending points
-        float elapsedRestingTime = 0;
+        float elapsedRestingTime;
         public bool active; //if false the platform does not move
         bool moveOnce;
         bool disappearing;
         bool transparent = false;
         float maxTransparentTime;
         float maxSolidTime;
-        float elapsedPltaformTime;
-        static float minAlpha = 0.15f;
-        static float alphaChangeSpeed = 3;//seconds^(-1)
-        float alphaValue = 1;
+        float elapsedTransparencyTime;
+        static readonly float minAlpha = 0.15f;
+        static readonly float alphaChangeSpeed = 3;//seconds^(-1)
+        float alphaValue;
+        float linearSpeed_pixelsPerSecond;
+        float delay;
         #endregion
         #region CONSTRUCTOR
         public MovingPlatform(TextureType _textureType, int _radius,
@@ -64,7 +66,8 @@ namespace _999AD
             height = sourceRectangles[(int)textureType].Height;
             angleRadiants = _startingAngleDegrees / 180 * MathHelper.Pi;
             angularSpeed = _angularSpeed;
-            linearSpeed = _linearSpeed_pixelsPerSecond / (Vector2.Distance(centerEndingPoint, centerStartingPoint));
+            linearSpeed_pixelsPerSecond = _linearSpeed_pixelsPerSecond;
+            linearSpeed = linearSpeed_pixelsPerSecond / (Vector2.Distance(centerEndingPoint, centerStartingPoint));
             centerRestingTime = _centerRestingTime;
             elapsedRestingTime = centerRestingTime;
             normalizedLinearProgression = MathHelper.Clamp(_normalizedLinearProression, 0, 1);
@@ -72,11 +75,14 @@ namespace _999AD
             rotationCenter = Vector2.Lerp(centerStartingPoint, centerEndingPoint, (float)normalizedLinearProgression);
             platformMidpointPosition = new Vector2(rotationCenter.X + radius * (float)Math.Sin(angleRadiants),
                 rotationCenter.Y - radius * (float)Math.Cos(angleRadiants));
+            platformMidpointPreviousPosition = Vector2.Zero;
             moveOnce = _moveOnce;
             disappearing = _disappearing;
             maxTransparentTime = _maxTransparentTime;
             maxSolidTime = _maxSolidTime;
-            elapsedPltaformTime = -_delay;
+            delay = _delay;
+            elapsedTransparencyTime = -delay;
+            alphaValue = 1;
         }
         public static void loadTextures(Texture2D _spritesheet)
         {
@@ -166,31 +172,31 @@ namespace _999AD
             {
                 if (transparent)
                 {
-                    elapsedPltaformTime += elapsedTime;
+                    elapsedTransparencyTime += elapsedTime;
                     if (alphaValue>minAlpha)
                     {
                         alphaValue -= alphaChangeSpeed * elapsedTime;
                         if (alphaValue < minAlpha)
                             alphaValue = minAlpha;
                     }
-                    if (elapsedPltaformTime >= maxTransparentTime)
+                    if (elapsedTransparencyTime >= maxTransparentTime)
                     {
-                        elapsedPltaformTime = 0;
+                        elapsedTransparencyTime = 0;
                         transparent = false;
                     }
                 }
                 else
                 {
-                    elapsedPltaformTime += elapsedTime;
+                    elapsedTransparencyTime += elapsedTime;
                     if (alphaValue <1)
                     {
                         alphaValue += alphaChangeSpeed * elapsedTime;
                         if (alphaValue > 1)
                             alphaValue = 1;
                     }
-                    if (elapsedPltaformTime >= maxSolidTime)
+                    if (elapsedTransparencyTime >= maxSolidTime)
                     {
-                            elapsedPltaformTime = 0;
+                            elapsedTransparencyTime = 0;
                             transparent = true;
                     }
                 }
@@ -202,6 +208,13 @@ namespace _999AD
             platformMidpointPosition.X = -width;
             platformMidpointPosition.Y = -height;
             active = false;
+        }
+        public MovingPlatform DeepCopy()
+        {
+
+            return new MovingPlatform(textureType, radius, centerStartingPoint, centerEndingPoint,
+                angularSpeed, linearSpeed, active, angleRadiants*180/ MathHelper.Pi, linearSpeed_pixelsPerSecond,
+                centerRestingTime, moveOnce, disappearing, maxTransparentTime, maxSolidTime, delay);
         }
         public void Draw(SpriteBatch spriteBatch)
         {

@@ -27,9 +27,6 @@ namespace _999AD
             roomWidth = MapsManager.maps[(int)_room].RoomWidthtPx;
             roomHeight = MapsManager.maps[(int)_room].RoomHeightPx;
             position = new Vector2(0, CameraManager.maxOffsetY);
-        }
-        public static void Inizialize()
-        {
             screenRectangle = new Rectangle(0, 0, Game1.gameWidth, Game1.gameHeight);
         }
         #endregion
