@@ -43,12 +43,14 @@ namespace _999AD
         static float elapsedInvulnerabilityTime = 0;
         static bool invulnerable = false;
         static float alphaValue = 1;
+        public static bool movingLeft;
         #endregion
         #region CONSTRUCTOR
         public static void Inizialize(Texture2D _spritesheet, Vector2 _position)
         {
             spritesheet = _spritesheet;
             position = _position;
+            movingLeft = false;
             //fill following statements with sprite info
             animations.Add(new Animation(new Rectangle(0, 0, 128, 24), 16, 24, 8, 0.3f, true));
             animations.Add( new Animation( new Rectangle(0, 24, 160,24), 16, 24, 10, 0.06f, true));
@@ -148,7 +150,8 @@ namespace _999AD
         {
             if (elapsedShotTime > timeBetweenShots)
             {
-                if (Game1.currentKeyboard.IsKeyDown(Keys.Space) && !Game1.previousKeyboard.IsKeyDown(Keys.Space))
+                //Space to Shoot / Controller - B to Shoot
+                if ((Game1.currentKeyboard.IsKeyDown(Keys.Space) && !Game1.previousKeyboard.IsKeyDown(Keys.Space))||(Game1.currentGamePad.Buttons.B==ButtonState.Pressed))
                 {
                     ProjectilesManager.ShootPlayerProjectile(isFacingRight ? (position + new Vector2(width, 0)) : position, ProjectileInitialVelocity);
                     elapsedShotTime = 0;
@@ -162,7 +165,13 @@ namespace _999AD
         //check input for movement
         static void CheckMovementInput()
         {
-            if (Game1.currentKeyboard.IsKeyDown(Keys.W) && !Game1.previousKeyboard.IsKeyDown(Keys.W))
+            //Get Thumbsticks controls
+            position.X += Game1.currentGamePad.ThumbSticks.Left.X * maxHorizontalMovementSpeed;
+            if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack)
+                currentAnimation = AnimationTypes.walk;
+
+            //W to Jump / Controller - A to Jump
+            if ((Game1.currentKeyboard.IsKeyDown(Keys.W) && !Game1.previousKeyboard.IsKeyDown(Keys.W)) || (Game1.currentGamePad.Buttons.A == ButtonState.Pressed))
             {
                 if (isTouchingTheGround)
                 {
@@ -201,14 +210,16 @@ namespace _999AD
                     return;
                 }
             }
-            if (Game1.currentKeyboard.IsKeyDown(Keys.D))
+            if ((Game1.currentKeyboard.IsKeyDown(Keys.D))||(Game1.currentGamePad.DPad.Right==ButtonState.Pressed))
             {
+                movingLeft = false;
                 horizontalMovementSpeed += maxHorizontalMovementSpeed;
                 if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack && isTouchingTheGround)
                     currentAnimation = AnimationTypes.walk;
             }
-            if (Game1.currentKeyboard.IsKeyDown(Keys.A))
+            if ((Game1.currentKeyboard.IsKeyDown(Keys.A))||(Game1.currentGamePad.DPad.Left==ButtonState.Pressed))
             {
+                movingLeft = true;
                 horizontalMovementSpeed -= maxHorizontalMovementSpeed;
                 if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack && isTouchingTheGround)
                     currentAnimation = AnimationTypes.walk;

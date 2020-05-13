@@ -23,19 +23,22 @@ namespace _999AD
         static Animation[] enemyAnimations;
 
         //Size Variables
-        public readonly int width = 32;
-        public readonly int height = 26;
+        public readonly int width = 42;
+        public readonly int height = 48;
 
         //Position Variables
         Vector2 currentPoint;
         Vector2 enemyPoint;
         Vector2 enemyPoint2;
-        bool isFacingRight = false;
+        bool isFacingLeft = true;
         bool moveToP1, moveToP2;
         bool moving;
 
         //Movement Variables
         float movementSpeed;
+
+        //Knockback Variables
+        bool knockback;
 
         //Distance between which enemy notices the player
         readonly int meleeDistance = 30;
@@ -47,11 +50,12 @@ namespace _999AD
         bool dead = false;
         Color enemyColor = Color.White;
 
-        public readonly float timeUntilShot = 3f;
+        public readonly float timeUntilShot = 3.5f;
         float elapsedShotTime;
 
         public readonly float timeUntilMelee = 3f;
         float elapsedMeleeTime;
+        bool melee;
 
         //Vector for projectile velocity
         //First value is horizontal distance, second value is vertical distance
@@ -75,13 +79,15 @@ namespace _999AD
             enemyPoint2.X += 50;
 
             movementSpeed = 0f;
+            knockback = false;
+            melee = false;
 
             enemyAnimations = new Animation[(int)EnemyState.total]
             {
-                new Animation(new Rectangle(0,0,128,32),32,26,3,1f,true),
-                new Animation(new Rectangle(0,26,64,32),32,26,3,1f,true),
-                new Animation(new Rectangle(0,52,64,32),32,26,3,1f,true),
-                new Animation(new Rectangle(0,78,64,32),32,26,3,1f,false, true),
+                new Animation(new Rectangle(0,0,440,48),44,48,10,0.4f,true), // Animation for Idle - Patrolling
+                new Animation(new Rectangle(0,48,616,48),56,48,11,0.4f,true), // Animation for Melee
+                new Animation(new Rectangle(0,96,704,48),44,48,16,0.4f,true), // Animation for Attack
+                new Animation(new Rectangle(0,144,264,48),44,48,6,0.4f,false, true), // Animation for Death
             };
         }
 
@@ -122,20 +128,22 @@ namespace _999AD
 
             //If the enemy HP goes below 0, its state will be set to death
             //This will play the death animation
-            if(enemyHP<0)
+            if(enemyHP<=0)
             {
                 enemyState = EnemyState.death;
             }
 
             //Updating direction the enemy faces
-            if(Enemy2CollisionRect.X + 5 < Player.CollisionRectangle.X)
+            if(Enemy2CollisionRect.X + 10 < Player.CollisionRectangle.X)
             {
-                isFacingRight = true;
+                isFacingLeft = true;
             }
             else
             {
-                isFacingRight = false;
+                isFacingLeft = false;
             }
+
+            CheckCollisions();
 
             //Switch case statement for the enemyState
             switch (enemyState)
@@ -166,17 +174,17 @@ namespace _999AD
             //If the enemy is moving to the second point, it will be drawn without being flipped
             if(moveToP2 && moving)
             {
-                spriteBatch.Draw(enemySheet, Camera.RelativeRectangle(Enemy2DrawRect), enemyAnimations[(int)enemyState].Frame, enemyColor, 0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0f);
+                spriteBatch.Draw(enemySheet, Camera.RelativeRectangle(Enemy2DrawRect), enemyAnimations[(int)enemyState].Frame, enemyColor, 0f, Vector2.Zero, SpriteEffects.None, 0f);
             }
             //If the enemy is moving back to the first point, it will be drawn flipped
             else if(moveToP1 && moving)
             {
-                spriteBatch.Draw(enemySheet, Camera.RelativeRectangle(Enemy2DrawRect), enemyAnimations[(int)enemyState].Frame, enemyColor, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+                spriteBatch.Draw(enemySheet, Camera.RelativeRectangle(Enemy2DrawRect), enemyAnimations[(int)enemyState].Frame, enemyColor, 0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0f);
             }
             //If the boss is not moving, it will be flipped around depending upon the position of the player
             else
             {
-                spriteBatch.Draw(enemySheet, Camera.RelativeRectangle(Enemy2DrawRect), enemyAnimations[(int)enemyState].Frame, enemyColor, 0f, Vector2.Zero, isFacingRight ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
+                spriteBatch.Draw(enemySheet, Camera.RelativeRectangle(Enemy2DrawRect), enemyAnimations[(int)enemyState].Frame, enemyColor, 0f, Vector2.Zero, isFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
             }
         }
 
@@ -186,11 +194,11 @@ namespace _999AD
             moving = false;
             if (Enemy2CollisionRect.X + 5 < Player.CollisionRectangle.X)
             {
-                isFacingRight = true;
+                isFacingLeft = false;
             }
             else
             {
-                isFacingRight = false;
+                isFacingLeft = true;
             }
 
             //If the player goes outside the given range,
@@ -208,7 +216,7 @@ namespace _999AD
             {
                 if(elapsedShotTime>timeUntilShot)
                 {
-                    ProjectilesManager.ShootEnemyProjectile(currentPoint, projectileInitialVelocity * (isFacingRight ? new Vector2(1, 1) : new Vector2(-1, 1)));
+                    ProjectilesManager.ShootEnemyProjectile(currentPoint, projectileInitialVelocity * (isFacingLeft ? new Vector2(-1, 1) : new Vector2(1, 1)));
                     elapsedShotTime = 0;
                 }
                 else
@@ -222,10 +230,20 @@ namespace _999AD
         public void Melee(float elapsedTime)
         {
             moving = false;
+
+            if (Enemy2CollisionRect.X + 5 < Player.CollisionRectangle.X)
+            {
+                isFacingLeft = false;
+            }
+            else
+            {
+                isFacingLeft = true;
+            }
+
             //If the player goes outside the given range,
             //The state will be changed accordingly
             //Else, the Melee attack will be delivered
-            if(Math.Abs(currentPoint.X - Player.CollisionRectangle.X)>=meleeDistance)
+            if (Math.Abs(currentPoint.X - Player.CollisionRectangle.X)>=meleeDistance)
             {
                 enemyState = EnemyState.attack;
             }
@@ -233,12 +251,16 @@ namespace _999AD
             {
                 enemyState = EnemyState.idle;
             }
+
             else
             {
                 if(elapsedMeleeTime>timeUntilMelee)
                 {
                     Player.takeDamage();
                     elapsedMeleeTime = 0;
+                    knockback = true;
+                    melee = true;
+                    KnockBack();
                 }
                 else
                 {
@@ -259,23 +281,19 @@ namespace _999AD
             return false;
         }
 
-        //Function to handle if Player is hit by Enemy 2
-        public void PlayerHitByEnemy2()
-        {
-            //work required
-        }
-
         //Function to handle the enemy death
         public void Death()
         {
-            if(enemyAnimations[(int)enemyState]!=enemyAnimations[(int)EnemyState.death])
+            enemyColor = Color.White;
+            if (enemyAnimations[(int)enemyState] != enemyAnimations[(int)EnemyState.death])
             {
                 enemyAnimations[(int)enemyState] = enemyAnimations[(int)EnemyState.death];
             }
-            else if(!enemyAnimations[(int)enemyState].Active)
+            else if (!enemyAnimations[(int)enemyState].Active)
             {
                 dead = true;
             }
+
         }
 
         //Function to handle the enemy behaviour when idle
@@ -288,7 +306,7 @@ namespace _999AD
                 movementSpeed = 0f;
                 if (Enemy2CollisionRect.X + 5 < Player.CollisionRectangle.X)
                 {
-                    isFacingRight = false;
+                    isFacingLeft = false;
                 }
                 enemyState = EnemyState.attack;
             }
@@ -338,6 +356,55 @@ namespace _999AD
             return false;
         }
 
+        //Knockback Function
+        public void KnockBack()
+        {
+            if(!isFacingLeft)
+            {
+                if(knockback&&melee)
+                {
+                    Player.position.X += 15;
+                }
+                else if(!Player.movingLeft)
+                {
+                    Player.position.X = Enemy2CollisionRect.X;
+                }
+            }
+            else
+            {
+                if(knockback&&melee)
+                {
+                    Player.position.X -= 15;
+                }
+                else
+                {
+                    Player.position.X = Enemy2CollisionRect.Right;
+                }
+            }
+
+            knockback = false;
+            melee = false;
+        }
+
+        //Function to check for collisions between enemy 2 and player
+        public void CheckCollisions()
+        {
+            if(!dead && Player.CollisionRectangle.Intersects(Enemy2CollisionRect))
+            {
+                if(Math.Abs(Player.CollisionRectangle.Bottom-Enemy2CollisionRect.Top)<=5)
+                {
+                    Player.Rebound(0.75f);
+                    enemyHP--;
+                    enemyColor = Color.Red * 0.5f;
+                }
+                else
+                {
+                    Player.takeDamage();
+                    knockback = true;
+                }
+                KnockBack();
+            }
+        }
         #endregion
     }
 }

@@ -23,13 +23,13 @@ namespace _999AD
         static Animation[] enemyAnimations;
 
         //Size Variables
-        public readonly int width = 14;
-        public readonly int height = 14;
+        public readonly int width = 42;
+        public readonly int height = 48;
 
         //Position Variables
         Vector2 currentPoint;
         Vector2 enemyPoint;
-        bool isFacingRight = false;
+        bool isFacingLeft = true;
 
         //Movement Variables
         float movementSpeed;
@@ -39,7 +39,7 @@ namespace _999AD
         bool hit = false;
 
         //Variables for knocking back the player
-        readonly int knockbackDistance = 60;
+        readonly int knockbackDistance = 40;
         int distanceKnocked;
         bool knockback = false;
 
@@ -67,9 +67,9 @@ namespace _999AD
 
             enemyAnimations = new Animation[(int)EnemyState.total]
             {
-                new Animation(new Rectangle(0,0,56,14),14,14,2,1f,true),
-                new Animation(new Rectangle(0,14,28,14),14,14,2,1f,true),
-                new Animation(new Rectangle(0,28,28,14),14,14,2,1f,false, true)
+                new Animation(new Rectangle(0,0,420,48),42,48,10,0.2f,true), // Animation for Idle
+                new Animation(new Rectangle(0,48,420,48),42,48,10,0.2f,true), //Animation for Attack - Dash
+                new Animation(new Rectangle(0,96,252,48),42,48,6,0.2f,false, true) //Animation for Death
             };
         }
         #endregion
@@ -111,7 +111,7 @@ namespace _999AD
 
             //If the enemy HP goes below 0, its state will be set to death
             //This will play the death animation
-            if(enemyHP<0)
+            if(enemyHP<=0)
             {
                 enemyState = EnemyState.death;
             }
@@ -119,12 +119,14 @@ namespace _999AD
             //Updating the direction the enemy faces
             if(Enemy1CollisionRect.X + 5 < Player.CollisionRectangle.X)
             {
-                isFacingRight = true;
+                isFacingLeft = true;
             }
             else
             {
-                isFacingRight = false;
+                isFacingLeft = false;
             }
+
+            CheckCollisions();
 
             //Switch case statement for the enemyState
             switch(enemyState)
@@ -149,7 +151,7 @@ namespace _999AD
                 return;
             }
 
-            spriteBatch.Draw(enemySheet, Camera.RelativeRectangle(Enemy1DrawRect), enemyAnimations[(int)enemyState].Frame, enemyColor, 0f, Vector2.Zero, isFacingRight ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
+            spriteBatch.Draw(enemySheet, Camera.RelativeRectangle(Enemy1DrawRect), enemyAnimations[(int)enemyState].Frame, enemyColor, 0f, Vector2.Zero, isFacingLeft ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
 
         }
 
@@ -159,7 +161,7 @@ namespace _999AD
             if(!hit)
             {
                 movementSpeed = 100;
-                if(isFacingRight)
+                if(isFacingLeft)
                 {
                     currentPoint.X += movementSpeed * elapsedTime;
                 }
@@ -180,7 +182,7 @@ namespace _999AD
         //Function that handles the player knock back
         public void KnockBack()
         {
-            if(!isFacingRight)
+            if(!isFacingLeft)
             {
                 if(knockback)
                 {
@@ -242,6 +244,7 @@ namespace _999AD
         //Function to handle the enemy death
         public void Death()
         {
+            enemyColor = Color.White;
             if(enemyAnimations[(int)enemyState]!=enemyAnimations[(int)EnemyState.death])
             {
                 enemyAnimations[(int)enemyState] = enemyAnimations[(int)EnemyState.death];
@@ -249,6 +252,20 @@ namespace _999AD
             else if(!enemyAnimations[(int)enemyState].Active)
             {
                 dead = true;
+            }
+        }
+
+        //Function to check for collisions between enemy 1 and player
+        public void CheckCollisions()
+        {
+            if(!dead && Player.CollisionRectangle.Intersects(Enemy1CollisionRect))
+            {
+                if(Math.Abs(Player.CollisionRectangle.Bottom-Enemy1CollisionRect.Top)<=5)
+                {
+                    enemyHP--;
+                    Player.Rebound(0.75f);
+                    enemyColor = Color.Red * 0.5f;
+                }
             }
         }
         #endregion

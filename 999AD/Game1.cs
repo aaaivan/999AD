@@ -38,6 +38,10 @@ namespace _999AD
 #endif
         public static KeyboardState previousKeyboard;
         public static KeyboardState currentKeyboard;
+
+        public static GamePadState previousGamePad;
+        public static GamePadState currentGamePad;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -78,6 +82,7 @@ namespace _999AD
             //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
             previousKeyboard = Keyboard.GetState();
+            previousGamePad = GamePad.GetState(PlayerIndex.One);
 
             base.Initialize();
         }
@@ -127,7 +132,6 @@ namespace _999AD
                                          Content.Load<Texture2D>("whiteTile"));
             //
             EnemyManager.Initialise(Content.Load<Texture2D>(@"characters\enemy1"), Content.Load<Texture2D>(@"characters\enemy2"));
-            //Enemy1.Initialise(Content.Load<Texture2D>(@"characters\enemy1"), new Vector2(150, 185));
 
             MidBoss.Initialise(Content.Load<Texture2D>(@"characters\midboss"));
             //
@@ -166,6 +170,7 @@ namespace _999AD
                 Exit();
 
             currentKeyboard = Keyboard.GetState();
+            currentGamePad = GamePad.GetState(PlayerIndex.One);
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             // TODO: Add your update logic here
 #if LEVEL_EDITOR
@@ -181,6 +186,7 @@ namespace _999AD
             Collisions.Update(elapsedTime);
 #endif
             previousKeyboard = currentKeyboard;
+            previousGamePad = currentGamePad;
             base.Update(gameTime);
         }
 

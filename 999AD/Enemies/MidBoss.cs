@@ -115,7 +115,7 @@ namespace _999AD
 
             //If the boss HP goes below 0, its state will be set to death
             //This will play the death animation
-            if(bossHP<0)
+            if(bossHP<=0)
             {
                 bossState = BossState.death;
             }

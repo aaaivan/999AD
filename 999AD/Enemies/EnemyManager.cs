@@ -77,15 +77,15 @@ namespace _999AD
                     new Enemy1[]
                     {
                         //For testing purposes only
-                        //new Enemy1(spritesheet, new Vector2(150, 185)),
-                        //new Enemy1(spritesheet, new Vector2(200, 185)),
-                        //new Enemy1(e1Spritesheet, new Vector2(250, 185))
+                        //new Enemy1(e1Spritesheet, new Vector2(150, 168)),
+                        //new Enemy1(e1Spritesheet, new Vector2(200, 168)),
+                        //new Enemy1(e1Spritesheet, new Vector2(250, 168))
                     },
                     new Enemy2[]
                     {
                         //For testing purposes only
-                        new Enemy2(e2Spritesheet, new Vector2(150,179)),
-                        //new Enemy2(e2Spritesheet, new Vector2(250,179))
+                        //new Enemy2(e2Spritesheet, new Vector2(150,169)),
+                        //new Enemy2(e2Spritesheet, new Vector2(250,169))
                     }
                 ),
 
