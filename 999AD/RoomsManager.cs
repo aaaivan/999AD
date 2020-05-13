@@ -27,7 +27,7 @@ namespace _999AD
         #region CONSTRUCTOR
         public static void Inizialize()
         {
-            currentRoom = Rooms.churchGroundFloor0;
+            currentRoom = Rooms.midBoss;
             previousRoom = Rooms.tutorial4;
             CameraManager.SwitchCamera(currentRoom);
         }
@@ -588,7 +588,7 @@ namespace _999AD
             {
                 FinalBoss.Update(elapsedTime);
             }
-            if(currentRoom==Rooms.midboss)
+            if(currentRoom==Rooms.midBoss)
             {
                MidBoss.Update(elapsedTime);
             }

@@ -35,10 +35,9 @@ namespace _999AD
         public static readonly Vector2 projectileInitialVelocity = new Vector2(200, -200);
         public static readonly float timeBetweenShots = 0.4f; //minimum time between shots
         static float elapsedShotTime;
-        public static readonly int maxHealthPoints = 3;
+        public static readonly int maxHealthPoints = 1000;
         public static int healthPoints;
         static readonly float invulnerabilityTime = 3;
-        public static bool movingLeft;
         static float elapsedInvulnerabilityTime;
         static bool invulnerable;
         static float alphaValue;
@@ -48,7 +47,6 @@ namespace _999AD
         {
             Reset(_position);
             spritesheet = _spritesheet;
-            movingLeft = false;
             //fill following statements with sprite info
             animations = new List<Animation>();
             animations.Add(new Animation(new Rectangle(0, 0, 128, 24), 16, 24, 8, 0.3f, true));
@@ -229,14 +227,12 @@ namespace _999AD
             }
             if ((Game1.currentKeyboard.IsKeyDown(Keys.D))||(Game1.currentGamePad.DPad.Right==ButtonState.Pressed))
             {
-                movingLeft = false;
                 horizontalMovementSpeed += maxHorizontalMovementSpeed;
                 if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack && isTouchingTheGround)
                     currentAnimation = AnimationTypes.walk;
             }
             if ((Game1.currentKeyboard.IsKeyDown(Keys.A))||(Game1.currentGamePad.DPad.Left==ButtonState.Pressed))
             {
-                movingLeft = true;
                 horizontalMovementSpeed -= maxHorizontalMovementSpeed;
                 if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack && isTouchingTheGround)
                     currentAnimation = AnimationTypes.walk;
@@ -490,6 +486,18 @@ namespace _999AD
         {
             jumpSpeed.Y = initialJumpSpeed.Y * ratioReboundToNormalJump;
             canDoubleJump = true;
+            isTouchingTheGround = false;
+            isOnMovingPlatform = false;
+            isWallJumping = false;
+        }
+        public static void Rebound(float ratioReboundToNormalJump_Y, float ratioReboundToNormalJump_X, bool toTheRight)
+        {
+            jumpSpeed.X = initialJumpSpeed.X * ratioReboundToNormalJump_X * (toTheRight ? 1 : -1);
+            jumpSpeed.Y = initialJumpSpeed.Y * ratioReboundToNormalJump_Y;
+            canDoubleJump = true;
+            isTouchingTheGround = false;
+            isOnMovingPlatform = false;
+            isWallJumping = false;
         }
         public static void takeDamage(int damage=1, bool damageEvenIfInvulnerable=false)
         {

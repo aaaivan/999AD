@@ -28,11 +28,9 @@ namespace _999AD
                 (
                     new Enemy1[]
                     {
-
                     },
                     new Enemy2[]
                     {
-
                     }
                 ),
 
@@ -40,11 +38,9 @@ namespace _999AD
                 (
                     new Enemy1[]
                     {
-
                     },
                     new Enemy2[]
                     {
-
                     }
                 ),
 
@@ -52,11 +48,9 @@ namespace _999AD
                 (
                     new Enemy1[]
                     {
-
                     },
                     new Enemy2[]
                     {
-
                     }
                 ),
 
@@ -64,14 +58,47 @@ namespace _999AD
                 (
                     new Enemy1[]
                     {
-
                     },
                     new Enemy2[]
                     {
-
                     }
                 ),
-
+                new EnemyRoomManager // Tutorial 4
+                (
+                    new Enemy1[]
+                    {
+                    },
+                    new Enemy2[]
+                    {
+                    }
+                ),
+                new EnemyRoomManager // churchBellTower0
+                (
+                    new Enemy1[]
+                    {
+                    },
+                    new Enemy2[]
+                    {
+                    }
+                ),
+                new EnemyRoomManager // churchBellTower1
+                (
+                    new Enemy1[]
+                    {
+                    },
+                    new Enemy2[]
+                    {
+                    }
+                ),
+                new EnemyRoomManager // churchBellTower2
+                (
+                    new Enemy1[]
+                    {
+                    },
+                    new Enemy2[]
+                    {
+                    }
+                ),
                 new EnemyRoomManager // Midboss
                 (
                     new Enemy1[]
@@ -84,8 +111,54 @@ namespace _999AD
                     new Enemy2[]
                     {
                         //For testing purposes only
-                        //new Enemy2(e2Spritesheet, new Vector2(150,169)),
-                        //new Enemy2(e2Spritesheet, new Vector2(250,169))
+                        new Enemy2(e2Spritesheet, new Vector2(150,190)),
+                        new Enemy2(e2Spritesheet, new Vector2(250,190))
+                    }
+                ),
+                new EnemyRoomManager // churchGroundFloor0
+                (
+                    new Enemy1[]
+                    {
+                    },
+                    new Enemy2[]
+                    {
+                    }
+                ),
+                new EnemyRoomManager // churchAltarRoom
+                (
+                    new Enemy1[]
+                    {
+                    },
+                    new Enemy2[]
+                    {
+                    }
+                ),
+                new EnemyRoomManager // church1stFloor0
+                (
+                    new Enemy1[]
+                    {
+                    },
+                    new Enemy2[]
+                    {
+                    }
+                ),
+                new EnemyRoomManager // church2ndFloor0
+                (
+                    new Enemy1[]
+                    {
+                    },
+                    new Enemy2[]
+                    {
+                    }
+                ),
+
+                new EnemyRoomManager // descent
+                (
+                    new Enemy1[]
+                    {
+                    },
+                    new Enemy2[]
+                    {
                     }
                 ),
 
@@ -93,11 +166,9 @@ namespace _999AD
                 (
                     new Enemy1[]
                     {
-
                     },
                     new Enemy2[]
                     {
-
                     }
                 ),
 
@@ -105,11 +176,9 @@ namespace _999AD
                 (
                     new Enemy1[]
                     {
-
                     }, 
                     new Enemy2[]
                     {
-
                     }
                 ),
 
@@ -117,11 +186,18 @@ namespace _999AD
                 (
                     new Enemy1[]
                     {
-
-                    }, 
+                    },
                     new Enemy2[]
                     {
-
+                    }
+                ),
+                new EnemyRoomManager // Escape 2
+                (
+                    new Enemy1[]
+                    {
+                    },
+                    new Enemy2[]
+                    {
                     }
                 ),
             };

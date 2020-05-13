@@ -98,7 +98,7 @@ namespace _999AD
                             Player.position = new Vector2(23, 1097);
                         else
                         {
-                            if (RoomsManager.PreviousRoom == RoomsManager.Rooms.tutorial0)
+                            if (RoomsManager.PreviousRoom == RoomsManager.Rooms.churchBellTower0)
                                 Player.position = new Vector2(372, 1097);
                             else
                                 Player.position = new Vector2(111, 121);
@@ -111,7 +111,7 @@ namespace _999AD
                         }
                         else if (Player.position.X >= 60)
                         {
-                            if (RoomsManager.PreviousRoom == RoomsManager.Rooms.tutorial1)
+                            if (RoomsManager.PreviousRoom == RoomsManager.Rooms.churchBellTower1)
                                 Player.position = new Vector2(119, 1177);
                             else
                                 Player.position = new Vector2(457, 65);

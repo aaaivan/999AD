@@ -38,7 +38,7 @@ namespace _999AD
         float movementSpeed;
 
         //Knockback Variables
-        bool knockback;
+        //bool knockback;
 
         //Distance between which enemy notices the player
         readonly int meleeDistance = 30;
@@ -55,7 +55,7 @@ namespace _999AD
 
         public readonly float timeUntilMelee = 3f;
         float elapsedMeleeTime;
-        bool melee;
+        //bool melee;
 
         //Vector for projectile velocity
         //First value is horizontal distance, second value is vertical distance
@@ -79,8 +79,8 @@ namespace _999AD
             enemyPoint2.X += 50;
 
             movementSpeed = 0f;
-            knockback = false;
-            melee = false;
+            //knockback = false;
+            //melee = false;
 
             enemyAnimations = new Animation[(int)EnemyState.total]
             {
@@ -258,9 +258,9 @@ namespace _999AD
                 {
                     Player.takeDamage();
                     elapsedMeleeTime = 0;
-                    knockback = true;
-                    melee = true;
-                    KnockBack();
+                    //knockback = true;
+                    //melee = true;
+                    Player.Rebound(0.2f, 1.4f, Player.Center.X > currentPoint.X);
                 }
                 else
                 {
@@ -357,9 +357,9 @@ namespace _999AD
         }
 
         //Knockback Function
-        public void KnockBack()
+        /*public void KnockBack()
         {
-            if(!isFacingLeft)
+            if (!isFacingLeft)
             {
                 if(knockback&&melee)
                 {
@@ -367,7 +367,7 @@ namespace _999AD
                 }
                 else if(!Player.movingLeft)
                 {
-                    Player.position.X = Enemy2CollisionRect.X;
+                   Player.position.X = Enemy2CollisionRect.X;
                 }
             }
             else
@@ -377,14 +377,14 @@ namespace _999AD
                     Player.position.X -= 15;
                 }
                 else
-                {
-                    Player.position.X = Enemy2CollisionRect.Right;
-                }
+               {
+                   Player.position.X = Enemy2CollisionRect.Right;
+               }
             }
 
             knockback = false;
             melee = false;
-        }
+        }*/
 
         //Function to check for collisions between enemy 2 and player
         public void CheckCollisions()
@@ -400,10 +400,14 @@ namespace _999AD
                 else
                 {
                     Player.takeDamage();
-                    knockback = true;
+                    //knockback = true;
+                    if (Player.Center.X>currentPoint.X)
+                        Player.position.X = currentPoint.X + width / 2;
+                    else
+                        Player.position.X = currentPoint.X - width / 2-Player.width;
                 }
-                KnockBack();
             }
+            //KnockBack();
         }
         #endregion
     }
