@@ -90,7 +90,6 @@ namespace _999AD
         }
         public static void MoveCamera(float _playerPositionWeight, Vector2 _pointLocked, float _transitionDuration)
         {
-            transientPlayerPositionWeight = playerPositionWeight;
             playerPositionWeight = _playerPositionWeight;
             pointLocked = _pointLocked;
             cameraTransitionProgression = 0;

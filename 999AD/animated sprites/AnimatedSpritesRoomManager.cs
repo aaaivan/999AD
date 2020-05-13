@@ -25,13 +25,18 @@ namespace _999AD
         #region METHODS
         public void Update(float elapsedTime)
         {
-            for (int i=animatedSprites.Count-1; i>=0; i--)
+            for (int i = animatedSprites.Count - 1; i >= 0; i--)
             {
                 if (animatedSprites[i].Active)
                     animatedSprites[i].Update(elapsedTime);
                 else
                     animatedSprites.RemoveAt(i);
             }
+            for (int i =0; i< temporaryAnimaterSprites.Count; i++)
+            {
+                    temporaryAnimaterSprites[i].Update(elapsedTime);
+            }
+
         }
         public void AddAnimatedSprite(AnimatedSprite animatedSprite)
         {
@@ -41,9 +46,17 @@ namespace _999AD
         {
             temporaryAnimaterSprites.Clear();
         }
+        public void AddTemporaryAnimatedSprites(List<AnimatedSprite> animatedSprites)
+        {
+            if (temporaryAnimaterSprites.Count > 0)
+                return;
+            temporaryAnimaterSprites = animatedSprites;
+        }
         public void Draw(SpriteBatch spriteBatch)
         {
             foreach (AnimatedSprite animatedSprite in animatedSprites)
+                animatedSprite.Draw(spriteBatch);
+            foreach (AnimatedSprite animatedSprite in temporaryAnimaterSprites)
                 animatedSprite.Draw(spriteBatch);
         }
         #endregion

@@ -75,7 +75,7 @@ namespace _999AD
             rotationCenter = Vector2.Lerp(centerStartingPoint, centerEndingPoint, (float)normalizedLinearProgression);
             platformMidpointPosition = new Vector2(rotationCenter.X + radius * (float)Math.Sin(angleRadiants),
                 rotationCenter.Y - radius * (float)Math.Cos(angleRadiants));
-            platformMidpointPreviousPosition = Vector2.Zero;
+            platformMidpointPreviousPosition = platformMidpointPosition;
             moveOnce = _moveOnce;
             disappearing = _disappearing;
             maxTransparentTime = _maxTransparentTime;
@@ -202,6 +202,18 @@ namespace _999AD
                 }
             }
 
+        }
+        public void Reset(bool _active)
+        {
+            angleRadiants = 0;
+            elapsedRestingTime = centerRestingTime;
+            normalizedLinearProgression = 0;
+            active = _active;
+            rotationCenter = Vector2.Lerp(centerStartingPoint, centerEndingPoint, (float)normalizedLinearProgression);
+            platformMidpointPosition = new Vector2(rotationCenter.X + radius * (float)Math.Sin(angleRadiants),
+                rotationCenter.Y - radius * (float)Math.Cos(angleRadiants));
+            elapsedTransparencyTime = -delay;
+            alphaValue = 1;
         }
         public void RemovePlatform()
         {

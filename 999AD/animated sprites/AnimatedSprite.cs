@@ -14,7 +14,7 @@ namespace _999AD
         #region DECLARATIONS
         public enum SpriteType
         {
-            fadingTile, loading, total
+            invisibleTile, total
         }
         static Texture2D spritesheet;
         static Animation[] animations;
@@ -34,8 +34,7 @@ namespace _999AD
             spritesheet = _spritesheet;
             animations = new Animation[(int)SpriteType.total]
             {
-                new Animation(new Rectangle(0,0,72, 8),8,8,9, 0.2f, false, true),
-                new Animation(new Rectangle(0,8,128,16),16,16,8,0.1f,true)
+                new Animation(new Rectangle(0,0,64, 8),8,8,8, 0.2f, true),
             };
         }
         #endregion
@@ -56,7 +55,8 @@ namespace _999AD
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(spritesheet, Camera.RelativeRectangle(DrawRectangle), animation.Frame, Color.White);
+            if (DrawRectangle.Intersects(Camera.Rectangle))
+                spriteBatch.Draw(spritesheet, Camera.RelativeRectangle(DrawRectangle), animation.Frame, Color.White);
         }
         #endregion
     }
