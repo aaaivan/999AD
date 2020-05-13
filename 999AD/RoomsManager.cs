@@ -588,8 +588,11 @@ namespace _999AD
             {
                 FinalBoss.Update(elapsedTime);
             }
-            if (currentRoom == Rooms.midBoss)
-                MidBoss.Update(elapsedTime);
+            if(currentRoom==Rooms.midboss)
+            {
+               MidBoss.Update(elapsedTime);
+            }
+            EnemyManager.enemyRoomManagers[(int)currentRoom].Update(elapsedTime);
             FireBallsManager.Update(elapsedTime);
             LavaGeyserManager.Update(elapsedTime);
             PlatformsManager.platformsRoomManagers[(int)currentRoom].Update(elapsedTime);
@@ -613,6 +616,7 @@ namespace _999AD
             {
                 MidBoss.Draw(spriteBatch);
             }
+            EnemyManager.enemyRoomManagers[(int)currentRoom].Draw(spriteBatch);
             FireBallsManager.Draw(spriteBatch);
             LavaGeyserManager.Draw(spriteBatch);
             MonologuesManager.monologuesRoomManagers[(int)currentRoom].Draw(spriteBatch);

@@ -32,6 +32,8 @@ namespace _999AD
         public static int scale;
         public static KeyboardState previousKeyboard;
         public static KeyboardState currentKeyboard;
+        public static GamePadState previousGamePad;
+        public static GamePadState currentGamePad;
         public static GameStates currentGameState;
         //<debug>
         SpriteFont spriteFont;
@@ -93,6 +95,8 @@ namespace _999AD
             graphics.PreferredBackBufferHeight = viewportRectangle.Height;
             graphics.ApplyChanges();
             previousKeyboard = Keyboard.GetState();
+            previousGamePad = GamePad.GetState(PlayerIndex.One);
+
 #endif
             base.Initialize();
         }
@@ -177,6 +181,7 @@ namespace _999AD
             FireBallsManager.Inizialize(Content.Load<Texture2D>("fireball"), Content.Load<Texture2D>("laser"));
             LavaGeyserManager.Inizialize(Content.Load<Texture2D>("lavaGeyser"),
                                          Content.Load<Texture2D>("whiteTile"));
+            EnemyManager.Initialise(Content.Load<Texture2D>(@"characters\enemy1"), Content.Load<Texture2D>(@"characters\enemy2"));
             MidBoss.Initialise(Content.Load<Texture2D>(@"characters\midboss"));
             FinalBoss.Inizialize(Content.Load<Texture2D>(@"characters\finalBoss"),
                                  new Texture2D[] { Content.Load<Texture2D>(@"characters\stoneWing"),
@@ -226,6 +231,7 @@ namespace _999AD
                 Exit();
 
             currentKeyboard = Keyboard.GetState();
+            currentGamePad = GamePad.GetState(PlayerIndex.One);
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             // TODO: Add your update logic here
 #if LEVEL_EDITOR
@@ -251,6 +257,7 @@ namespace _999AD
 
 #endif
             previousKeyboard = currentKeyboard;
+            previousGamePad = currentGamePad;
             base.Update(gameTime);
         }
 

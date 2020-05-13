@@ -12,6 +12,7 @@ namespace _999AD
     static class ProjectilesManager
     {
         #region DECLARATIONS
+        public static List<Projectile> enemyProjectiles; //list of the projectiles thrown by enemy 2
         public static List<Projectile> playerProjectiles; //list of the projectiles thrown by the player
         public static List<Projectile> midbossProjectiles; //list of the projectiles thrown by midboss
         #endregion
@@ -21,6 +22,7 @@ namespace _999AD
             Projectile.Inizialize(spritesheet);
             playerProjectiles = new List<Projectile>();
             midbossProjectiles = new List<Projectile>();
+            enemyProjectiles = new List<Projectile>();
         }
         #endregion
         #region METHODS
@@ -35,6 +37,14 @@ namespace _999AD
             midbossProjectiles.Add(new Projectile(position, initialVelocity, Projectile.SpriteType.broccoli));
             //Broccoli - Placeholder
         }
+
+        //Function to make the enemy 2 shoot a projectile
+        public static void ShootEnemyProjectile(Vector2 position, Vector2 initialVelocity)
+        {
+            enemyProjectiles.Add(new Projectile(position, initialVelocity, Projectile.SpriteType.holyWater));
+            //Holy water - Placeholder
+        }
+
         public static void Update(float elapsedTime)
         {
             //update for player projectiles
@@ -54,6 +64,15 @@ namespace _999AD
                 else
                     midbossProjectiles.RemoveAt(index);
             }
+
+            //Updates for enemy projectiles
+            for(int index = enemyProjectiles.Count-1;index>=0;index--)
+            {
+                if (enemyProjectiles[index].active)
+                    enemyProjectiles[index].Update(elapsedTime);
+                else
+                    enemyProjectiles.RemoveAt(index);
+            }
         }
         public static void Reset()
         {
@@ -67,7 +86,14 @@ namespace _999AD
                 p.Draw(spriteBatch);
             }
 
+            //Draw for midboss projectiles
             foreach(Projectile p in midbossProjectiles)
+            {
+                p.Draw(spriteBatch);
+            }
+
+            //Draw for enemy projectiles
+            foreach(Projectile p in enemyProjectiles)
             {
                 p.Draw(spriteBatch);
             }
