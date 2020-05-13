@@ -68,7 +68,7 @@ namespace _999AD
             canDoubleJump = true;
             isWallJumping = false;
             elapsedShotTime = 0f;
-            healthPoints = 3;
+            healthPoints = maxHealthPoints;
             elapsedInvulnerabilityTime = 0;
             invulnerable = false;
             alphaValue = 1;

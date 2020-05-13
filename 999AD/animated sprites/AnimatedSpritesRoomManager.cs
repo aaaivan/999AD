@@ -13,11 +13,13 @@ namespace _999AD
     {
         #region DECLARATIONS
         List<AnimatedSprite> animatedSprites;
+        List<AnimatedSprite> temporaryAnimaterSprites;
         #endregion
         #region CONSTRUCTOR
         public AnimatedSpritesRoomManager(AnimatedSprite[] _animatedSprites)
         {
             animatedSprites = new List<AnimatedSprite>(_animatedSprites);
+            temporaryAnimaterSprites= new List<AnimatedSprite>(_animatedSprites);
         }
         #endregion
         #region METHODS
@@ -34,6 +36,10 @@ namespace _999AD
         public void AddAnimatedSprite(AnimatedSprite animatedSprite)
         {
             animatedSprites.Add(animatedSprite);
+        }
+        public void ClearTemporaryAnimatedSprites()
+        {
+            temporaryAnimaterSprites.Clear();
         }
         public void Draw(SpriteBatch spriteBatch)
         {

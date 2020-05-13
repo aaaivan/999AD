@@ -13,11 +13,11 @@ namespace _999AD
     {
         public enum BossAnimations
         {
-            stone, stoneToIdle, idle, attack, recovering, falling, total
+            stone, stoneToIdle, idle, attack,startRecovering, recovering, endRecovering, falling, total
         }
         public enum WingAnimations
         {
-            stoneToIdle, idle, spread, flap, withdraw, total
+            stoneIdle, stoneToIdle, idle, spread, flap, withdraw, withdrawDead, total
         }
         public enum WingTextures
         {
@@ -31,15 +31,20 @@ namespace _999AD
         static Texture2D bossSpritesheet;
         static Texture2D[] wingSpritesheets;
         static Animation[] bossAnimations;
-        static Animation[] wingAnimations;
+        static Animation[] rightWingAnimations;
+        static Animation[] leftWingAnimations;
         static public readonly float recoveryTime= 15;
         static float elapsedRecoveryTime;
-        static public readonly int bossWidth = 180;
-        static public readonly int bossHeight = 280;
-        static public readonly Vector2 fireballsCenter = new Vector2(384, 400);
+        static public readonly float attackAnimationTime = 3;
+        static float elapsedAttackAnimationTime;
+        static public readonly int bossWidth = 80;
+        static public readonly int bossHeight = 128;
+        static public readonly int wingWidth = 136;
+        static public readonly int wingHeight = 8;
+        static public readonly Vector2 fireballsCenter = new Vector2(384, 338);
         static Vector2 bossInitialMidPoint;
         static public Vector2 bossMidPoint;
-        static public readonly int wingsRelativeYPosition = 100;
+        static public readonly int wingsRelativeYPosition = -2;
         static float YSpeed;
         static BossAnimations bossAnimation;
         static WingAnimations rightWingAnimation;
@@ -47,7 +52,7 @@ namespace _999AD
         static WingTextures rightWingTexture;
         static WingTextures leftWingTexture;
         static Phases currentPhase;
-        static readonly int maxBossHp = 10;
+        static readonly int maxBossHp = 20;
         static readonly int maxWingHP = 2;
         static int bossHP;
         static int rightWingHP;
@@ -66,46 +71,64 @@ namespace _999AD
             wingSpritesheets = _wingSpritesheets;
             bossAnimations = new Animation[(int)BossAnimations.total]
                 {
-                    new Animation(new Rectangle(0,0,100, 150),100,150, 1, 0, true),
-                    new Animation(new Rectangle(0,0,400, 150),100,150, 4, 1, false, true),
-                    new Animation(new Rectangle(0,150,200, 150),100,150,2, 0.5f, true),
-                    new Animation(new Rectangle(0,300,200, 150),100,150,2, 1f, false, true),
-                    new Animation(new Rectangle(0,450,200, 150),100,150,2, 0.5f, true),
-                    new Animation(new Rectangle(0,600,200, 150),100,150,2, 0.5f, true),
+                    new Animation(new Rectangle(0,0,288, 256),288,256, 1, 0, false, true),
+                    new Animation(new Rectangle(0,0,2016, 1024),288,256, 22, 0.2f, false, true),
+                    new Animation(new Rectangle(288,768,1728, 256),288,256,6, 0.2f, true),
+                    new Animation(new Rectangle(0,1024,1728, 256),288,256,6, 0.2f, true),
+                    new Animation(new Rectangle(0,1280,2016, 256),288,256,7, 0.2f, false, true),
+                    new Animation(new Rectangle(0,1536,1728, 256),288,256,6, 0.2f, true),
+                    new Animation(new Rectangle(0,1792,2016, 256),288,256,7, 0.2f, false, true),
+                    new Animation(new Rectangle(0,1536,1728, 256),288,256,6, 0.2f, true),
                 };
-            wingAnimations = new Animation[(int)WingAnimations.total]
+            rightWingAnimations = new Animation[(int)WingAnimations.total]
                 {
-                    new Animation(new Rectangle[]{ new Rectangle(0,0,50,100),
-                                                   new Rectangle(50,0,50,100),
-                                                   new Rectangle(100,0,50,100),
-                                                   new Rectangle(150, 0, 50, 100)}, 3, false, true),
-                    new Animation(new Rectangle[]{ new Rectangle(0,0,50,100) }, 0, true),
-                    new Animation(new Rectangle[]{ new Rectangle(0,100,50,100),
-                                                   new Rectangle(50, 100,100,100),
-                                                   new Rectangle(150, 100, 150, 100),
-                                                   new Rectangle(300, 100, 200, 100)}, 0.3f, false, true),
-                    new Animation(new Rectangle[]{ new Rectangle(0,200,180,100),
-                                                   new Rectangle(180, 200,190,100),
-                                                   new Rectangle(370, 200, 200, 100)}, 0.3f, true),
-                    new Animation(new Rectangle[]{ new Rectangle(0,300,200,100),
-                                                   new Rectangle(200, 300,150,100),
-                                                   new Rectangle(350, 300, 100, 100),
-                                                   new Rectangle(450, 300, 50, 100)}, 0.3f, false, true),
+                    new Animation(new Rectangle(0,0,144, 256), 144, 256, 1, 0f, false, true),
+                    new Animation(new Rectangle(0,0,1584, 512), 144, 256, 22, 0.2f, false, true),
+                    new Animation(new Rectangle(0,0,864, 256), 144, 256, 6, 0.2f, true),
+                    new Animation(new Rectangle(0,768,1008, 256), 144, 256, 7, 0.2f, false, true),
+                    new Animation(new Rectangle(0,512,864, 256), 144, 256, 6, 0.2f, true),
+                    new Animation(new Rectangle(0,768,1008, 256), 144, 256, 7, 0.2f, false, true),
+                    new Animation(new Rectangle[]{new Rectangle(864, 768, 144, 256),
+                                                  new Rectangle(720, 768, 144, 256),
+                                                  new Rectangle(576, 768, 144, 256),
+                                                  new Rectangle(432, 768, 144, 256),
+                                                  new Rectangle(288, 768, 144, 256),
+                                                  new Rectangle(144, 768, 144, 256),
+                                                  new Rectangle(0, 768, 144, 256),
+                                                    }, 0.2f, false, true),
+                };
+            leftWingAnimations= new Animation[(int)WingAnimations.total]
+                {
+                    new Animation(new Rectangle(0,0,144, 256), 144, 256, 1, 0f, false, true),
+                    new Animation(new Rectangle(0,0,1584, 512), 144, 256, 22, 0.2f, false, true),
+                    new Animation(new Rectangle(0,0,864, 256), 144, 256, 6, 0.2f, true),
+                    new Animation(new Rectangle(0,768,1008, 256), 144, 256, 7, 0.2f, false, true),
+                    new Animation(new Rectangle(0,512,864, 256), 144, 256, 6, 0.2f, true),
+                    new Animation(new Rectangle(0,768,1008, 256), 144, 256, 7, 0.2f, false, true),
+                                        new Animation(new Rectangle[]{new Rectangle(864, 768, 144, 256),
+                                                  new Rectangle(720, 768, 144, 256),
+                                                  new Rectangle(576, 768, 144, 256),
+                                                  new Rectangle(432, 768, 144, 256),
+                                                  new Rectangle(288, 768, 144, 256),
+                                                  new Rectangle(144, 768, 144, 256),
+                                                  new Rectangle(0, 768, 144, 256),
+                                                    }, 0.2f, false, true),
                 };
         }
         public static void Reset()
         {
             elapsedRecoveryTime = 0;
+            elapsedAttackAnimationTime = 0;
             YSpeed = 0;
             bossAnimation = BossAnimations.stone;
-            rightWingAnimation = WingAnimations.idle;
-            leftWingAnimation = WingAnimations.idle;
+            rightWingAnimation = WingAnimations.stoneIdle;
+            leftWingAnimation = WingAnimations.stoneIdle;
             rightWingTexture = WingTextures.stone;
             leftWingTexture = WingTextures.stone;
             currentPhase = Phases.one;
             bossColor = Color.White;
             frameCount = 0;
-            bossInitialMidPoint = new Vector2(fireballsCenter.X, fireballsCenter.Y - 30);
+            bossInitialMidPoint = new Vector2(fireballsCenter.X, fireballsCenter.Y - 13);
             bossHP = maxBossHp;
             rightWingHP = maxWingHP;
             leftWingHP = maxWingHP;
@@ -117,34 +140,58 @@ namespace _999AD
         {
             get { return new Rectangle((int)(bossMidPoint.X - bossWidth / 2), (int)(bossMidPoint.Y - bossHeight / 2), bossWidth, bossHeight); }
         }
-        public static Rectangle BossDrawRectangle //improve: adjust based on sprite
+        public static Rectangle BossDrawRectangle
         {
             get
             {
-                return new Rectangle((int)(bossMidPoint.X - bossAnimations[(int)bossAnimation].Frame.Width / 2),
-                                     (int)(bossMidPoint.Y - bossAnimations[(int)bossAnimation].Frame.Height / 2),
+                if (Player.position.X<bossMidPoint.X || bossAnimation== BossAnimations.stone)
+                    return new Rectangle((int)(bossMidPoint.X - 126),
+                                     (int)(bossMidPoint.Y - 134),
                                      bossAnimations[(int)bossAnimation].Frame.Width,
                                      bossAnimations[(int)bossAnimation].Frame.Height);
+                else
+                    return new Rectangle((int)(bossMidPoint.X - 162),
+                                         (int)(bossMidPoint.Y - 134),
+                                         bossAnimations[(int)bossAnimation].Frame.Width,
+                                         bossAnimations[(int)bossAnimation].Frame.Height);
             }
         }
         public static Rectangle RightWingCollisionRectangle //improve: adjust based on sprite
         {
             get
             {
-                return new Rectangle((int)bossMidPoint.X,
+                if (bossAnimation != BossAnimations.recovering)
+                    return new Rectangle(0, 0, 0, 0);
+                if (Player.position.X < bossMidPoint.X)
+
+                    return new Rectangle((int)bossMidPoint.X+18,
                                     (int)(bossMidPoint.Y - wingsRelativeYPosition),
-                                    wingAnimations[(int)rightWingAnimation].Frame.Width,
-                                    8);
+                                    wingWidth,
+                                    wingHeight);
+                else
+                    return new Rectangle((int)bossMidPoint.X - 18,
+                                    (int)(bossMidPoint.Y - wingsRelativeYPosition),
+                                    wingWidth,
+                                    wingHeight);
             }
         }
         public static Rectangle LeftWingCollisionRectangle //improve: adjust based on sprite
         {
             get
             {
-                return new Rectangle((int)bossMidPoint.X - wingAnimations[(int)leftWingAnimation].Frame.Width,
-                              (int)(bossMidPoint.Y - wingsRelativeYPosition),
-                              wingAnimations[(int)leftWingAnimation].Frame.Width,
-                              8);
+                if (bossAnimation != BossAnimations.recovering)
+                    return new Rectangle(0, 0, 0, 0);
+                if (Player.position.X < bossMidPoint.X)
+
+                    return new Rectangle((int)bossMidPoint.X + 18-wingWidth,
+                                    (int)(bossMidPoint.Y + wingsRelativeYPosition),
+                                    wingWidth,
+                                    wingHeight);
+                else
+                    return new Rectangle((int)bossMidPoint.X - 18-wingWidth,
+                                    (int)(bossMidPoint.Y + wingsRelativeYPosition),
+                                    wingWidth,
+                                    wingHeight);
             }
         }
 
@@ -152,20 +199,34 @@ namespace _999AD
         {
             get
             {
-                return new Rectangle((int)bossMidPoint.X,
-                                    (int)(bossMidPoint.Y - wingsRelativeYPosition),
-                                    wingAnimations[(int)rightWingAnimation].Frame.Width,
-                                    wingAnimations[(int)rightWingAnimation].Frame.Height);
+                if (Player.position.X < bossMidPoint.X || bossAnimation == BossAnimations.stone)
+                    return new Rectangle((int)bossMidPoint.X+38,
+                                    (int)(bossMidPoint.Y + wingsRelativeYPosition-118),
+                                    rightWingAnimations[(int)rightWingAnimation].Frame.Width,
+                                    rightWingAnimations[(int)rightWingAnimation].Frame.Height);
+                else
+                    return new Rectangle((int)bossMidPoint.X -2,
+                        (int)(bossMidPoint.Y + wingsRelativeYPosition-118),
+                        rightWingAnimations[(int)rightWingAnimation].Frame.Width,
+                        rightWingAnimations[(int)rightWingAnimation].Frame.Height);
+
             }
         }
         public static Rectangle LeftWingDrawRectangle
         {
             get
             {
-                return new Rectangle((int)bossMidPoint.X - wingAnimations[(int)leftWingAnimation].Frame.Width,
-                              (int)(bossMidPoint.Y - wingsRelativeYPosition),
-                              wingAnimations[(int)leftWingAnimation].Frame.Width,
-                              wingAnimations[(int)leftWingAnimation].Frame.Height);
+                if (Player.position.X < bossMidPoint.X || bossAnimation == BossAnimations.stone)
+                    return new Rectangle((int)bossMidPoint.X - leftWingAnimations[(int)leftWingAnimation].Frame.Width-2,
+                              (int)(bossMidPoint.Y + wingsRelativeYPosition-118),
+                              leftWingAnimations[(int)leftWingAnimation].Frame.Width,
+                              leftWingAnimations[(int)leftWingAnimation].Frame.Height);
+                else
+                    return new Rectangle((int)bossMidPoint.X - leftWingAnimations[(int)leftWingAnimation].Frame.Width-38,
+                              (int)(bossMidPoint.Y + wingsRelativeYPosition-118),
+                              leftWingAnimations[(int)leftWingAnimation].Frame.Width,
+                              leftWingAnimations[(int)leftWingAnimation].Frame.Height);
+
             }
         }
         public static bool Dead
@@ -177,46 +238,50 @@ namespace _999AD
         public static void WakeUp()
         {
             bossAnimation = BossAnimations.stoneToIdle;
+            bossAnimations[(int)bossAnimation].Reset();
             rightWingAnimation = WingAnimations.stoneToIdle;
             leftWingAnimation = WingAnimations.stoneToIdle;
-        } 
+            rightWingAnimations[(int)rightWingAnimation].Reset();
+            leftWingAnimations[(int)leftWingAnimation].Reset();
+        }
         public static void Update(float elapsedTime)
         {
             if (dead||bossAnimation==BossAnimations.stone)
                 return;
-            if (bossAnimation==BossAnimations.idle || bossAnimation == BossAnimations.recovering)
+            if (bossAnimation!=BossAnimations.stone &&
+                bossAnimation != BossAnimations.stoneToIdle
+                && bossAnimation != BossAnimations.falling)
             {
                 bossMidPoint.Y += YSpeed;
                 YSpeed += (bossInitialMidPoint.Y - bossMidPoint.Y)*0.2f*elapsedTime;
             }
-
             bossAnimations[(int)bossAnimation].Update(elapsedTime);
-            wingAnimations[(int)rightWingAnimation].Update(elapsedTime);
-            wingAnimations[(int)leftWingAnimation].Update(elapsedTime);
+            rightWingAnimations[(int)rightWingAnimation].Update(elapsedTime);
+            leftWingAnimations[(int)leftWingAnimation].Update(elapsedTime);
             if (!bossAnimations[(int)bossAnimation].Active)
             {
-                bossAnimation = BossAnimations.idle;
-            }
-            if (!wingAnimations[(int)rightWingAnimation].Active)
-            {
-                if (rightWingAnimation == WingAnimations.spread)
+                if (bossAnimation == BossAnimations.startRecovering)
+                {
+                    bossAnimation = BossAnimations.recovering;
                     rightWingAnimation = WingAnimations.flap;
-                else
-                {
-                    if (rightWingAnimation == WingAnimations.stoneToIdle)
-                        rightWingTexture = WingTextures.healthy;
-                    rightWingAnimation = WingAnimations.idle;
-                }
-            }
-            if (!wingAnimations[(int)leftWingAnimation].Active)
-            {
-                if (leftWingAnimation == WingAnimations.spread)
                     leftWingAnimation = WingAnimations.flap;
+                    bossAnimations[(int)bossAnimation].Reset();
+                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                    leftWingAnimations[(int)leftWingAnimation].Reset();
+                }
                 else
                 {
-                    if (leftWingAnimation == WingAnimations.stoneToIdle)
-                        leftWingTexture = WingTextures.healthy;
+                    bossAnimation = BossAnimations.idle;
+                    rightWingAnimation = WingAnimations.idle;
                     leftWingAnimation = WingAnimations.idle;
+                    if (rightWingTexture == WingTextures.stone || leftWingTexture== WingTextures.stone)
+                    {
+                        rightWingTexture = WingTextures.healthy;
+                        leftWingTexture = WingTextures.healthy;
+                    }
+                    bossAnimations[(int)bossAnimation].Reset();
+                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                    leftWingAnimations[(int)leftWingAnimation].Reset();
                 }
             }
             /*//debug only
@@ -234,25 +299,22 @@ namespace _999AD
                 case BossAnimations.stoneToIdle:
                     break;
                 case BossAnimations.idle:
+                    if (!bossAnimations[(int)bossAnimation].IsLastFrame())
+                        break;
                     switch (currentPhase)
                     {
                         case Phases.one:
                             {
                                 if (bossHP <= 0)
                                 {
-                                    bossAnimation = BossAnimations.recovering;
+                                    bossAnimation = BossAnimations.startRecovering;
+                                    bossAnimations[(int)BossAnimations.startRecovering].Reset();
                                     LavaGeyserManager.Reset();
                                     FireBallsManager.Reset();
-                                    if (rightWingHP > 0)
-                                    {
-                                        rightWingAnimation = WingAnimations.spread;
-                                        wingAnimations[(int)WingAnimations.spread].Reset();
-                                    }
-                                    if (leftWingHP > 0)
-                                    {
-                                        leftWingAnimation = WingAnimations.spread;
-                                        wingAnimations[(int)WingAnimations.spread].Reset();
-                                    }
+                                    rightWingAnimation = WingAnimations.spread;
+                                    leftWingAnimation = WingAnimations.spread;
+                                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                                    leftWingAnimations[(int)leftWingAnimation].Reset();
                                     break;
                                 }
                                 if (FireBallsManager.NumberOfActiveFireballs > 0 || LavaGeyserManager.ActiveLavaGeysers > 0)
@@ -260,15 +322,20 @@ namespace _999AD
                                 int attack = rand.Next(4);
                                 if (attack == 0)
                                 {
-                                    FireBallsManager.ThrowAtPlayer((int)MathHelper.Lerp(3, 6, 1 - (float)bossHP / maxBossHp), (float)(0.5 + rand.NextDouble()), 0.5f);
+                                    FireBallsManager.ThrowAtPlayer((int)MathHelper.Lerp(3, 6, 1 - (float)bossHP / maxBossHp), 2+(float)rand.NextDouble(), 1f);
                                     bossAnimation = BossAnimations.attack;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
+                                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                                    leftWingAnimations[(int)leftWingAnimation].Reset();
                                 }
                                 else if (attack == 1)
                                 {
                                     FireBallsManager.ThrowInAllDirections((int)MathHelper.Lerp(3, 7, 1 - (float)bossHP / maxBossHp), FireBall.radialShootingVelocity, (float)(0.5 + rand.NextDouble()));
                                     bossAnimation = BossAnimations.attack;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
+                                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                                    leftWingAnimations[(int)leftWingAnimation].Reset();
+
                                 }
                                 else if (attack == 2)
                                 {
@@ -276,10 +343,10 @@ namespace _999AD
                                     int[] platforms = new int[num];
                                     for (int i = 0; i < num; i++)
                                     {
-                                        int nextPlatform = rand.Next(PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length);
+                                        int nextPlatform = rand.Next(PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length-1);
                                         while (platforms.Contains(nextPlatform))
                                         {
-                                            nextPlatform = (nextPlatform + 1) % PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length;
+                                            nextPlatform = (nextPlatform + 1) % (PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length-1);
                                         }
                                         platforms[i] = nextPlatform;
                                     }
@@ -287,12 +354,16 @@ namespace _999AD
                                     FireBallsManager.AddGhostFireball(9);
                                     bossAnimation = BossAnimations.attack;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
+                                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                                    leftWingAnimations[(int)leftWingAnimation].Reset();
                                 }
                                 else
                                 {
-                                    FireBallsManager.Sweep((float)(0.5 + rand.NextDouble()), rand.Next(3, 7));
+                                    FireBallsManager.Sweep((float)(0.4 + 0.2*rand.NextDouble()), rand.Next(3, 5));
                                     bossAnimation = BossAnimations.attack;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
+                                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                                    leftWingAnimations[(int)leftWingAnimation].Reset();
                                 }
                                 break;
                             }
@@ -300,19 +371,14 @@ namespace _999AD
                             {
                                 if (bossHP <= 0)
                                 {
-                                    bossAnimation = BossAnimations.recovering;
+                                    bossAnimation = BossAnimations.startRecovering;
+                                    bossAnimations[(int)BossAnimations.startRecovering].Reset();
                                     LavaGeyserManager.Reset();
                                     FireBallsManager.Reset();
-                                    if (rightWingHP > 0)
-                                    {
-                                        rightWingAnimation = WingAnimations.spread;
-                                        wingAnimations[(int)WingAnimations.spread].Reset();
-                                    }
-                                    if (leftWingHP > 0)
-                                    {
-                                        leftWingAnimation = WingAnimations.spread;
-                                        wingAnimations[(int)WingAnimations.spread].Reset();
-                                    }
+                                    rightWingAnimation = WingAnimations.spread;
+                                    leftWingAnimation = WingAnimations.spread;
+                                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                                    leftWingAnimations[(int)leftWingAnimation].Reset();
                                     break;
                                 }
                                 if (FireBallsManager.NumberOfActiveFireballs > 0 || LavaGeyserManager.ActiveLavaGeysers > 0)
@@ -323,15 +389,19 @@ namespace _999AD
                                     attack = rand.Next(3);
                                     if (attack == 0)
                                     {
-                                        FireBallsManager.ThrowAtPlayer((int)MathHelper.Lerp(5, 11, 1 - (float)bossHP / maxBossHp), (float)(1 + rand.NextDouble()), 0.5f);
+                                        FireBallsManager.ThrowAtPlayer((int)MathHelper.Lerp(4, 9, 1 - (float)bossHP / maxBossHp), (float)(3 + rand.NextDouble()), 1f);
                                         bossAnimation = BossAnimations.attack;
                                         bossAnimations[(int)BossAnimations.attack].Reset();
+                                        rightWingAnimations[(int)rightWingAnimation].Reset();
+                                        leftWingAnimations[(int)leftWingAnimation].Reset();
                                     }
                                     else if (attack == 1)
                                     {
-                                        FireBallsManager.ThrowInAllDirections(6, FireBall.radialShootingVelocity, (float)(0.5 + rand.NextDouble()));
+                                        FireBallsManager.ThrowInAllDirections(6, FireBall.radialShootingVelocity, (float)(1 + rand.NextDouble()));
                                         bossAnimation = BossAnimations.attack;
                                         bossAnimations[(int)BossAnimations.attack].Reset();
+                                        rightWingAnimations[(int)rightWingAnimation].Reset();
+                                        leftWingAnimations[(int)leftWingAnimation].Reset();
                                     }
                                     else
                                     {
@@ -339,17 +409,19 @@ namespace _999AD
                                         int[] platforms = new int[num];
                                         for (int i = 0; i < num; i++)
                                         {
-                                            int nextPlatform = rand.Next(PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length);
+                                            int nextPlatform = rand.Next(PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length-1);
                                             while (platforms.Contains(nextPlatform))
                                             {
-                                                nextPlatform = (nextPlatform + 1) % PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length;
+                                                nextPlatform = (nextPlatform + 1) % (PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length-1);
                                             }
                                             platforms[i] = nextPlatform;
                                         }
                                         FireBallsManager.TargetPlatform(platforms, 6, 2);
-                                        FireBallsManager.AddGhostFireball(9);
+                                        FireBallsManager.AddGhostFireball(7);
                                         bossAnimation = BossAnimations.attack;
                                         bossAnimations[(int)BossAnimations.attack].Reset();
+                                        rightWingAnimations[(int)rightWingAnimation].Reset();
+                                        leftWingAnimations[(int)leftWingAnimation].Reset();
                                     }
                                 }
                                 else if (attack == 1)
@@ -358,16 +430,20 @@ namespace _999AD
                                     FireBallsManager.TrowWithinCircularSector(
                                         (int)(angle / 6),
                                         FireBall.radialShootingVelocity * 0.8f,
-                                        (float)(0.5 + rand.NextDouble()),
+                                        (float)(0.25 + 0.5*rand.NextDouble()),
                                         angle);
                                     bossAnimation = BossAnimations.attack;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
+                                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                                    leftWingAnimations[(int)leftWingAnimation].Reset();
                                 }
                                 else
                                 {
-                                    FireBallsManager.RandomSweep((float)(1 + rand.NextDouble()), 3, 4);
+                                    FireBallsManager.RandomSweep((float)(0.8f + 0.5*rand.NextDouble()), 3, 4);
                                     bossAnimation = BossAnimations.attack;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
+                                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                                    leftWingAnimations[(int)leftWingAnimation].Reset();
                                 }
                                 break;
                             }
@@ -375,19 +451,14 @@ namespace _999AD
                             {
                                 if (bossHP <= 0)
                                 {
-                                    bossAnimation = BossAnimations.recovering;
+                                    bossAnimation = BossAnimations.startRecovering;
+                                    bossAnimations[(int)BossAnimations.startRecovering].Reset();
                                     LavaGeyserManager.Reset();
                                     FireBallsManager.Reset();
-                                    if (rightWingHP > 0)
-                                    {
-                                        rightWingAnimation = WingAnimations.spread;
-                                        wingAnimations[(int)WingAnimations.spread].Reset();
-                                    }
-                                    if (leftWingHP > 0)
-                                    {
-                                        leftWingAnimation = WingAnimations.spread;
-                                        wingAnimations[(int)WingAnimations.spread].Reset();
-                                    }
+                                    rightWingAnimation = WingAnimations.spread;
+                                    leftWingAnimation = WingAnimations.spread;
+                                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                                    leftWingAnimations[(int)leftWingAnimation].Reset();
                                     break;
                                 }
                                 if (FireBallsManager.NumberOfActiveFireballs > 0 || LavaGeyserManager.ActiveLavaGeysers > 0)
@@ -402,16 +473,20 @@ namespace _999AD
                                         FireBallsManager.TrowWithinCircularSector(
                                             (int)(angle / 6),
                                             FireBall.radialShootingVelocity * 0.8f,
-                                            (float)(1.5 + rand.NextDouble()),
+                                            (float)(0.4 + 0.2*rand.NextDouble()),
                                             angle);
                                         bossAnimation = BossAnimations.attack;
                                         bossAnimations[(int)BossAnimations.attack].Reset();
+                                        rightWingAnimations[(int)rightWingAnimation].Reset();
+                                        leftWingAnimations[(int)leftWingAnimation].Reset();
                                     }
                                     else
                                     {
-                                        FireBallsManager.RandomSweep((float)(1 + rand.NextDouble()), 4, 5);
+                                        FireBallsManager.RandomSweep((float)(1+0.5*rand.NextDouble()), 4, 5);
                                         bossAnimation = BossAnimations.attack;
                                         bossAnimations[(int)BossAnimations.attack].Reset();
+                                        rightWingAnimations[(int)rightWingAnimation].Reset();
+                                        leftWingAnimations[(int)leftWingAnimation].Reset();
                                     }
                                 }
                                 else if (attack == 1)
@@ -420,10 +495,10 @@ namespace _999AD
                                     int[] platforms = new int[num];
                                     for (int i = 0; i < num; i++)
                                     {
-                                        int nextPlatform = rand.Next(PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length);
+                                        int nextPlatform = rand.Next(PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length-1);
                                         while (platforms.Contains(nextPlatform))
                                         {
-                                            nextPlatform = (nextPlatform + 1) % PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length;
+                                            nextPlatform = (nextPlatform + 1) % (PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length-1);
                                         }
                                         platforms[i] = nextPlatform;
                                     }
@@ -434,40 +509,50 @@ namespace _999AD
                                         FireBallsManager.ThrowAtPlayer(6, (float)(1 + rand.NextDouble()), 0.5f);
                                         bossAnimation = BossAnimations.attack;
                                         bossAnimations[(int)BossAnimations.attack].Reset();
+                                        rightWingAnimations[(int)rightWingAnimation].Reset();
+                                        leftWingAnimations[(int)leftWingAnimation].Reset();
                                     }
                                     else if (attack == 1)
                                     {
                                         FireBallsManager.ThrowInAllDirections(6, FireBall.radialShootingVelocity, (float)(0.5 + rand.NextDouble()));
                                         bossAnimation = BossAnimations.attack;
                                         bossAnimations[(int)BossAnimations.attack].Reset();
+                                        rightWingAnimations[(int)rightWingAnimation].Reset();
+                                        leftWingAnimations[(int)leftWingAnimation].Reset();
                                     }
                                     else
                                     {
                                         FireBallsManager.TrowWithinCircularSector(
                                             20,
                                             FireBall.radialShootingVelocity * 0.8f,
-                                            (float)(0.5 + rand.NextDouble()),
+                                            (float)(0.5 + 0.1*rand.NextDouble()),
                                             120);
                                         bossAnimation = BossAnimations.attack;
                                         bossAnimations[(int)BossAnimations.attack].Reset();
+                                        rightWingAnimations[(int)rightWingAnimation].Reset();
+                                        leftWingAnimations[(int)leftWingAnimation].Reset();
                                     }
                                 }
                                 else if (attack == 2)
                                 {
-                                    FireBallsManager.Spiral(30, 10, MathHelper.Lerp(0.5f, 1.5f, (float)bossHP / maxBossHp), FireBall.radialShootingVelocity * 0.8f);
+                                    FireBallsManager.Spiral(30, 20, MathHelper.Lerp(0.3f, 0.5f, (float)bossHP / maxBossHp), FireBall.radialShootingVelocity * 0.4f);
                                     bossAnimation = BossAnimations.attack;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
+                                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                                    leftWingAnimations[(int)leftWingAnimation].Reset();
                                 }
                                 else
                                 {
                                     if ((float)bossHP / maxBossHp < 0.3f)
-                                        LavaGeyserManager.EquallySpaced(LavaGeyser.size * 1.5f, 2, 0);
+                                        LavaGeyserManager.EquallySpaced(LavaGeyser.size * 7, 2, 0);
                                     else
                                         LavaGeyserManager.ShootGeyser(
                                         new float[] { rand.Next((int)fireballsCenter.X - 350, (int)fireballsCenter.X + 350) },
                                         3);
                                     bossAnimation = BossAnimations.attack;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
+                                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                                    leftWingAnimations[(int)leftWingAnimation].Reset();
                                 }
                                 break;
                             }
@@ -475,19 +560,14 @@ namespace _999AD
                             {
                                 if (bossHP <= 0)
                                 {
-                                    bossAnimation = BossAnimations.recovering;
+                                    bossAnimation = BossAnimations.startRecovering;
+                                    bossAnimations[(int)BossAnimations.startRecovering].Reset();
                                     LavaGeyserManager.Reset();
                                     FireBallsManager.Reset();
-                                    if (rightWingHP > 0)
-                                    {
-                                        rightWingAnimation = WingAnimations.spread;
-                                        wingAnimations[(int)WingAnimations.spread].Reset();
-                                    }
-                                    if (leftWingHP > 0)
-                                    {
-                                        leftWingAnimation = WingAnimations.spread;
-                                        wingAnimations[(int)WingAnimations.spread].Reset();
-                                    }
+                                    rightWingAnimation = WingAnimations.spread;
+                                    leftWingAnimation = WingAnimations.spread;
+                                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                                    leftWingAnimations[(int)leftWingAnimation].Reset();
                                     break;
                                 }
                                 if (FireBallsManager.NumberOfActiveFireballs > 0 || LavaGeyserManager.ActiveLavaGeysers > 0)
@@ -498,36 +578,41 @@ namespace _999AD
                                     LavaGeyserManager.SweepAcross(
                                         1,
                                         0.5f,
-                                        (int)MathHelper.Lerp(2, 4, (float)bossHP / maxBossHp),
+                                        (int)MathHelper.Lerp(4, 10, (float)bossHP / maxBossHp),
                                         244,
                                         524,
                                         rand.Next(2) == 0);
                                     bossAnimation = BossAnimations.attack;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
+                                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                                    leftWingAnimations[(int)leftWingAnimation].Reset();
                                 }
                                 else if (attack == 1)
                                 {
-                                    float distance = LavaGeyser.size * MathHelper.Lerp(2, 3, (float)bossHP / maxBossHp);
-                                    LavaGeyserManager.EquallySpaced(distance, 2, distance * (float)rand.NextDouble());
+                                    LavaGeyserManager.EquallySpaced(LavaGeyser.size *6, 2, LavaGeyser.size * 6 * (float)rand.NextDouble());
                                     bossAnimation = BossAnimations.attack;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
+                                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                                    leftWingAnimations[(int)leftWingAnimation].Reset();
                                 }
                                 else if (attack == 2)
                                 {
                                     int[] platforms = new int[2];
                                     for (int i = 0; i < 2; i++)
                                     {
-                                        int nextPlatform = rand.Next(PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length);
+                                        int nextPlatform = rand.Next(PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length-1);
                                         while (platforms.Contains(nextPlatform))
                                         {
-                                            nextPlatform = (nextPlatform + 1) % PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length;
+                                            nextPlatform = (nextPlatform + 1) % (PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length-1);
                                         }
                                         platforms[i] = nextPlatform;
                                     }
                                     FireBallsManager.TargetPlatform(platforms, 6, 5);
-                                    FireBallsManager.Spiral(30, 10, 1, FireBall.radialShootingVelocity * 0.8f);
+                                    FireBallsManager.Spiral(30, 20, 0.3f, FireBall.radialShootingVelocity * 0.4f);
                                     bossAnimation = BossAnimations.attack;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
+                                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                                    leftWingAnimations[(int)leftWingAnimation].Reset();
                                 }
                                 else
                                 {
@@ -538,47 +623,62 @@ namespace _999AD
                                         FireBallsManager.ThrowAtPlayer(
                                             (int)MathHelper.Lerp(3, 7, 1 - (float)bossHP / maxBossHp),
                                             1.5f,
-                                            2);
+                                            1);
                                     }
                                     else if (attack == 2)
                                     {
                                         FireBallsManager.ThrowInAllDirections(
                                             (int)MathHelper.Lerp(3, 7, 1 - (float)bossHP / maxBossHp),
                                             FireBall.radialShootingVelocity,
-                                            2);
+                                            1);
                                     }
                                     else
                                     {
-                                        FireBallsManager.Sweep(1, 8);
+                                        FireBallsManager.Sweep(0.5f, 5);
                                     }
                                     bossAnimation = BossAnimations.attack;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
+                                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                                    leftWingAnimations[(int)leftWingAnimation].Reset();
                                 }
                                 break;
                             }
                     }
                     break;
                 case BossAnimations.attack:
+                    elapsedAttackAnimationTime += elapsedTime;
+                    if (elapsedAttackAnimationTime>= attackAnimationTime)
                     {
-                        bossMidPoint.Y = bossInitialMidPoint.Y+5;
-                        break;
+                        elapsedAttackAnimationTime = 0;
+                        bossAnimation = BossAnimations.idle;
+                        bossAnimations[(int)BossAnimations.endRecovering].Reset();
+                        rightWingAnimations[(int)rightWingAnimation].Reset();
+                        leftWingAnimations[(int)leftWingAnimation].Reset();
                     }
+                    break;
+                case BossAnimations.startRecovering:
+                    break;
                 case BossAnimations.recovering:
                     {
                         elapsedRecoveryTime += elapsedTime;
                         if(elapsedRecoveryTime>= recoveryTime)
                         {
-                            bossAnimation = BossAnimations.idle;
-                            if (rightWingAnimation != WingAnimations.idle)
+                            bossAnimation = BossAnimations.endRecovering;
+                            if (rightWingHP>0)
                             {
                                 rightWingAnimation = WingAnimations.withdraw;
-                                wingAnimations[(int)rightWingAnimation].Reset();
                             }
-                            if (leftWingAnimation != WingAnimations.idle)
+                            else
+                                rightWingAnimation = WingAnimations.withdrawDead;
+                            if (leftWingHP>0)
                             {
                                 leftWingAnimation = WingAnimations.withdraw;
-                                wingAnimations[(int)leftWingAnimation].Reset();
                             }
+                            else
+                                leftWingAnimation = WingAnimations.withdrawDead;
+                            bossAnimations[(int)BossAnimations.endRecovering].Reset();
+                            rightWingAnimations[(int)rightWingAnimation].Reset();
+                            leftWingAnimations[(int)leftWingAnimation].Reset();
                             elapsedRecoveryTime = 0;
                             bossHP = maxBossHp / 2;
                             break;
@@ -592,18 +692,23 @@ namespace _999AD
                                     bossHP = maxBossHp;
                                     elapsedRecoveryTime = 0;
                                     currentPhase = Phases.two;
-                                    bossAnimation = BossAnimations.attack;
-                                    if (rightWingAnimation != WingAnimations.idle)
+                                    bossAnimation = BossAnimations.endRecovering;
+                                    if (rightWingHP > 0)
                                     {
                                         rightWingAnimation = WingAnimations.withdraw;
-                                        wingAnimations[(int)rightWingAnimation].Reset();
                                     }
-                                    if (leftWingAnimation != WingAnimations.idle)
+                                    else
+                                        rightWingAnimation = WingAnimations.withdrawDead;
+                                    if (leftWingHP > 0)
                                     {
                                         leftWingAnimation = WingAnimations.withdraw;
-                                        wingAnimations[(int)leftWingAnimation].Reset();
                                     }
+                                    else
+                                        leftWingAnimation = WingAnimations.withdrawDead;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
+                                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                                    leftWingAnimations[(int)leftWingAnimation].Reset();
+
                                     FireBallsManager.AddGhostFireball(3);
                                 }
                                 break;
@@ -613,19 +718,23 @@ namespace _999AD
                                     bossHP = maxBossHp;
                                     elapsedRecoveryTime = 0;
                                     currentPhase = Phases.three;
-                                    bossAnimation = BossAnimations.attack;
-                                    if (rightWingAnimation != WingAnimations.idle)
+                                    bossAnimation = BossAnimations.endRecovering;
+                                    if (rightWingHP > 0)
                                     {
                                         rightWingAnimation = WingAnimations.withdraw;
-                                        wingAnimations[(int)rightWingAnimation].Reset();
                                     }
-                                    if (leftWingAnimation != WingAnimations.idle)
+                                    else
+                                        rightWingAnimation = WingAnimations.withdrawDead;
+                                    if (leftWingHP > 0)
                                     {
                                         leftWingAnimation = WingAnimations.withdraw;
-                                        wingAnimations[(int)leftWingAnimation].Reset();
                                     }
+                                    else
+                                        leftWingAnimation = WingAnimations.withdrawDead;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
-                                    FireBallsManager.ThrowAtPlayer(20,2,0.2f);
+                                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                                    leftWingAnimations[(int)leftWingAnimation].Reset();
+                                    FireBallsManager.ThrowAtPlayer(20,2,0.1f);
                                 }
                                 break;
                             case Phases.three:
@@ -634,36 +743,42 @@ namespace _999AD
                                     bossHP = maxBossHp;
                                     elapsedRecoveryTime = 0;
                                     currentPhase = Phases.four;
-                                    bossAnimation = BossAnimations.attack;
-                                    if (rightWingAnimation != WingAnimations.idle)
+                                    bossAnimation = BossAnimations.endRecovering;
+                                    if (rightWingHP > 0)
                                     {
                                         rightWingAnimation = WingAnimations.withdraw;
-                                        wingAnimations[(int)rightWingAnimation].Reset();
                                     }
-                                    if (leftWingAnimation != WingAnimations.idle)
+                                    else
+                                        rightWingAnimation = WingAnimations.withdrawDead;
+                                    if (leftWingHP > 0)
                                     {
                                         leftWingAnimation = WingAnimations.withdraw;
-                                        wingAnimations[(int)leftWingAnimation].Reset();
                                     }
+                                    else
+                                        leftWingAnimation = WingAnimations.withdrawDead;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
-                                    LavaGeyserManager.SweepAcross(1,0.2f, 100, 244, 524, true);
-                                    LavaGeyserManager.SweepAcross(6,0.2f, 100, 244, 524, false);
+                                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                                    leftWingAnimations[(int)leftWingAnimation].Reset();
+                                    LavaGeyserManager.SweepAcross(1,0f, 100, 159, 609, true);
                                 }
                                 break;
                             case Phases.four:
                                 if (rightWingHP + leftWingHP == 0)
                                 {
-                                    if (rightWingAnimation != WingAnimations.idle)
+                                    if (Player.CollisionRectangle.Right > bossMidPoint.X)
                                     {
                                         rightWingAnimation = WingAnimations.withdraw;
-                                        wingAnimations[(int)rightWingAnimation].Reset();
+                                        leftWingAnimation = WingAnimations.withdrawDead;
                                     }
-                                    if (leftWingAnimation != WingAnimations.idle)
+                                    else
                                     {
+                                        rightWingAnimation = WingAnimations.withdrawDead;
                                         leftWingAnimation = WingAnimations.withdraw;
-                                        wingAnimations[(int)leftWingAnimation].Reset();
                                     }
                                     bossAnimation = BossAnimations.falling;
+                                    bossAnimations[(int)BossAnimations.attack].Reset();
+                                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                                    leftWingAnimations[(int)leftWingAnimation].Reset();
                                     elapsedRecoveryTime = 0;
                                     FireBallsManager.Reset();
                                     LavaGeyserManager.Reset();
@@ -672,6 +787,8 @@ namespace _999AD
                         }
                         break;
                     }
+                case BossAnimations.endRecovering:
+                    break;
                 case BossAnimations.falling:
                     {
                         bossMidPoint.Y += YSpeed * elapsedTime;
@@ -684,7 +801,7 @@ namespace _999AD
                     }
             }
         }
-        public static void DamageWing(bool rightWing)
+        public static bool DamageWing(bool rightWing)
         {
             if (rightWing)
             {
@@ -695,6 +812,7 @@ namespace _999AD
                         rightWingTexture = WingTextures.damaged;
                     else if (rightWingHP == 0)
                         rightWingTexture = WingTextures.dead;
+                    return true;
                 }
             }
             else
@@ -706,9 +824,10 @@ namespace _999AD
                         leftWingTexture = WingTextures.damaged;
                     else if (leftWingHP == 0)
                         leftWingTexture = WingTextures.dead;
+                    return true;
                 }
             }
-
+            return false;
         }
         public static bool WingHitByReactangle(Rectangle collisionRect, float yVelocity, float elapsedTime)
         {
@@ -716,23 +835,21 @@ namespace _999AD
                 return false;
             Rectangle spaceSpanned;
             spaceSpanned = new Rectangle(collisionRect.X,
-                                             (int)(collisionRect.Y - yVelocity * elapsedTime),
+                                             (int)(collisionRect.Bottom - yVelocity * elapsedTime),
                                              collisionRect.Width,
                                              (int)(yVelocity * elapsedTime));
-            if (rightWingAnimation == WingAnimations.flap)
+            if (rightWingAnimation == WingAnimations.flap && rightWingHP>0)
             {
                 if (RightWingCollisionRectangle.Intersects(spaceSpanned))
                 {
-                    DamageWing(true);
-                    return true;
+                    return DamageWing(true);
                 }
             }
-            if (leftWingAnimation == WingAnimations.flap)
+            if (leftWingAnimation == WingAnimations.flap && leftWingHP>0)
             {
                 if (LeftWingCollisionRectangle.Intersects(spaceSpanned))
                 {
-                    DamageWing(false);
-                    return true;
+                    return DamageWing(false);
                 }
             }
             return false;
@@ -754,9 +871,13 @@ namespace _999AD
         {
             if (dead)
                 return;
-            spriteBatch.Draw(wingSpritesheets[(int)rightWingTexture], Camera.RelativeRectangle(RightWingDrawRectangle), wingAnimations[(int)rightWingAnimation].Frame, Color.White);
-            spriteBatch.Draw(wingSpritesheets[(int)leftWingTexture], Camera.RelativeRectangle(LeftWingDrawRectangle), wingAnimations[(int)leftWingAnimation].Frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 1); ;
-            spriteBatch.Draw(bossSpritesheet, Camera.RelativeRectangle(BossDrawRectangle), bossAnimations[(int)bossAnimation].Frame, bossColor);
+            spriteBatch.Draw(wingSpritesheets[(int)rightWingTexture], Camera.RelativeRectangle(RightWingDrawRectangle), rightWingAnimations[(int)rightWingAnimation].Frame, Color.White);
+            spriteBatch.Draw(wingSpritesheets[(int)leftWingTexture], Camera.RelativeRectangle(LeftWingDrawRectangle), leftWingAnimations[(int)leftWingAnimation].Frame, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 1); ;
+            spriteBatch.Draw(bossSpritesheet,
+                Camera.RelativeRectangle(BossDrawRectangle),
+                bossAnimations[(int)bossAnimation].Frame, bossColor, 0,
+                Vector2.Zero,
+                (Player.position.X<bossMidPoint.X || bossAnimation== BossAnimations.stone)?SpriteEffects.None: SpriteEffects.FlipHorizontally, 0);
             if (frameCount >= framesOfDifferentColor)
             {
                 frameCount = 0;

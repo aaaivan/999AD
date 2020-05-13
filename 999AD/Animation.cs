@@ -87,6 +87,10 @@ namespace _999AD
                 }
             }
         }
+        public bool IsLastFrame()
+        {
+            return currentFrame == totalFrames - 1;
+        }
         public void Reset()
         {
             elapsedFrameTime = 0;

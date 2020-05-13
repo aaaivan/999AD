@@ -21,10 +21,14 @@ namespace _999AD
         }
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        public static readonly  int gameWidth = 1920/5; //pixels on the x axis
-        public static readonly int gameHeight = 1080/5; //pixels on the y axis
+        public static readonly int min_gameWidth = 1920 / 5; //pixels on the x axis
+        public static readonly int min_gameHeight = 1080 / 5; //pixels on the y axis
+        public static  int gameWidth; //pixels on the x axis
+        public static int gameHeight; //pixels on the y axis
         public static Rectangle viewportRectangle;
-        RenderTarget2D nativeRenderTarget;
+        static RenderTarget2D nativeRenderTarget;
+        static RenderTarget2D renderTarget_zoom1;
+        static RenderTarget2D renderTarger_zoom0dot5;
         public static int scale;
         public static KeyboardState previousKeyboard;
         public static KeyboardState currentKeyboard;
@@ -59,6 +63,8 @@ namespace _999AD
         {
             // TODO: Add your initialization logic here
             this.IsMouseVisible = true;
+            gameWidth = min_gameWidth;
+            gameHeight = min_gameHeight;
 #if LEVEL_EDITOR
             mouseState = Mouse.GetState();
             previousMouseState = mouseState;
@@ -75,7 +81,9 @@ namespace _999AD
 #else
             scale = MathHelper.Min(GraphicsDevice.DisplayMode.Width / gameWidth, GraphicsDevice.DisplayMode.Height / gameHeight);
             //scale = 1;
-            nativeRenderTarget = new RenderTarget2D(GraphicsDevice, gameWidth, gameHeight);
+            renderTarget_zoom1 = new RenderTarget2D(GraphicsDevice, gameWidth, gameHeight);
+            renderTarger_zoom0dot5 = new RenderTarget2D(GraphicsDevice, gameWidth*2, gameHeight*2);
+            nativeRenderTarget = renderTarget_zoom1;
             viewportRectangle = new Rectangle(
                 0,
                 0,
@@ -163,7 +171,7 @@ namespace _999AD
             );
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
             ProjectilesManager.Inizialize(Content.Load<Texture2D>("projectile"));
-            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(800,44));
+            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(900,44));
             RoomsManager.Inizialize();
             GameEvents.Inizialize();
             FireBallsManager.Inizialize(Content.Load<Texture2D>("fireball"), Content.Load<Texture2D>("laser"));
@@ -193,7 +201,20 @@ namespace _999AD
         {
             // TODO: Unload any non ContentManager content here
         }
-
+        public static void Zoom0Dot5()
+        {
+            gameWidth = min_gameWidth * 2;
+            gameHeight = min_gameHeight * 2;
+            nativeRenderTarget = renderTarger_zoom0dot5;
+            CameraManager.SwitchCamera(RoomsManager.CurrentRoom);
+        }
+        public static void Zoom1()
+        {
+            gameWidth = min_gameWidth;
+            gameHeight = min_gameHeight;
+            nativeRenderTarget = renderTarget_zoom1;
+            CameraManager.SwitchCamera(RoomsManager.CurrentRoom);
+        }
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -227,6 +248,7 @@ namespace _999AD
                     PlayerDeathManager.Update(elapsedTime);
                     break;
             }
+
 #endif
             previousKeyboard = currentKeyboard;
             base.Update(gameTime);
@@ -261,7 +283,7 @@ namespace _999AD
             //spriteBatch.Draw(white, Camera.RelativeRectangle(Player.CollisionRectangle), Color.Green);
             //MouseState mouseState = Mouse.GetState();
             //spriteBatch.DrawString(spriteFont, (mouseState.X / 5 + (int)Camera.position.X) + "," + (mouseState.Y / 5 + (int)Camera.position.Y), new Vector2(10, 10), Color.Blue);
-            spriteBatch.DrawString(spriteFont, Player.position.X + "," + Player.position.Y, new Vector2(10, 10), Color.Blue);
+            //spriteBatch.DrawString(spriteFont, Player.position.X + "," + Player.position.Y, new Vector2(10, 10), Color.Blue);
             //spriteBatch.DrawString(spriteFont, Player.healthPoints+"", new Vector2(10, 10), Color.Blue);
             //</debug>
 
