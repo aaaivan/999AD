@@ -168,7 +168,7 @@ namespace _999AD
             {
                 //Space to Shoot / Controller - B to Shoot
                 if ((Game1.currentKeyboard.IsKeyDown(Keys.Space) && !Game1.previousKeyboard.IsKeyDown(Keys.Space))||
-                    (Game1.currentGamePad.Buttons.B==ButtonState.Pressed))
+                    (Game1.currentGamePad.Buttons.B==ButtonState.Pressed && Game1.previousGamePad.Buttons.B == ButtonState.Released))
                 {
                     ProjectilesManager.ShootPlayerProjectile(isFacingRight ? (position + new Vector2(width, 0)) : position, ProjectileInitialVelocity);
                     elapsedShotTime = 0;
@@ -188,7 +188,8 @@ namespace _999AD
                 currentAnimation = AnimationTypes.walk;*/
 
             //W to Jump / Controller - A to Jump
-            if ((Game1.currentKeyboard.IsKeyDown(Keys.W) && !Game1.previousKeyboard.IsKeyDown(Keys.W)) || (Game1.currentGamePad.Buttons.A == ButtonState.Pressed))
+            if ((Game1.currentKeyboard.IsKeyDown(Keys.W) && !Game1.previousKeyboard.IsKeyDown(Keys.W)) ||
+                (Game1.currentGamePad.Buttons.A == ButtonState.Pressed && Game1.previousGamePad.Buttons.A == ButtonState.Released))
             {
                 if (isTouchingTheGround)
                 {
