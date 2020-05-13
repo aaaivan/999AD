@@ -27,7 +27,7 @@ namespace _999AD
         #region CONSTRUCTOR
         public static void Inizialize()
         {
-            currentRoom = Rooms.tutorial0;
+            currentRoom = Rooms.finalBoss;
             previousRoom = Rooms.tutorial4;
             CameraManager.SwitchCamera(currentRoom);
         }
@@ -458,6 +458,7 @@ namespace _999AD
                     {//move to finalBoss
                         currentRoom = Rooms.finalBoss;
                         previousRoom = Rooms.descent;
+                        Game1.Zoom0Dot5();
                         CameraManager.SwitchCamera(Rooms.finalBoss);
                         Player.position.Y = 0;
                         Player.position.X += MapsManager.maps[(int)currentRoom].RoomWidthtPx - MapsManager.maps[(int)Rooms.descent].RoomWidthtPx;
@@ -471,6 +472,7 @@ namespace _999AD
                     {//move to escape0
                         currentRoom = Rooms.escape0;
                         previousRoom = Rooms.finalBoss;
+                        Game1.Zoom1();
                         CameraManager.SwitchCamera(Rooms.escape0);
                         Player.position.X = MapsManager.maps[(int)currentRoom].RoomWidthtPx-Player.width;
                         FireBallsManager.Reset();
@@ -481,6 +483,7 @@ namespace _999AD
                     {//move to descent
                         currentRoom = Rooms.descent;
                         previousRoom = Rooms.finalBoss;
+                        Game1.Zoom1();
                         CameraManager.SwitchCamera(Rooms.descent);
                         Player.position.Y = MapsManager.maps[(int)currentRoom].RoomHeightPx - Player.height;
                         Player.position.X += MapsManager.maps[(int)currentRoom].RoomWidthtPx - MapsManager.maps[(int)Rooms.finalBoss].RoomWidthtPx;
@@ -498,6 +501,7 @@ namespace _999AD
                     {//move to finalBoss
                         currentRoom = Rooms.finalBoss;
                         previousRoom = Rooms.escape0;
+                        Game1.Zoom0Dot5();
                         CameraManager.SwitchCamera(Rooms.finalBoss);
                         Player.position.X = 0;
                         FireBallsManager.Reset();

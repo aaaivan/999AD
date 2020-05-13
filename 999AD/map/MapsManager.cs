@@ -64,14 +64,14 @@ namespace _999AD
                 catch (IOException)
                 {
                     maps[room] = new RoomMap(
-                        (Game1.gameHeight + 2 * CameraManager.maxOffsetY + (int)(Tile.tileSize * CameraManager.scaleByRoom[room]) - 1) / (int)(Tile.tileSize * CameraManager.scaleByRoom[room]),
-                        (Game1.gameWidth + (int)(Tile.tileSize * CameraManager.scaleByRoom[room]) - 1) / (int)(Tile.tileSize * CameraManager.scaleByRoom[room]));
+                        (Game1.gameHeight + 2 * CameraManager.maxOffsetY + (int)(Tile.tileSize ) - 1) / (int)(Tile.tileSize ),
+                        (Game1.gameWidth + (int)(Tile.tileSize) - 1) / (int)(Tile.tileSize ));
                 }
                 catch (System.ArgumentOutOfRangeException)
                 {
                     maps[room] = new RoomMap(
-                        (Game1.gameHeight + 2* CameraManager.maxOffsetY + (int)(Tile.tileSize * CameraManager.scaleByRoom[room]) - 1) / (int)(Tile.tileSize * CameraManager.scaleByRoom[room]),
-                        (Game1.gameWidth + (int)(Tile.tileSize * CameraManager.scaleByRoom[room]) - 1) / (int)(Tile.tileSize * CameraManager.scaleByRoom[room]));
+                        (Game1.gameHeight + 2* CameraManager.maxOffsetY + (int)(Tile.tileSize) - 1) / (int)(Tile.tileSize),
+                        (Game1.gameWidth + (int)(Tile.tileSize ) - 1) / (int)(Tile.tileSize ));
                 }
             }
         }

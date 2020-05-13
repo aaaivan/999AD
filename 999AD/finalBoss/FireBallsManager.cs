@@ -53,7 +53,7 @@ namespace _999AD
         public static void ThrowAtPlayer(int amount, float angularVelocity, float timeBtweenShots)
         {
             for (int i =0; i<amount; i++)
-            fireballs.Add(new FireBall(360f/amount*i, new float[] { 20,0, 0, FireBall.radialShootingVelocity }, new float[] { angularVelocity, angularVelocity, angularVelocity,0 }, new float[] { 2,timeBtweenShots*i,3,4 }, true));
+            fireballs.Add(new FireBall(360f/amount*i, new float[] { 20,0, 0, FireBall.radialShootingVelocity }, new float[] { angularVelocity, angularVelocity, angularVelocity,0 }, new float[] { 2,2+timeBtweenShots*i,5,4 }, true));
         }
         public static void ThrowInAllDirections(int amount, float shotVelocity, float angularVelocity)
         {
@@ -80,11 +80,11 @@ namespace _999AD
         {
             int angle = rand.Next(0, 360);
             int sign = 1 - 2 * rand.Next(0, 2);
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 15; i++)
                 fireballs.Add(new FireBall(angle,
-                    new float[] { 0,0,100, 0}, 
-                    new float[] { 0,0,0, sign*angularVelocity}, 
-                    new float[] { 0.2f*i,0.2f*i,5-0.4f*i, lifetime }));
+                    new float[] { 0,100, 0}, 
+                    new float[] { 0,0, sign*angularVelocity}, 
+                    new float[] { 0.2f*i,3-0.2f*i, lifetime }));
         }
         public static void RandomSweep(float angularVelocity, float maxTimeWithoutInverion, int numberOfInversions)
         {
@@ -100,11 +100,11 @@ namespace _999AD
                 sign *= -1;
                 radialVel[i] = 0;
             }
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 15; i++)
                 fireballs.Add(new FireBall(angle,
-                    new float[] { 0, 0, 100}.Concat(radialVel).ToArray(),
-                    new float[] { 0, 0, 0}.Concat(angularVel).ToArray(),
-                    new float[] { 0.2f * i, 0.2f * i, 5 - 0.4f * i}.Concat(times).ToArray()
+                    new float[] { 0, 100}.Concat(radialVel).ToArray(),
+                    new float[] { 0, 0}.Concat(angularVel).ToArray(),
+                    new float[] { 0.2f * i, 3 - 0.2f * i}.Concat(times).ToArray()
                     ));
         }
         public static void Spiral(int amount, float angleOffset, float timeBetweenShots, float shotVelocity)

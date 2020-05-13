@@ -77,8 +77,8 @@ namespace _999AD
         {
             int tileRow = 0;
             int tileCol = 0;
-            tileCol = ((int)(mouseState.X/(CameraManager.scaleByRoom[currentRoomNumber]*Game1.scale)) + Camera.Rectangle.X) / Tile.tileSize;
-            tileRow = ((int)(mouseState.Y / (CameraManager.scaleByRoom[currentRoomNumber] * Game1.scale)) + Camera.Rectangle.Y) / Tile.tileSize;
+            tileCol = ((int)(mouseState.X/(Game1.scale)) + Camera.Rectangle.X) / Tile.tileSize;
+            tileRow = ((int)(mouseState.Y / (Game1.scale)) + Camera.Rectangle.Y) / Tile.tileSize;
             tileCol = MathHelper.Clamp(tileCol, 0, MapsManager.maps[currentRoomNumber].roomWidthTiles - 1);
             tileRow = MathHelper.Clamp(tileRow, 0, MapsManager.maps[currentRoomNumber].roomHeightTiles - 1);
             return new Point(tileCol, tileRow);
@@ -365,12 +365,12 @@ namespace _999AD
                         widthTiles =int.Parse(arr[0]);
                         widthTiles = MathHelper.Clamp(
                             widthTiles,
-                            (Game1.gameWidth + (int)(Tile.tileSize* CameraManager.scaleByRoom[currentRoomNumber]) -1)/ (int)(Tile.tileSize * CameraManager.scaleByRoom[currentRoomNumber]),
+                            (Game1.gameWidth + (int)(Tile.tileSize) -1)/ (int)(Tile.tileSize),
                             500);
                         heightTiles = int.Parse(arr[1]);
                         heightTiles = MathHelper.Clamp(
                             heightTiles,
-                            (Game1.gameHeight + 2 * CameraManager.maxOffsetY + (int)(Tile.tileSize * CameraManager.scaleByRoom[currentRoomNumber]) - 1) / (int)(Tile.tileSize * CameraManager.scaleByRoom[currentRoomNumber]),
+                            (Game1.gameHeight + 2 * CameraManager.maxOffsetY + (int)(Tile.tileSize) - 1) / (int)(Tile.tileSize),
                             500);
                         menu = MenuState.pickResizingDirection;
                         userInputString = "U,R";
@@ -502,11 +502,11 @@ namespace _999AD
                 if (Game1.currentKeyboard.IsKeyDown(Keys.Left))
                     CameraManager.pointLocked.X -= 10;
                 CameraManager.pointLocked.X = MathHelper.Clamp(CameraManager.pointLocked.X,
-                                Game1.gameWidth / (2f * Camera.Scale),
-                                MapsManager.maps[currentRoomNumber].RoomWidthtPx - Game1.gameWidth / (2f * Camera.Scale));
+                                Game1.gameWidth / (2f),
+                                MapsManager.maps[currentRoomNumber].RoomWidthtPx - Game1.gameWidth / (2f ));
                 CameraManager.pointLocked.Y = MathHelper.Clamp(CameraManager.pointLocked.Y,
-                                Game1.gameHeight / (2f * Camera.Scale),
-                                MapsManager.maps[currentRoomNumber].RoomHeightPx - Game1.gameHeight / (2f * Camera.Scale));
+                                Game1.gameHeight / (2f),
+                                MapsManager.maps[currentRoomNumber].RoomHeightPx - Game1.gameHeight / (2f));
 
                 if (mouseState.X >= 0 && mouseState.X < Game1.gameWidth*Game1.scale &&
                     mouseState.Y >= 0 && mouseState.Y < Game1.gameHeight * Game1.scale)

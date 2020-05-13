@@ -14,7 +14,7 @@ namespace _999AD
         #region DECLARATIONS
         static Texture2D spritesheet;
         public static readonly int size = 10;
-        public static readonly float radialShootingVelocity = 600;
+        public static readonly float radialShootingVelocity = 400;
         public static readonly float shotLifeTime = 3;
         Vector2 rotationCenter;
         Animation animation;

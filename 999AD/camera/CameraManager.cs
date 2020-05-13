@@ -13,27 +13,6 @@ namespace _999AD
     {
         #region DECLARATIONS
         static Texture2D[] backgrounds;
-        public static readonly float[] scaleByRoom = new float[(int)RoomsManager.Rooms.total]
-        {
-            1, //tutorial0
-            1, //tutorial1
-            1, //tutorial2
-            1, //tutorial3
-            1, //tutorial4
-            1, //churchBellTower0
-            1, //churchBellTower1
-            1, //churchBellTower2
-            1, //midBoss
-            1, //churchGroundFloor0
-            1, //churchAltarRoom
-            1, //church1stFloor0
-            1, //church2ndFloor0
-            1, //finalBoss
-            0.625f, //finalBoss
-            1, //escape0
-            1, //escape1
-            1 //escape2
-        };
         public static readonly int maxOffsetY = 2; //amplitude of the rumble
         static bool shaking;
         static int offsetY; //current offset
@@ -73,7 +52,7 @@ namespace _999AD
             playerPositionWeight = _playerPositionWeight;
             transientPlayerPositionWeight = playerPositionWeight;
             cameraTransitionProgression = 1;
-            Camera.Inizialize(backgrounds[(int)room], room, scaleByRoom[(int)room]);
+            Camera.Inizialize(backgrounds[(int)room], room);
         }
         //makes the camera shake for the time (in seconds) passed to the function as parameter
         public static void shakeForTime(float _shakingTime)
