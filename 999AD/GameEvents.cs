@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace _999AD
 {
@@ -11,6 +14,10 @@ namespace _999AD
         public enum Events
         {
             none,
+            activateMovingPlatforms_churchGroundFloor0, resetMovingPlatforms_churchGroundFloor0,
+
+            showInvisibleTiles_church1stFloor0, hide_InvisibleTiles_church1stFloor0,
+
             terrainCollapseFinalBoss, finalBossComesAlive, activatePlatformsFinalBoss, escapeFinalBossRoom,
 
             lavaEruption1_escape0, lowerFloor1_escape0, removeFloor1_escape0,
@@ -25,6 +32,8 @@ namespace _999AD
         public static readonly float[] eventsDuration = new float[(int)Events.total]
         {
             0,
+            0,0,
+            0,0,
             2, 4, 0, 0,
             0, 3.1f, 0,
             2.5f, 1f, 0,
@@ -109,6 +118,28 @@ namespace _999AD
         {
             switch (RoomsManager.CurrentRoom)
             {
+                case RoomsManager.Rooms.churchGroundFloor0:
+                    if (Player.position.X >= 88 - Player.width && Player.position.Y < 178)
+                    {
+                        if (Player.IsOnMovingPlatform && !eventAlreadyHappened[(int)Events.activateMovingPlatforms_churchGroundFloor0])
+                            TriggerEvent(Events.activateMovingPlatforms_churchGroundFloor0);
+                    }
+                    else if (!eventAlreadyHappened[(int)Events.resetMovingPlatforms_churchGroundFloor0])
+                        TriggerEvent(Events.resetMovingPlatforms_churchGroundFloor0);
+                    break;
+                case RoomsManager.Rooms.church1stFloor0:
+                    if ((Player.position.X < 1032 && Player.position.X >= 1000) ||
+                        (Player.position.X < 684 && Player.position.X >= 664) ||
+                        (Player.position.X < 364 && Player.position.X >= 344 && Player.position.Y>106))
+                    {
+                        if (!eventAlreadyHappened[(int)Events.showInvisibleTiles_church1stFloor0])
+                        {
+                            TriggerEvent(Events.showInvisibleTiles_church1stFloor0);
+                        }
+                    }
+                    else if (!eventAlreadyHappened[(int)Events.hide_InvisibleTiles_church1stFloor0])
+                        TriggerEvent(Events.hide_InvisibleTiles_church1stFloor0);
+                    break;
                 case RoomsManager.Rooms.finalBoss:
                     if (Player.position.X <= 200 && !eventAlreadyHappened[(int)Events.terrainCollapseFinalBoss])
                         TriggerEvent(Events.terrainCollapseFinalBoss);
@@ -163,7 +194,66 @@ namespace _999AD
         }
         public static void TriggerEvent(Events _event)
         {
-            if (RoomsManager.CurrentRoom == RoomsManager.Rooms.finalBoss)
+            if (RoomsManager.CurrentRoom == RoomsManager.Rooms.churchGroundFloor0)
+            {
+                switch(_event)
+                {
+                    case Events.activateMovingPlatforms_churchGroundFloor0:
+                        PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[16].active = true;
+                        PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[17].active = true;
+                        PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[18].active = true;
+                        happening = Events.activateMovingPlatforms_churchGroundFloor0;
+                        eventAlreadyHappened[(int)Events.resetMovingPlatforms_churchGroundFloor0] = false;
+                        elapsedEventsDuration = 0;
+                        break;
+                    case Events.resetMovingPlatforms_churchGroundFloor0:
+                        PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[16].Reset(false);
+                        PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[17].Reset(false);
+                        PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[18].Reset(false);
+                        happening = Events.resetMovingPlatforms_churchGroundFloor0;
+                        eventAlreadyHappened[(int)Events.activateMovingPlatforms_churchGroundFloor0] = false;
+                        elapsedEventsDuration = 0;
+                        break;
+                }
+            }
+            else if (RoomsManager.CurrentRoom== RoomsManager.Rooms.church1stFloor0)
+            {
+                switch(_event)
+                {
+                    case Events.showInvisibleTiles_church1stFloor0:
+                        List<AnimatedSprite> animatedSprites = new List<AnimatedSprite>();
+                        for (int row=0; row< MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles; row++)
+                        {
+                            for (int col = 0; col < MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles; col++)
+                            {
+                                if (MapsManager.maps[(int)RoomsManager.CurrentRoom].array[row, col].tileType== Tile.TileType.solidEmpty)
+                                {
+                                    animatedSprites.Add(new AnimatedSprite(new Vector2(col * Tile.tileSize, row * Tile.tileSize),
+                                        AnimatedSprite.SpriteType.invisibleTile));
+                                }
+                            }
+                        }
+                        AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.CurrentRoom].AddTemporaryAnimatedSprites(animatedSprites);
+                        if (Player.position.X < 1032 && Player.position.X >= 1000)
+                            CameraManager.MoveCamera(0, new Vector2(856, MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomHeightPx), 8);
+                        else if (Player.position.X < 684 && Player.position.X >= 664)
+                            CameraManager.MoveCamera(0, new Vector2(528, MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomHeightPx), 8);
+                        else if (Player.position.X < 364 && Player.position.X >= 344)
+                            CameraManager.MoveCamera(0, new Vector2(204, MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomHeightPx), 8);
+                        happening = Events.showInvisibleTiles_church1stFloor0;
+                        eventAlreadyHappened[(int)Events.hide_InvisibleTiles_church1stFloor0] = false;
+                        elapsedEventsDuration = 0;
+                        break;
+                    case Events.hide_InvisibleTiles_church1stFloor0:
+                        AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.CurrentRoom].ClearTemporaryAnimatedSprites();
+                        CameraManager.MoveCamera(1, CameraManager.pointLocked, 8);
+                        happening = Events.hide_InvisibleTiles_church1stFloor0;
+                        eventAlreadyHappened[(int)Events.showInvisibleTiles_church1stFloor0] = false;
+                        elapsedEventsDuration = 0;
+                        break;
+                }
+            }
+            else if (RoomsManager.CurrentRoom == RoomsManager.Rooms.finalBoss)
             {
                 switch (_event)
                 {

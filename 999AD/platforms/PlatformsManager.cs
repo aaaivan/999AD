@@ -330,15 +330,15 @@ namespace _999AD
                         new MovingPlatform(MovingPlatform.TextureType.platform40_8, 0,
                                             new Vector2(108, 168),
                                             new Vector2(1044,168),
-                                            0,60,true),
+                                            0,60,false),
                         new MovingPlatform(MovingPlatform.TextureType.platform40_8, 0,
                                             new Vector2(140, 116),
                                             new Vector2(1076,116),
-                                            0,60,true),
+                                            0,60,false),
                         new MovingPlatform(MovingPlatform.TextureType.platform40_8, 0,
                                             new Vector2(172, 68),
                                             new Vector2(1108,68),
-                                            0,60,true),
+                                            0,60,false),
                     }
                 ),
                 new PlatformsRoomManager //churchAltarRoom
