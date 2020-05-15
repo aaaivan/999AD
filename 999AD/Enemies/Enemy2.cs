@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 
 namespace _999AD
 {
@@ -130,8 +131,13 @@ namespace _999AD
 
         #region METHODS
         //Update Function
-        public void Update(float elapsedTime)
+        public void Update(float elapsedTime, SoundEffects soundEffects)
         {
+            if(dead)
+            {
+                return;
+            }
+
             //updating the animation of the enemy sprite
             enemyAnimations[(int)enemyState].Update(elapsedTime);
 
@@ -152,7 +158,7 @@ namespace _999AD
                 isFacingLeft = false;
             }
 
-            CheckCollisions();
+            CheckCollisions(soundEffects);
 
             //Switch case statement for the enemyState
             switch (enemyState)
@@ -161,13 +167,13 @@ namespace _999AD
                     Idle(elapsedTime);
                     break;
                 case EnemyState.melee:
-                    Melee(elapsedTime);
+                    Melee(elapsedTime, soundEffects);
                     break;
                 case EnemyState.attack:
-                    Attack(elapsedTime);
+                    Attack(elapsedTime, soundEffects);
                     break;
                 case EnemyState.death:
-                    Death();
+                    Death(soundEffects);
                     break;
             }
         }
@@ -198,7 +204,7 @@ namespace _999AD
         }
 
         //Function to handle Attack
-        public void Attack(float elapsedTime)
+        public void Attack(float elapsedTime, SoundEffects soundEffects)
         {
             moving = false;
             if (Enemy2CollisionRect.X + 5 < Player.CollisionRectangle.X)
@@ -225,6 +231,7 @@ namespace _999AD
             {
                 if(elapsedShotTime>timeUntilShot)
                 {
+                    soundEffects.Enemy2Attack.Play();
                     ProjectilesManager.ShootEnemyProjectile(currentPoint, projectileInitialVelocity * (isFacingLeft ? new Vector2(-1, 1) : new Vector2(1, 1)));
                     elapsedShotTime = 0;
                 }
@@ -236,7 +243,7 @@ namespace _999AD
         }
 
         //Function to handle Melee Attack
-        public void Melee(float elapsedTime)
+        public void Melee(float elapsedTime, SoundEffects soundEffects)
         {
             moving = false;
 
@@ -265,6 +272,7 @@ namespace _999AD
             {
                 if(elapsedMeleeTime>timeUntilMelee)
                 {
+                    MediaPlayer.Play(soundEffects.Enemy2Melee);
                     Player.takeDamage();
                     elapsedMeleeTime = 0;
                     //knockback = true;
@@ -279,11 +287,12 @@ namespace _999AD
         }
 
         //Function that returns boolean if the enemy is hit by projectile
-        public bool Enemy2HitByRect(Rectangle collisionRect)
+        public bool Enemy2HitByRect(Rectangle collisionRect, SoundEffects soundEffects)
         {
             if(Enemy2CollisionRect.Intersects(collisionRect))
             {
                 enemyHP--;
+                soundEffects.EnemyHurt.Play();
                 enemyColor = Color.Red * 0.5f;
                 return true;
             }
@@ -291,8 +300,9 @@ namespace _999AD
         }
 
         //Function to handle the enemy death
-        public void Death()
+        public void Death(SoundEffects soundEffects)
         {
+            soundEffects.EnemyHurt.Play();
             enemyColor = Color.White;
             if (enemyAnimations[(int)enemyState] != enemyAnimations[(int)EnemyState.death])
             {
@@ -396,13 +406,14 @@ namespace _999AD
         }*/
 
         //Function to check for collisions between enemy 2 and player
-        public void CheckCollisions()
+        public void CheckCollisions(SoundEffects soundEffects)
         {
             if(!dead && Player.CollisionRectangle.Intersects(Enemy2CollisionRect))
             {
                 if(Math.Abs(Player.CollisionRectangle.Bottom-Enemy2CollisionRect.Top)<=5)
                 {
                     Player.Rebound(0.75f);
+                    soundEffects.EnemyHurt.Play();
                     enemyHP--;
                     enemyColor = Color.Red * 0.5f;
                 }

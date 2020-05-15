@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace _999AD
 {
@@ -112,7 +114,7 @@ namespace _999AD
 
         #region METHODS
         //Update Function
-        public static void Update(float elapsedTime)
+        public static void Update(float elapsedTime, SoundEffects soundEffects)
         {
             //Updating the animation of the boss sprite
             bossAnimations[(int)bossState].Update(elapsedTime);
@@ -141,13 +143,13 @@ namespace _999AD
                     ChangeFromIdle(elapsedTime);
                     break;
                 case BossState.move:
-                    Move(elapsedTime);
+                    Move(elapsedTime, soundEffects);
                     break;
                 case BossState.attack:
-                    Attack(elapsedTime);
+                    Attack(elapsedTime, soundEffects);
                     break;
                 case BossState.death:
-                    Death();
+                    Death(soundEffects);
                     break;
             }
         }
@@ -178,12 +180,13 @@ namespace _999AD
         }
 
         //Function to handle Attack
-        public static void Attack(float elapsedTime)
+        public static void Attack(float elapsedTime, SoundEffects soundEffects)
         {
             if(elapsedShotTime > timeUntilShot)
             {
                 ProjectilesManager.ShootBossProjectile(isFacingRight ? bossPoint : (bossPoint - new Vector2(bossWidth-5, 0)), projectileInitialVelocity * (isFacingRight ? new Vector2(1, 1) : new Vector2(-1, 1)));
                 elapsedShotTime = 0;
+                soundEffects.MidbossAttack.Play();
                 bossState = BossState.idle;
             }
             else
@@ -193,7 +196,7 @@ namespace _999AD
         }
 
         //Function to handle midboss movement
-        public static void Move(float elapsedTime)
+        public static void Move(float elapsedTime, SoundEffects soundEffects)
         {
             movementSpeed = 100;
             if(bossPoint==point1)
@@ -205,6 +208,7 @@ namespace _999AD
                 moveToP1 = true;
             }
 
+            MediaPlayer.Play(soundEffects.MidbossMove);
             if(moveToP2)
             {
                 bossPoint.X -= movementSpeed * elapsedTime;
@@ -232,11 +236,12 @@ namespace _999AD
         }
 
         //Function that returns boolean if the boss is hit by projectile
-        public static bool BossHitByRect(Rectangle collisionRect)
+        public static bool BossHitByRect(Rectangle collisionRect, SoundEffects soundEffects)
         {
             if (BossCollisionRect.Intersects(collisionRect))
             {
                 bossHP -= 1;
+                MediaPlayer.Play(soundEffects.MidbossHurt);
                 bossColor = Color.Red * 0.8f;
                 return true;
             }
@@ -287,8 +292,9 @@ namespace _999AD
         }
 
         //Function to handle the boss death
-        public static void Death()
+        public static void Death(SoundEffects soundEffects)
         {
+            MediaPlayer.Play(soundEffects.MidbossHurt);
             if (bossAnimations[(int)bossState] != bossAnimations[(int)BossState.death])
             {
                 bossAnimations[(int)bossState] = bossAnimations[(int)BossState.death];
