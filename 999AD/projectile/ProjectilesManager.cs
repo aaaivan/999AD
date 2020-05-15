@@ -34,14 +34,14 @@ namespace _999AD
         //Function to make the midboss shoot a projectile
         public static void ShootBossProjectile(Vector2 position, Vector2 initialVelocity)
         {
-            midbossProjectiles.Add(new Projectile(position, initialVelocity, Projectile.SpriteType.broccoli));
+            midbossProjectiles.Add(new Projectile(position, initialVelocity, Projectile.SpriteType.lava));
             //Broccoli - Placeholder
         }
 
         //Function to make the enemy 2 shoot a projectile
         public static void ShootEnemyProjectile(Vector2 position, Vector2 initialVelocity)
         {
-            enemyProjectiles.Add(new Projectile(position, initialVelocity, Projectile.SpriteType.holyWater));
+            enemyProjectiles.Add(new Projectile(position, initialVelocity, Projectile.SpriteType.lava));
             //Holy water - Placeholder
         }
 
@@ -78,6 +78,7 @@ namespace _999AD
         {
             playerProjectiles.Clear();
             midbossProjectiles.Clear();
+            enemyProjectiles.Clear();
         }
         public static void Draw(SpriteBatch spriteBatch)
         {

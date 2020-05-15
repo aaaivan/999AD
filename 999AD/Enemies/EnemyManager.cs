@@ -22,6 +22,12 @@ namespace _999AD
         //Takes a spritesheet as a parameter
         public static void Initialise(Texture2D e1Spritesheet, Texture2D e2Spritesheet)
         {
+            Enemy1.Inizialize(e1Spritesheet);
+            Enemy2.Inizialize(e2Spritesheet);
+            Reset();
+        }
+        public static void Reset()
+        {
             enemyRoomManagers = new EnemyRoomManager[(int)RoomsManager.Rooms.total]
             {
                 new EnemyRoomManager //Tutorial 0
@@ -58,6 +64,9 @@ namespace _999AD
                 (
                     new Enemy1[]
                     {
+                        new Enemy1(new Vector2(150, 200), new Vector2(400, 200)),
+                        new Enemy1( new Vector2(200, 200), new Vector2(500, 200)),
+                        new Enemy1( new Vector2(250, 200), new Vector2(600, 200))
                     },
                     new Enemy2[]
                     {
@@ -111,8 +120,8 @@ namespace _999AD
                     new Enemy2[]
                     {
                         //For testing purposes only
-                        new Enemy2(e2Spritesheet, new Vector2(150,190)),
-                        new Enemy2(e2Spritesheet, new Vector2(250,190))
+                        //new Enemy2(e2Spritesheet, new Vector2(150,190)),
+                        //new Enemy2(e2Spritesheet, new Vector2(250,190))
                     }
                 ),
                 new EnemyRoomManager // churchGroundFloor0
@@ -176,7 +185,7 @@ namespace _999AD
                 (
                     new Enemy1[]
                     {
-                    }, 
+                    },
                     new Enemy2[]
                     {
                     }
@@ -202,7 +211,6 @@ namespace _999AD
                 ),
             };
         }
-
         #endregion
     }
 }

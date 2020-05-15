@@ -66,22 +66,32 @@ namespace _999AD
         #region CONSTRUCTOR
         //Constructor for Enemy 2
         //Takes a spritesheet and a vector as parameters
-        public Enemy2(Texture2D spritesheet, Vector2 EnemyPoint)
+        public Enemy2(Vector2 EnemyPoint, Vector2 EnemyPoint2)
         {
             enemyPoint = EnemyPoint;
-            enemySheet = spritesheet;
+            enemyPoint2 = EnemyPoint2;
+
+            if (enemyPoint.X > enemyPoint2.X)
+            {
+                Vector2 tempVector = enemyPoint2;
+                enemyPoint2 = enemyPoint;
+                enemyPoint = enemyPoint2;
+            }
+
             enemyColor = Color.White;
 
             enemyHP = maxHP;
             currentPoint = enemyPoint;
 
-            enemyPoint2 = enemyPoint;
-            enemyPoint2.X += 50;
 
             movementSpeed = 0f;
             //knockback = false;
             //melee = false;
 
+        }
+        public static void Inizialize(Texture2D spritesheet)
+        {
+            enemySheet = spritesheet;
             enemyAnimations = new Animation[(int)EnemyState.total]
             {
                 new Animation(new Rectangle(0,0,440,48),44,48,10,0.4f,true), // Animation for Idle - Patrolling
@@ -90,7 +100,6 @@ namespace _999AD
                 new Animation(new Rectangle(0,144,264,48),44,48,6,0.4f,false, true), // Animation for Death
             };
         }
-
         #endregion
 
         #region PROPERTIES

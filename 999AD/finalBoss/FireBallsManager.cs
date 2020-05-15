@@ -13,7 +13,8 @@ namespace _999AD
     {
         #region DECLARATIONS
         static public Vector2 fireballsCenter;
-        static Texture2D laser;
+        static Texture2D spritesheet;
+        static Rectangle laserSourceRect;
         static List<int> targetedPlatforms;
         static float relativeLaserProgression=0;
         static readonly float laserVelocity = 2f;
@@ -25,10 +26,11 @@ namespace _999AD
         static readonly Random rand = new Random();
         #endregion
         #region CONSTRUCTORS
-        public static void Inizialize(Texture2D spritesheet, Texture2D _laser)
+        public static void Inizialize(Texture2D _spritesheet)
         {
-            laser = _laser;
-            FireBall.Inizialize(spritesheet);
+            spritesheet = _spritesheet;
+            laserSourceRect = new Rectangle(409, 41, 30, 180);
+            FireBall.Inizialize(_spritesheet);
             fireballsCenter = FinalBoss.fireballsCenter;
             targetedPlatforms = new List<int>();
             fireballs = new List<FireBall>();
@@ -201,16 +203,16 @@ namespace _999AD
         {
             foreach (int i in targetedPlatforms)
             {
-                spriteBatch.Draw(laser,
+                spriteBatch.Draw(spritesheet,
                     Camera.RelativeRectangle( new Rectangle((int)fireballsCenter.X,
-                                  (int)(fireballsCenter.Y - laser.Width / 2),
-                                  laser.Width,
-                                  (int)(PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[i].radius * relativeLaserProgression))
+                                  (int)(fireballsCenter.Y-laserSourceRect.Width/2),
+                                  laserSourceRect.Width,
+                                  (int)((PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[i].radius+20) * relativeLaserProgression))
                     ),
-                    null,
+                    laserSourceRect,
                     Color.White,
                     PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[i].AngleRadiants+MathHelper.Pi,
-                    new Vector2(laser.Width / 2, 0),
+                    new Vector2(laserSourceRect.Width / 2, 0),
                     SpriteEffects.None,
                     1);
             }

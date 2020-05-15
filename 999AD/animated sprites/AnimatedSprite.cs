@@ -14,7 +14,10 @@ namespace _999AD
         #region DECLARATIONS
         public enum SpriteType
         {
-            invisibleTile, total
+            invisibleTile,
+            openBrassDoor, openGoldDoor, openBronzeDoor, openSilverDoor,
+            displayDoubleJumpRelic, displayWallJumpRelic,
+            total
         }
         static Texture2D spritesheet;
         static Animation[] animations;
@@ -34,7 +37,13 @@ namespace _999AD
             spritesheet = _spritesheet;
             animations = new Animation[(int)SpriteType.total]
             {
-                new Animation(new Rectangle(0,0,64, 8),8,8,8, 0.2f, true),
+                new Animation(new Rectangle(336,40,64, 8),8,8,8, 0.1f, true),
+                new Animation(new Rectangle(0,0, 112, 40), 16, 40, 7, 0.1f, false, true),
+                new Animation(new Rectangle(112,0, 112, 40), 16, 40, 7, 0.1f, false, true),
+                new Animation(new Rectangle(224,0, 112, 40), 16, 40, 7, 0.1f, false, true),
+                new Animation(new Rectangle(336,0, 112, 40), 16, 40, 7, 0.1f, false, true),
+                new Animation(new Rectangle(0,40, 24, 24), 24, 24, 1, 0, false),
+                new Animation(new Rectangle(0,75, 24, 24), 24, 24, 1, 0, false),
             };
         }
         #endregion
@@ -52,6 +61,22 @@ namespace _999AD
         public void Update(float elapsedTime)
         {
             animation.Update(elapsedTime);
+        }
+        public static SpriteType GetDoorAnimation(Door.TextureType doorType)
+        {
+            switch (doorType)
+            {
+                case Door.TextureType.brassDoor:
+                    return SpriteType.openBrassDoor;
+                case Door.TextureType.goldDoor:
+                    return SpriteType.openGoldDoor;
+                case Door.TextureType.silverDoor:
+                    return SpriteType.openSilverDoor;
+                case Door.TextureType.bronzeDoor:
+                    return SpriteType.openBronzeDoor;
+                default:
+                    return SpriteType.openBrassDoor;
+            }
         }
         public void Draw(SpriteBatch spriteBatch)
         {

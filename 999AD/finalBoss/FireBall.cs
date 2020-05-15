@@ -46,7 +46,7 @@ namespace _999AD
             angularVelocities = _angularVelocities;
             lifeTimes = _lifeTimes;
             targetPlayer = _targetPlayer;
-            animation= new Animation(new Rectangle(0,0,spritesheet.Width, spritesheet.Height), size, size, spritesheet.Width / size, 0.2f, true);
+            animation= new Animation(new Rectangle(336,48,size*4, size), size, size, 4, 0.1f, true);
         }
         public static void Inizialize(Texture2D _spritesheet)
         {

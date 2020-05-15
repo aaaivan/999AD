@@ -13,25 +13,44 @@ namespace _999AD
     {
         #region DECLARATIONS
         List<Collectable> collectables;
+        List<Collectable> heartsBackUp;
         #endregion
         #region CONSTRUCTOR
         public CollectablesRoomManager(Collectable[] _collectables)
         {
             collectables = new List<Collectable>(_collectables);
+            heartsBackUp = new List<Collectable>();
+            foreach(Collectable collectable in collectables)
+                if (collectable.type== Collectable.ItemType.heart)
+                    heartsBackUp.Add(collectable.DeepCopy());
         }
         #endregion
         #region METHODS
         public void Update(float elapsedTime)
         {
-            for (int i= collectables.Count-1; i>=0; i--)
+            for (int i = collectables.Count - 1; i >= 0; i--)
             {
                 if (collectables[i].Collected)
                 {
-                    CollectablesManager.AddToInventory(collectables[i].type);
+                    if (collectables[i].type == Collectable.ItemType.heart)
+                        Player.IncreaseHealth();
+                    else
+                        CollectablesManager.AddToInventory(collectables[i]);
                     collectables.RemoveAt(i);
                 }
                 else
                     collectables[i].Update(elapsedTime);
+            }
+        }
+        public void AddCollectableToMap(Collectable collectable)
+        {
+            collectables.Add(collectable);
+        }
+        public void ResetHearts()
+        {
+            foreach (Collectable heart in heartsBackUp)
+            {
+                collectables.Add(heart.DeepCopy());
             }
         }
         public void Draw(SpriteBatch spriteBatch)

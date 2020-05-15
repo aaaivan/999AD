@@ -29,6 +29,7 @@ namespace _999AD
         //Position Variables
         Vector2 currentPoint;
         Vector2 enemyPoint;
+        Vector2 enemyPoint2;
         bool isFacingLeft = true;
 
         //Movement Variables
@@ -53,10 +54,16 @@ namespace _999AD
         #region CONSTRUCTOR
         //Constructor for Enemy 1
         //Takes a spritesheet and a vector as parameters
-        public Enemy1(Texture2D EnemySheet, Vector2 EnemyPoint)
+        public Enemy1(Vector2 EnemyPoint, Vector2 EnemyPoint2)
         {
             enemyPoint = EnemyPoint;
-            enemySheet = EnemySheet;
+            enemyPoint2 = EnemyPoint2;
+            if (enemyPoint.X>enemyPoint2.X)
+            {
+                Vector2 tempVector = enemyPoint2;
+                enemyPoint2 = enemyPoint;
+                enemyPoint = enemyPoint2;
+            }
             enemyColor = Color.White;
 
             enemyHP = maxHP;
@@ -65,12 +72,17 @@ namespace _999AD
             movementSpeed = 0f;
             distanceKnocked = 0;
 
+        }
+        public static void Inizialize(Texture2D spritesheet)
+        {
+            enemySheet = spritesheet;
             enemyAnimations = new Animation[(int)EnemyState.total]
             {
                 new Animation(new Rectangle(0,0,420,48),42,48,10,0.2f,true), // Animation for Idle
                 new Animation(new Rectangle(0,48,420,48),42,48,10,0.2f,true), //Animation for Attack - Dash
                 new Animation(new Rectangle(0,96,252,48),42,48,6,0.2f,false, true) //Animation for Death
             };
+
         }
         #endregion
 
@@ -160,14 +172,24 @@ namespace _999AD
         {
             if(!hit)
             {
-                movementSpeed = 100;
+                movementSpeed = 80;
                 if(isFacingLeft)
                 {
                     currentPoint.X += movementSpeed * elapsedTime;
+                    if (currentPoint.X> enemyPoint2.X)
+                    {
+                        currentPoint.X = enemyPoint2.X;
+                        enemyState = EnemyState.idle;
+                    }
                 }
                 else
                 {
                     currentPoint.X -= movementSpeed * elapsedTime;
+                    if (currentPoint.X < enemyPoint.X)
+                    {
+                        currentPoint.X = enemyPoint.X;
+                        enemyState = EnemyState.idle;
+                    }
                 }
                 PlayerHitByEnemy1();
             }

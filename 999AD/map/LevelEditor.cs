@@ -36,6 +36,7 @@ namespace _999AD
         SpriteFont arial14;
         Texture2D whiteTexture;
         Random rand = new Random();
+        Point PreviousTileHovered=new Point(-1,-1);
         #region CONSTRUCTOR
         public LevelEditor(SpriteFont _arial32, SpriteFont _arial16, Texture2D _whiteTexture)
         {
@@ -435,6 +436,8 @@ namespace _999AD
                         menu = MenuState.none;
                         message = "";
                         randomMode = false;
+                        PreviousTileHovered = new Point(-1, -1);
+
                     }
                     break;
                 case MenuState.selectRandomTiles:
@@ -468,6 +471,7 @@ namespace _999AD
                             menu = MenuState.none;
                             message = "";
                             randomMode = false;
+                            PreviousTileHovered = new Point(-1, -1);
                             int tile = int.Parse(arr[0]);
                             currentTileType= tile < (int)Tile.TileType.total ? tile : ((int)Tile.TileType.total - 1);
                             break;
@@ -517,12 +521,12 @@ namespace _999AD
                     {
                         if (randomMode)
                         {
-                            Point previousTile = TileFromPointerLocation(previousMouseState);
-                            if (previousTile != tile || previousMouseState.LeftButton != ButtonState.Pressed)
+                            if (PreviousTileHovered != tile || previousMouseState.LeftButton != ButtonState.Pressed)
                             {
                                 int index = rand.Next(randomTiles.Count);
                                 MapsManager.maps[currentRoomNumber].array[tile.Y, tile.X].tileType = (Tile.TileType)randomTiles[index];
                             }
+                            PreviousTileHovered = tile;
                         }
                         else
                             MapsManager.maps[currentRoomNumber].array[tile.Y, tile.X].tileType = (Tile.TileType)currentTileType;
@@ -541,6 +545,7 @@ namespace _999AD
                         if (newTileType< (int)Tile.TileType.total)
                         {
                             randomMode = false;
+                            PreviousTileHovered = new Point(-1, -1);
                             currentTileType = newTileType;
                         }
                     }

@@ -32,10 +32,12 @@ namespace _999AD
         static bool isOnMovingPlatform;
         static bool canDoubleJump;
         static bool isWallJumping;
+        public static bool doubleJumpUnlocked;
+        public static bool wallJumpUnlocked;
         public static readonly Vector2 projectileInitialVelocity = new Vector2(200, -200);
         public static readonly float timeBetweenShots = 0.4f; //minimum time between shots
         static float elapsedShotTime;
-        public static readonly int maxHealthPoints = 1000;
+        public static readonly int maxHealthPoints = 3;
         public static int healthPoints;
         static readonly float invulnerabilityTime = 3;
         static float elapsedInvulnerabilityTime;
@@ -47,6 +49,8 @@ namespace _999AD
         {
             Reset(_position);
             spritesheet = _spritesheet;
+            doubleJumpUnlocked=false;
+            wallJumpUnlocked= false;
             //fill following statements with sprite info
             animations = new List<Animation>();
             animations.Add(new Animation(new Rectangle(0, 0, 128, 24), 16, 24, 8, 0.3f, true));
@@ -202,7 +206,7 @@ namespace _999AD
                     isOnMovingPlatform = false;
                     return;
                 }
-                else if (isOnTheWall)
+                else if (isOnTheWall && wallJumpUnlocked)
                 {
                     if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack)
                         currentAnimation = AnimationTypes.jump;
@@ -216,7 +220,7 @@ namespace _999AD
                         jumpSpeed.X = -initialJumpSpeed.X;
                     isFacingRight = !isFacingRight;
                 }
-                else if (canDoubleJump)
+                else if (canDoubleJump && doubleJumpUnlocked)
                 {
                     if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack)
                         currentAnimation = AnimationTypes.jump;
@@ -425,6 +429,7 @@ namespace _999AD
                             jumpSpeed.Y = 0;
                             jumpSpeed.X = 0;
                             isTouchingTheGround = true;
+                            isOnMovingPlatform = false;
                             canDoubleJump = true;
                             isOnTheWall = false;
                             isWallJumping = false;
@@ -513,6 +518,11 @@ namespace _999AD
                 invulnerable = true;
                 elapsedInvulnerabilityTime = 0;
             }
+        }
+        public static void IncreaseHealth()
+        {
+            if (healthPoints < maxHealthPoints)
+                healthPoints++;
         }
         public static void ReplenishHealth()
         {

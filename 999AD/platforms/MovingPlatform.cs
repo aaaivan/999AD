@@ -14,8 +14,8 @@ namespace _999AD
         #region DECLARATIONS
         public enum TextureType
         {
-            platform40_8,
-            platform24_8,
+            grass40_8, dirt40_8, marble40_8,
+            dirt24_8, marble24_8, crackedDirt24_8, crackedMarble24_8,
             fallingFloor272_40,
             fallingFloor296_40,
             fallingFloor112_216,
@@ -88,9 +88,14 @@ namespace _999AD
         {
             spritesheet = _spritesheet;
             sourceRectangles = new Rectangle[(int)TextureType.total]
-            { 
+            {
               new Rectangle(0, 0, 40, 8),
-              new Rectangle(0, 40, 24, 8),
+              new Rectangle(40, 0, 40, 8),
+              new Rectangle(80, 0, 40, 8),
+              new Rectangle(120, 0, 24, 8),
+              new Rectangle(144, 0, 24, 8),
+              new Rectangle(168, 0, 24, 8),
+              new Rectangle(192, 0, 24, 8),
               new Rectangle(0, 8, 272, 40),
               new Rectangle(0, 48, 296, 40),
               new Rectangle(0, 88, 112, 224),

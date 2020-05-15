@@ -13,13 +13,13 @@ namespace _999AD
     {
         #region DECLARATIONS
         static public Texture2D spritesheet;
-        static public Texture2D whiteTexture;
+        static public Rectangle whiteTexture;
         static public readonly int size= 24;
         static public readonly int heigthBeforeErupting = 40;
         float initialYVelocity;
         float yVelocity;
-        Animation geyserTopAnim;
-        Animation geyserBodyAnim;
+        Rectangle geyserTop;
+        Rectangle geyserBody;
         Vector2 position;
         float timeBeforeErupting;
         float elapsedTimeBeforeErupting;
@@ -34,13 +34,13 @@ namespace _999AD
             erupted = false;
             position = new Vector2(xCenterPosition - 0.5f*size, MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomHeightPx);
             timeBeforeErupting = _timeBeforeErupting;
-            geyserTopAnim = new Animation(new Rectangle(0, 0, spritesheet.Width, size), size, size, 2, 0.5f, true);
-            geyserBodyAnim= new Animation(new Rectangle(0, size, spritesheet.Width, size), size, size, 2, 0.5f, true);
+            geyserTop = new Rectangle(0,173, size, size);
+            geyserBody= new Rectangle(0, 197, size, size);
         }
-        public static void Inizialize(Texture2D _spritesheet, Texture2D _white)
+        public static void Inizialize(Texture2D _spritesheet)
         {
             spritesheet = _spritesheet;
-            whiteTexture = _white;
+            whiteTexture = new Rectangle(400, 40, 8,8);
         }
         #endregion
         #region PROPERTIES
@@ -61,8 +61,6 @@ namespace _999AD
         }
         public void Update(float elapsedTime)
         {
-            geyserBodyAnim.Update(elapsedTime);
-            geyserTopAnim.Update(elapsedTime);
             if (elapsedTimeBeforeErupting==0 )
             {
                 if (position.Y < MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomHeightPx - heigthBeforeErupting)
@@ -94,18 +92,19 @@ namespace _999AD
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(whiteTexture,
+            spriteBatch.Draw(spritesheet,
                 Camera.RelativeRectangle(new Vector2(position.X,0),size, MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomHeightPx),
+                whiteTexture,
                 Color.Red * 0.1f);
             spriteBatch.Draw(spritesheet,
                 Camera.RelativeRectangle(position, size,size),
-                geyserTopAnim.Frame,
+                geyserTop,
                 Color.White);
             for (int i=1; i<=(MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomHeightPx - (int)position.Y + size -1)/size; i++)
             {
                 spriteBatch.Draw(spritesheet,
                     Camera.RelativeRectangle(position+new Vector2(0,i*size), size, size),
-                    geyserBodyAnim.Frame,
+                    geyserBody,
                     Color.White);
             }
         }

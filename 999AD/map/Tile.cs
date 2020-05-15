@@ -15,13 +15,14 @@ namespace _999AD
         public enum TileType
         {
             empty, solidEmpty,
-            grassTL, grassTR, grassBL, grassBR, grassT, grassR, grassB, grassL, grass,
-            stoneTL, stoneTR, stoneBL, stoneBR, stoneT, stoneR, stoneB, stoneL, stone,
-            dirtTL, dirtTR, dirtBL, dirtBR, dirtT, dirtR, dirtB, dirtL, dirt,
-            marbleT, marbleR, marbleB, marbleL, marble,
-            caveT, caveR, caveB, caveL, cave,
-            spikeT, spikeR, spikeB, spikeL,
-            total
+
+            caveOutTL, caveOutT, caveOutTR, dirtOutTL, dirtOutT, dirtOutTR, marbleOutTL, marbleOutT, marbleOutTR,
+            caveSpikeL, caveSpikeR, caveOutL, caveOut, caveOutR, dirtOutL, dirtOut, dirtOutR, marbleOutL, marbleOut, marbleOutR,
+            caveSpikeT, caveSpikeB, caveOutBL, caveOutB, caveOutBR, dirtOutBL, dirtOutB, dirtOutBR, marbleOutBL, marbleOutB, marbleOutBR,
+            marbleSpikeL, marbleSpikeR, caveInTL, caveInT, caveInTR, dirtInTL, dirtInT, dirtInTR, marbleInTL, marbleInT, marbleInTR,
+            marbleSpikeT, marbleSpikeB, caveInL, caveIn, caveInR, dirtInL, dirtIn, dirtInR, marbleInL, marbleIn, marbleInR,
+            dirtSpikeL, dirtSpikeR, caveInBL, caveInB, caveInBR, dirtInBL, dirtInB, dirtInBR, marbleInBL, marbleInB, marbleInBR,
+            dirtSpikeT, dirtSpikeB, total
         }
         public static readonly int tileSize=8;
         static Texture2D spritesheet; //set by MapsManager
@@ -55,14 +56,17 @@ namespace _999AD
         #region METHODS
         public bool isSolid()
         {
-            if ((int)tileType >= 1 && (int)tileType < 39)
+            if ((int)tileType >= 1 && !isHarmful())
                 return true;
             return false;
         }
         public bool isHarmful()
         {
-            if ((int)tileType >= 39 && (int)tileType <= 42)
-                return true;
+            if ((int)tileType >= 11)
+            {
+                if ((int)tileType%11==0 || (int)tileType % 11==1)
+                    return true;
+            }
             return false;
         }
         public void Draw(SpriteBatch spriteBatch)

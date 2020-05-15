@@ -57,9 +57,20 @@ namespace _999AD
         //Takes a spritesheet as a parameter
         public static void Initialise(Texture2D BossSheet)
         {
-            point1 = new Vector2(200,200);
-            point2 = new Vector2(100,200);
             bossSheet = BossSheet;
+            bossAnimations = new Animation[(int)BossState.total]
+            {
+                new Animation(new Rectangle(0,0,104,20),20,26,4,1f,true),
+                new Animation(new Rectangle(0,26,52,20),20,26,2,1f,true),
+                new Animation(new Rectangle(0,52,52,20),20,26,2,1f,true),
+                new Animation(new Rectangle(0,78,52,20),20,26,2,1f,false, true),
+            };
+            Reset();
+        }
+        public static void Reset()
+        {
+            point1 = new Vector2(200, 200);
+            point2 = new Vector2(100, 200);
             bossColor = Color.White;
 
             bossHP = maxHP;
@@ -69,13 +80,6 @@ namespace _999AD
             moveToP2 = false;
             moveToP1 = false;
 
-            bossAnimations = new Animation[(int)BossState.total]
-            {
-                new Animation(new Rectangle(0,0,104,20),20,26,4,1f,true),
-                new Animation(new Rectangle(0,26,52,20),20,26,2,1f,true),
-                new Animation(new Rectangle(0,52,52,20),20,26,2,1f,true),
-                new Animation(new Rectangle(0,78,52,20),20,26,2,1f,false, true),
-            };
         }
         #endregion
 

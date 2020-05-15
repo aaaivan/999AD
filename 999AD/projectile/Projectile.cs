@@ -13,7 +13,7 @@ namespace _999AD
     {
         public enum SpriteType
         {
-            holyWater, broccoli, total
+            holyWater, lava, total
         }
         #region DECLARATION
         static Texture2D spritesheet;
@@ -40,8 +40,8 @@ namespace _999AD
             spritesheet = _spritesheet;
             animations = new Animation[(int)SpriteType.total]
                 {
-                    new Animation(new Rectangle(0,0,32,8), 8,8, 4, 0.3f, true),
-                    new Animation(new Rectangle(0,8,64,16), 16,16, 4, 0.3f, true),
+                    new Animation(new Rectangle(336,64,16,4), 4,4, 4, 0.1f, true),
+                    new Animation(new Rectangle(336,58,24,6), 6,6, 4, 0.1f, true),
                 };
         }
         #endregion
