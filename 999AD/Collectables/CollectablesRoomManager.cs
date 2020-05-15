@@ -48,6 +48,11 @@ namespace _999AD
         }
         public void ResetHearts()
         {
+            for (int i=collectables.Count-1; i>=0; i--)
+            {
+                if (collectables[i].type == Collectable.ItemType.heart)
+                    collectables.RemoveAt(i);
+            }
             foreach (Collectable heart in heartsBackUp)
             {
                 collectables.Add(heart.DeepCopy());

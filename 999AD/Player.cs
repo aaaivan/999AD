@@ -51,8 +51,8 @@ namespace _999AD
         {
             Reset(_position);
             spritesheet = _spritesheet;
-            doubleJumpUnlocked=false;
-            wallJumpUnlocked= false;
+            doubleJumpUnlocked =false;
+            wallJumpUnlocked = false;
             //fill following statements with sprite info
             animations = new List<Animation>();
             animations.Add(new Animation(new Rectangle(0, 0, 128, 24), 16, 24, 8, 0.3f, true));
@@ -60,7 +60,7 @@ namespace _999AD
             animations.Add(new Animation( new Rectangle(0, 48, 80, 24), 16, 24, 5, 0.06f, false, true));
             animations.Add(new Animation( new Rectangle(0, 72, 112, 24), 16, 24, 7, 0.06f, false, false));
             animations.Add(new Animation( new Rectangle(0, 96, 64, 24), 16, 24, 4, 0.1f, true));
-            animations.Add(new Animation( new Rectangle(0, 120, 96, 24), 16, 24, 5, 0.1f, false, true));
+            animations.Add(new Animation( new Rectangle(0, 120, 160, 24), 16, 24, 10, 0.1f, false, true));
         }
         public static void Reset(Vector2 _position)
         {
@@ -141,8 +141,6 @@ namespace _999AD
                     {
                         animations[(int)AnimationTypes.attack].Reset();
                         animations[(int)AnimationTypes.jump].Reset();
-                        animations[(int)AnimationTypes.die].Reset();
-                        currentAnimation = AnimationTypes.idle;
                         Game1.currentGameState = Game1.GameStates.dead;
                     }
                     break;
@@ -511,7 +509,7 @@ namespace _999AD
             if (invulnerable && !damageEvenIfInvulnerable)
                 return;
             healthPoints -= damage;
-            if (healthPoints<=0)
+            if (healthPoints==0)
             {
                 currentAnimation = AnimationTypes.die;
             }
@@ -529,6 +527,7 @@ namespace _999AD
         public static void ReplenishHealth()
         {
             healthPoints = maxHealthPoints;
+            animations[(int)AnimationTypes.die].Reset();
             currentAnimation = AnimationTypes.idle;
         }
         public static void Draw(SpriteBatch spriteBatch)
