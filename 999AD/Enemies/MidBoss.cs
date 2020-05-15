@@ -114,6 +114,11 @@ namespace _999AD
         //Update Function
         public static void Update(float elapsedTime)
         {
+            if(dead)
+            {
+                return;
+            }
+
             //Updating the animation of the boss sprite
             bossAnimations[(int)bossState].Update(elapsedTime);
 

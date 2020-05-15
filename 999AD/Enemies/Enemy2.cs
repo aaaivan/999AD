@@ -132,6 +132,11 @@ namespace _999AD
         //Update Function
         public void Update(float elapsedTime)
         {
+            if(dead)
+            {
+                return;
+            }
+
             //updating the animation of the enemy sprite
             enemyAnimations[(int)enemyState].Update(elapsedTime);
 
