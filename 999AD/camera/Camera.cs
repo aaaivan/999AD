@@ -50,6 +50,10 @@ namespace _999AD
                                  (int)(rect.Width),
                                  (int)(rect.Height));
         }
+        public static Vector2 RelativePoint(Vector2 point)
+        {
+            return new Vector2(point.X - position.X, point.Y - position.Y);
+        }
         public static void Update(bool shaking, Vector2 pointLocked)
         {
             pointLocked.X = MathHelper.Clamp(pointLocked.X,

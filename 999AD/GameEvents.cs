@@ -14,6 +14,13 @@ namespace _999AD
         public enum Events
         {
             none,
+
+            keySpawns1_tutorial3, keySpawns2_tutorial3,
+
+            unlockDoubleJump, unlockWallJump,
+
+            keyAndPowerUpSpawn_midBoss,
+
             activateMovingPlatforms_churchGroundFloor0, resetMovingPlatforms_churchGroundFloor0,
 
             showInvisibleTiles_church1stFloor0, hide_InvisibleTiles_church1stFloor0,
@@ -32,6 +39,9 @@ namespace _999AD
         public static readonly float[] eventsDuration = new float[(int)Events.total]
         {
             0,
+            0,0,
+            0,0,
+            0, 
             0,0,
             0,0,
             2, 4, 0, 0,
@@ -118,6 +128,28 @@ namespace _999AD
         {
             switch (RoomsManager.CurrentRoom)
             {
+                case RoomsManager.Rooms.tutorial3:
+                    if (EnemyManager.enemyRoomManagers[(int)RoomsManager.CurrentRoom].enemiesType1[0].Dead &&
+                        !eventAlreadyHappened[(int)Events.keySpawns1_tutorial3])
+                        TriggerEvent(Events.keySpawns1_tutorial3);
+                    else if (EnemyManager.enemyRoomManagers[(int)RoomsManager.CurrentRoom].enemiesType1[1].Dead &&
+                        !eventAlreadyHappened[(int)Events.keySpawns2_tutorial3])
+                        TriggerEvent(Events.keySpawns2_tutorial3);
+                    break;
+                case RoomsManager.Rooms.churchBellTower0:
+                    if (Player.CollisionRectangle.Intersects(new Rectangle(196, 908, 96, 76)) &&
+                        CollectablesManager.TryRemoveFromInventory(Collectable.ItemType.doubleJump_powerup, new Vector2(220, 932)) &&
+                        !eventAlreadyHappened[(int)Events.unlockDoubleJump])
+                        TriggerEvent(Events.unlockDoubleJump);
+                    else if (Player.CollisionRectangle.Intersects(new Rectangle(196, 908, 96, 76)) &&
+                        CollectablesManager.TryRemoveFromInventory(Collectable.ItemType.wallJump_powerup, new Vector2(220, 932)) &&
+                        !eventAlreadyHappened[(int)Events.unlockWallJump])
+                        TriggerEvent(Events.unlockWallJump);
+                    break;
+                case RoomsManager.Rooms.midBoss:
+                    if (MidBoss.Dead && !eventAlreadyHappened[(int)Events.keyAndPowerUpSpawn_midBoss])
+                        TriggerEvent(Events.keyAndPowerUpSpawn_midBoss);
+                    break;
                 case RoomsManager.Rooms.churchGroundFloor0:
                     if (Player.position.X >= 88 - Player.width && Player.position.Y < 178)
                     {
@@ -194,7 +226,58 @@ namespace _999AD
         }
         public static void TriggerEvent(Events _event)
         {
-            if (RoomsManager.CurrentRoom == RoomsManager.Rooms.churchGroundFloor0)
+            if (RoomsManager.CurrentRoom== RoomsManager.Rooms.tutorial3)
+            {
+                switch (_event)
+                {
+                    case Events.keySpawns1_tutorial3:
+                        CollectablesManager.collectablesRoomManagers[(int)RoomsManager.CurrentRoom].AddCollectableToMap(
+                            new Collectable(new Point(570, 132), Collectable.ItemType.brassKey));
+                        happening = Events.keySpawns1_tutorial3;
+                        elapsedEventsDuration = 0;
+                        break;
+                    case Events.keySpawns2_tutorial3:
+                        CollectablesManager.collectablesRoomManagers[(int)RoomsManager.CurrentRoom].AddCollectableToMap(
+                            new Collectable(new Point(350, 46), Collectable.ItemType.silverKey));
+                        happening = Events.keySpawns2_tutorial3;
+                        elapsedEventsDuration = 0;
+                        break;
+                }
+            }
+            else if (RoomsManager.CurrentRoom == RoomsManager.Rooms.churchBellTower0)
+            {
+                switch (_event)
+                {
+                    case Events.unlockDoubleJump:
+                        Player.doubleJumpUnlocked = true;
+                        AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.CurrentRoom].AddAnimatedSprite(
+                            new AnimatedSprite(new Vector2(208, 920), AnimatedSprite.SpriteType.displayDoubleJumpRelic, false));
+                        happening = Events.unlockDoubleJump;
+                        elapsedEventsDuration = 0;
+                        break;
+                    case Events.unlockWallJump:
+                        Player.wallJumpUnlocked = true;
+                        AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.CurrentRoom].AddAnimatedSprite(
+                            new AnimatedSprite(new Vector2(256, 920), AnimatedSprite.SpriteType.displayWallJumpRelic, false));
+                        happening = Events.unlockWallJump;
+                        elapsedEventsDuration = 0;
+                        break;
+                }
+            }
+            else if (RoomsManager.CurrentRoom == RoomsManager.Rooms.midBoss)
+                switch(_event)
+                {
+                    case Events.keyAndPowerUpSpawn_midBoss:
+                        CollectablesManager.collectablesRoomManagers[(int)RoomsManager.CurrentRoom].AddCollectableToMap(
+                            new Collectable(new Point(280, 140), Collectable.ItemType.wallJump_powerup));
+                        CollectablesManager.collectablesRoomManagers[(int)RoomsManager.CurrentRoom].AddCollectableToMap(
+                            new Collectable(new Point(216, 148), Collectable.ItemType.brassKey));
+                        happening = Events.keyAndPowerUpSpawn_midBoss;
+                        elapsedEventsDuration = 0;
+                        break;
+
+                }
+            else if (RoomsManager.CurrentRoom == RoomsManager.Rooms.churchGroundFloor0)
             {
                 switch(_event)
                 {

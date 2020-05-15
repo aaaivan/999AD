@@ -46,7 +46,7 @@ namespace _999AD
         public static int editorHeight;
         public static MouseState mouseState;
         public static MouseState previousMouseState;
-        public static int tilesPerRow=10;
+        public static int tilesPerRow=11;
         public static int infoBoxHeightPx = 20;
 #endif
         public Game1()
@@ -174,12 +174,12 @@ namespace _999AD
                 }
             );
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
-            ProjectilesManager.Inizialize(Content.Load<Texture2D>("projectile"));
-            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(10,200));
+            ProjectilesManager.Inizialize(Content.Load<Texture2D>("animatedSprites"));
+            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(300,80));
             RoomsManager.Inizialize();
             GameEvents.Inizialize();
-            FireBallsManager.Inizialize(Content.Load<Texture2D>("fireball"), Content.Load<Texture2D>("laser"));
-            LavaGeyserManager.Inizialize(Content.Load<Texture2D>("lavaGeyser"),
+            FireBallsManager.Inizialize(Content.Load<Texture2D>("animatedSprites"));
+            LavaGeyserManager.Inizialize(Content.Load<Texture2D>("animatedSprites"),
                                          Content.Load<Texture2D>("whiteTile"));
             EnemyManager.Initialise(Content.Load<Texture2D>(@"characters\enemy1"), Content.Load<Texture2D>(@"characters\enemy2"));
             MidBoss.Initialise(Content.Load<Texture2D>(@"characters\midboss"));
@@ -188,12 +188,12 @@ namespace _999AD
                                                    Content.Load<Texture2D>(@"characters\healthyWing"),
                                                    Content.Load<Texture2D>(@"characters\damagedWing"),
                                                    Content.Load<Texture2D>(@"characters\deadWing")});
-            CollectablesManager.Inizialize(Content.Load<Texture2D>("collectables"));
+            CollectablesManager.Inizialize(Content.Load<Texture2D>("animatedSprites"));
             MonologuesManager.Inizialize(Content.Load<Texture2D>("dialogueBox"),
                                          Content.Load<Texture2D>("arrowDialogue"),
                                          Content.Load<Texture2D>("interact"),
                                          Content.Load<SpriteFont>(@"fonts\monologue"));
-            DoorsManager.Inizialize(Content.Load<Texture2D>("doors"));
+            DoorsManager.Inizialize(Content.Load<Texture2D>("animatedSprites"));
             AnimatedSpritesManager.Inizialize(Content.Load<Texture2D>("animatedSprites"));
 #endif
         }
@@ -249,6 +249,7 @@ namespace _999AD
                     ProjectilesManager.Update(elapsedTime);
                     GameEvents.Update(elapsedTime);
                     Collisions.Update(elapsedTime);
+                    CollectablesManager.Update(elapsedTime);
                     break;
                 case GameStates.dead:
                     PlayerDeathManager.Update(elapsedTime);
@@ -275,22 +276,26 @@ namespace _999AD
             spriteBatch.Begin();
             levelEditor.Draw(spriteBatch, tilesPerRow, infoBoxHeightPx, editorWidth, editorHeight);
             PlatformsManager.platformsRoomManagers[levelEditor.currentRoomNumber].Draw(spriteBatch);
+            MouseState mouseState = Mouse.GetState();
+            spriteBatch.DrawString(spriteFont, (mouseState.X / 4 + (int)Camera.position.X) + "," + (mouseState.Y / 4 + (int)Camera.position.Y), new Vector2(10, 10), Color.Blue);
             spriteBatch.End();
             GraphicsDevice.SetRenderTarget(null);
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             spriteBatch.Draw(nativeRenderTarget, viewportRectangle, Color.White);
             levelEditor.DrawText(spriteBatch, infoBoxHeightPx);
+
             spriteBatch.End();
 #else
             spriteBatch.Begin();
             Camera.Draw(spriteBatch);
             RoomsManager.Draw(spriteBatch);
+            CollectablesManager.Draw(spriteBatch);
 
             //<debug>
             //spriteBatch.Draw(white, Camera.RelativeRectangle(Player.CollisionRectangle), Color.Green);
             //MouseState mouseState = Mouse.GetState();
             //spriteBatch.DrawString(spriteFont, (mouseState.X / 5 + (int)Camera.position.X) + "," + (mouseState.Y / 5 + (int)Camera.position.Y), new Vector2(10, 10), Color.Blue);
-            spriteBatch.DrawString(spriteFont, Player.position.X + "," + Player.position.Y, new Vector2(10, 10), Color.Blue);
+            //spriteBatch.DrawString(spriteFont, Player.position.X + "," + Player.position.Y, new Vector2(10, 10), Color.Blue);
             //spriteBatch.DrawString(spriteFont, Player.healthPoints+"", new Vector2(10, 10), Color.Blue);
             //</debug>
 
@@ -298,7 +303,6 @@ namespace _999AD
             GraphicsDevice.SetRenderTarget(null);
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             spriteBatch.Draw(nativeRenderTarget, viewportRectangle, Color.White);
-
             spriteBatch.End();
 #endif
             base.Draw(gameTime);

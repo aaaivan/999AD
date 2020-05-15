@@ -41,6 +41,10 @@ namespace _999AD
                 LavaGeyserManager.Reset();
                 FireBallsManager.Reset();
                 ProjectilesManager.Reset();
+                EnemyManager.Reset();
+                if (!MidBoss.Dead)
+                    MidBoss.Reset();
+                CollectablesManager.ResetHearts();
                 GameEvents.Reset();
                 Player.ReplenishHealth();
                 switch (RoomsManager.CurrentRoom)

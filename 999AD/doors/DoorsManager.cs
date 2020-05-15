@@ -22,6 +22,7 @@ namespace _999AD
                 {
                     new DoorsRoomManager(new Door[] //tutorial0
                     {
+                        new Door(new Point(912, 168), Door.TextureType.brassDoor, Collectable.ItemType.brassKey)
                     }
                     ),
                     new DoorsRoomManager(new Door[] //tutorial1
@@ -30,18 +31,24 @@ namespace _999AD
                     ),
                     new DoorsRoomManager(new Door[] //tutorial2
                     {
+                        new Door(new Point(458,136), Door.TextureType.brassDoor, Collectable.ItemType.brassKey),
                     }
                     ),
                     new DoorsRoomManager(new Door[] //tutorial3
                     {
+                        new Door(new Point(520, 72), Door.TextureType.brassDoor, Collectable.ItemType.brassKey),
+                        new Door(new Point(768, 176), Door.TextureType.silverDoor, Collectable.ItemType.silverKey),
+
                     }
                     ),
                     new DoorsRoomManager(new Door[] //tutorial4
                     {
+                        new Door(new Point(120, 136), Door.TextureType.goldDoor, Collectable.ItemType.goldKey),
                     }
                     ),
                     new DoorsRoomManager(new Door[] //churchBellTower0
                     {
+                        new Door(new Point(472,200), Door.TextureType.silverDoor, Collectable.ItemType.silverKey)
                     }
                     ),
                     new DoorsRoomManager(new Door[] //churchBellTower1
@@ -54,14 +61,17 @@ namespace _999AD
                     ),
                     new DoorsRoomManager(new Door[] //midBoss
                     {
+                        new Door(new Point(48, 176), Door.TextureType.brassDoor, Collectable.ItemType.brassKey)
                     }
                     ),
                     new DoorsRoomManager(new Door[] //churchGroundFloor0
                     {
+                        new Door(new Point(1184, 448), Door.TextureType.brassDoor, Collectable.ItemType.brassKey),
                     }
                     ),
                     new DoorsRoomManager(new Door[] //churchAltarRoom
                     {
+                        new Door(new Point(96, 448), Door.TextureType.bronzeDoor, Collectable.ItemType.bronzeKey)
                     }
                     ),
                     new DoorsRoomManager(new Door[] //church1stFloor0

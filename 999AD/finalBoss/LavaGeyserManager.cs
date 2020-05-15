@@ -18,7 +18,7 @@ namespace _999AD
         #region CONSTRUCTOR
         static public void Inizialize(Texture2D spritesheet, Texture2D whiteTexture)
         {
-            LavaGeyser.Inizialize(spritesheet, whiteTexture);
+            LavaGeyser.Inizialize(spritesheet);
             lavaGeysers = new List<LavaGeyser>();
         }
         public static void Reset()

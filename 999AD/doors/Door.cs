@@ -14,7 +14,7 @@ namespace _999AD
         #region DECLARATIONS
         public enum TextureType
         {
-            redDoor, greenDoor, total
+            brassDoor, goldDoor,bronzeDoor, silverDoor,  total
         }
         static Texture2D spritesheet;
         static Rectangle[] sourceRectangles;
@@ -37,7 +37,9 @@ namespace _999AD
             sourceRectangles = new Rectangle[(int)TextureType.total]
                 {
                     new Rectangle(0,0,16,40),
-                    new Rectangle(16,0,16,40)
+                    new Rectangle(112,0,16,40),
+                    new Rectangle(224,0,16,40),
+                    new Rectangle(336,0,16,40),
                 };
         }
         #endregion
@@ -85,7 +87,7 @@ namespace _999AD
         public void Update()
         {
             if (InteractionRectangle.Intersects(Player.CollisionRectangle) &&
-                CollectablesManager.TryRemoveFromInventory(key))
+                CollectablesManager.TryRemoveFromInventory(key,new Vector2(DrawRectangle.Center.X, DrawRectangle.Center.Y)))
             {
                 closed = false;
                 int topRow = (int)position.Y / Tile.tileSize;
@@ -99,6 +101,8 @@ namespace _999AD
                         MapsManager.maps[(int)RoomsManager.CurrentRoom].array[row, col].tileType = Tile.TileType.empty;
                     }
                 }
+                AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.CurrentRoom].AddAnimatedSprite(
+                    new AnimatedSprite(new Vector2(position.X, position.Y), AnimatedSprite.GetDoorAnimation(textureType)));
             }
         }
         public void Draw(SpriteBatch spriteBatch)
