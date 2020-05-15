@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +37,10 @@ namespace _999AD
         public static GamePadState previousGamePad;
         public static GamePadState currentGamePad;
         public static GameStates currentGameState;
+
+        private static Song finalBossMusic;
+        SoundEffects soundEffects = new SoundEffects();
+
         //<debug>
         SpriteFont spriteFont;
         Texture2D white;
@@ -195,6 +201,30 @@ namespace _999AD
                                          Content.Load<SpriteFont>(@"fonts\monologue"));
             DoorsManager.Inizialize(Content.Load<Texture2D>("animatedSprites"));
             AnimatedSpritesManager.Inizialize(Content.Load<Texture2D>("animatedSprites"));
+
+            soundEffects.Initialise
+                (
+                //Player Sound Effects
+                Content.Load<SoundEffect>(@"sounds\pJump"),
+                Content.Load<Song>(@"sounds\pShoot"),
+                Content.Load<SoundEffect>(@"sounds\pHurt"),
+
+                //Enemy Sound Effects
+                Content.Load<Song>(@"sounds\enemyAttack"),
+                Content.Load<SoundEffect>(@"sounds\enemyHurt"),
+                Content.Load<SoundEffect>(@"sounds\e2Attack"),
+
+                //Midboss Sound Effects
+                Content.Load<Song>(@"sounds\midMove"),
+                Content.Load<SoundEffect>(@"sounds\midAttack"),
+                Content.Load<Song>(@"sounds\midHurt"),
+
+                Content.Load<Song>(@"sounds\finAttack"),
+                Content.Load<Song>(@"sounds\finHurt"),
+                Content.Load<Song>(@"sounds\finAwaken"),
+                Content.Load<Song>(@"sounds\finRecover")
+                );
+
 #endif
         }
 
@@ -244,11 +274,11 @@ namespace _999AD
             switch(currentGameState)
             {
                 case GameStates.playing:
-                    RoomsManager.Update(elapsedTime);
+                    RoomsManager.Update(elapsedTime, soundEffects);
                     Player.Update(elapsedTime);
                     ProjectilesManager.Update(elapsedTime);
                     GameEvents.Update(elapsedTime);
-                    Collisions.Update(elapsedTime);
+                    Collisions.Update(elapsedTime, soundEffects);
                     CollectablesManager.Update(elapsedTime);
                     break;
                 case GameStates.dead:

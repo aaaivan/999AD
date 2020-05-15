@@ -29,18 +29,18 @@ namespace _999AD
 
         #region METHODS
         //Update Function
-        public void Update(float elapsedTime)
+        public void Update(float elapsedTime, SoundEffects soundEffects)
         {
             //Updating each Enemy 1 in the list
             foreach (Enemy1 enemy in enemiesType1)
             {
-                enemy.Update(elapsedTime);
+                enemy.Update(elapsedTime, soundEffects);
             }
 
             //Updating each Enemy 2 in the list
             foreach(Enemy2 enemy in enemiesType2)
             {
-                enemy.Update(elapsedTime);
+                enemy.Update(elapsedTime, soundEffects);
             }
         }
 

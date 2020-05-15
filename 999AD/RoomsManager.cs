@@ -27,7 +27,7 @@ namespace _999AD
         #region CONSTRUCTOR
         public static void Inizialize()
         {
-            currentRoom = Rooms.church2ndFloor0;
+            currentRoom = Rooms.tutorial0;
             previousRoom = Rooms.tutorial4;
             CameraManager.SwitchCamera(currentRoom);
         }
@@ -579,7 +579,7 @@ namespace _999AD
                     break;
             }
         }
-        public static void Update(float elapsedTime)
+        public static void Update(float elapsedTime, SoundEffects soundEffects)
         {
             switchRoom();
             CameraManager.Update(elapsedTime);
@@ -590,9 +590,9 @@ namespace _999AD
             }
             if(currentRoom==Rooms.midBoss)
             {
-               MidBoss.Update(elapsedTime);
+               MidBoss.Update(elapsedTime, soundEffects);
             }
-            EnemyManager.enemyRoomManagers[(int)currentRoom].Update(elapsedTime);
+            EnemyManager.enemyRoomManagers[(int)currentRoom].Update(elapsedTime, soundEffects);
             FireBallsManager.Update(elapsedTime);
             LavaGeyserManager.Update(elapsedTime);
             PlatformsManager.platformsRoomManagers[(int)currentRoom].Update(elapsedTime);
