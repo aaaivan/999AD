@@ -195,6 +195,11 @@ namespace _999AD
             }
         }
 
+        public static BossAnimations CurrentState // Returns current state of the boss animation to play the soundtrack
+        {
+            get { return bossAnimation; }
+        }
+
         public static Rectangle RightWingDrawRectangle
         {
             get

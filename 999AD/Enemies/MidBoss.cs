@@ -50,6 +50,7 @@ namespace _999AD
         static Random random = new Random();
         static bool dead = false;
         static Color bossColor = Color.White;
+        static bool awaken;
         #endregion
 
         #region CONSTRUCTOR
@@ -68,6 +69,7 @@ namespace _999AD
             movementSpeed = 0f;
             moveToP2 = false;
             moveToP1 = false;
+            awaken = false;
 
             bossAnimations = new Animation[(int)BossState.total]
             {
@@ -102,6 +104,12 @@ namespace _999AD
         public static bool Dead
         {
             get { return dead; }
+        }
+
+        //Returns the boolean first to play the soundtrack
+        public static bool Awaken
+        {
+            get { return awaken; }
         }
 
         #endregion
@@ -254,6 +262,11 @@ namespace _999AD
         //Takes elapsed time as a parameter to produce a delay when states are changed
         public static void ChangeFromIdle(float elapsedTime)
         {
+            if(awaken==false)
+            {
+                awaken = true;
+            }
+
             if (elapsedChangeTime > timeUntilChange)
                 {
                     ChangeState();

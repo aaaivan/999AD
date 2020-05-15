@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +37,12 @@ namespace _999AD
         public static GamePadState previousGamePad;
         public static GamePadState currentGamePad;
         public static GameStates currentGameState;
+
+        //private static Song gameMusic;
+        //private static Song midBossMusic;
+        //private static Song finalBossMusic;
+        SoundEffects soundEffects = new SoundEffects();
+
         //<debug>
         SpriteFont spriteFont;
         Texture2D white;
@@ -195,6 +203,36 @@ namespace _999AD
                                          Content.Load<SpriteFont>(@"fonts\monologue"));
             DoorsManager.Inizialize(Content.Load<Texture2D>("doors"));
             AnimatedSpritesManager.Inizialize(Content.Load<Texture2D>("animatedSprites"));
+
+            //gameMusic = Content.Load<Song>(@"sounds\gameMusic");
+            //midBossMusic = Content.Load<Song>(@"sounds\midBossMusic")
+            //finalBossMusic = Content.Load<Song>(@"sounds\finalBossMusic");
+            /*
+            soundEffects.Initialise
+                (
+                //Player Sound Effects
+                Content.Load<SoundEffect>(@"sounds\pJump"),
+                Content.Load<SoundEffect>(@"sounds\pShoot"),
+                Content.Load<SoundEffect>(@"sounds\pHurt"),
+
+                //Enemy Sound Effects
+                Content.Load<SoundEffect>(@"sounds\enemyAttack"),
+                Content.Load<SoundEffect>(@"sounds\enemyHurt"),
+                Content.Load<SoundEffect>(@"sounds\e2Attack"),
+
+                //Midboss Sound Effects
+                Content.Load<SoundEffect>(@"sounds\midMove"),
+                Content.Load<SoundEffect>(@"sounds\midAttack"),
+                Content.Load<SoundEffect>(@"sounds\midHurt"),
+
+                Content.Load<SoundEffect>(@"sounds\finAttack"),
+                Content.Load<SoundEffect>(@"sounds\finHurt"),
+                Content.Load<SoundEffect>(@"sounds\finAwaken"),
+                Content.Load<SoundEffect>(@"sounds\finRecover")
+                );
+            */
+            //MediaPlayer.Play(gameMusic);
+
 #endif
         }
 
@@ -254,6 +292,30 @@ namespace _999AD
                     PlayerDeathManager.Update(elapsedTime);
                     break;
             }
+
+            /*
+             if((RoomsManager.CurrentRoom==RoomsManager.Rooms.midBoss)&& !MidBoss.Dead && MidBoss.Awaken==true)
+            {
+                MediaPlayer.Pause(gameMusic);
+                MediaPlayer.Play(midBossMusic);
+            }
+            else if(MidBoss.Dead)
+            {
+                MediaPlayer.Pause(midBossMusic);
+                MediaPlayer.Resume(gameMusic);
+            }
+
+            if((RoomsManager.CurrentRoom==RoomsManager.Rooms.finalBoss)&&!FinalBoss.Dead && FinalBoss.CurrentState!=FinalBoss.BossAnimations.stoneToIdle)
+            {
+                MediaPlayer.Pause(gameMusic);
+                MediaPlayer.Play(finalBossMusic);
+            }
+            else if(FinalBoss.Dead)
+            {
+                MediaPlayer.Pause(finalBossMusic);
+                MediaPlayer.Resume(gameMusic);
+            }
+            */
 
 #endif
             previousKeyboard = currentKeyboard;
