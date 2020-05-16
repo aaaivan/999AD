@@ -60,7 +60,7 @@ namespace _999AD
 
         //Vector for projectile velocity
         //First value is horizontal distance, second value is vertical distance
-        public readonly Vector2 projectileInitialVelocity = new Vector2(500, -150);
+        public readonly Vector2 projectileInitialVelocity = new Vector2(500, -60);
 
         #endregion
 
@@ -293,7 +293,7 @@ namespace _999AD
             {
                 enemyHP--;
                 soundEffects.EnemyHurt.Play();
-                enemyColor = Color.Red * 0.5f;
+                enemyColor = Color.Red * 0.6f;
                 return true;
             }
             return false;
@@ -415,7 +415,7 @@ namespace _999AD
                     Player.Rebound(0.75f);
                     soundEffects.EnemyHurt.Play();
                     enemyHP--;
-                    enemyColor = Color.Red * 0.5f;
+                    enemyColor = Color.Red * 0.6f;
                 }
                 else
                 {

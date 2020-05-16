@@ -64,8 +64,8 @@ namespace _999AD
                 (
                     new Enemy1[]
                     {
-                        new Enemy1(new Vector2(300, 192), new Vector2(500, 192)),
-                        new Enemy1( new Vector2(250, 87), new Vector2(450, 87)),
+                        new Enemy1(new Vector2(200, 192), new Vector2(500, 192)),
+                        new Enemy1(new Vector2(250, 87), new Vector2(450, 87)),
                     },
                     new Enemy2[]
                     {

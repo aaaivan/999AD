@@ -53,6 +53,10 @@ namespace _999AD
         {
             get { return collected; }
         }
+        public static Texture2D Sprites
+        {
+            get { return spritesheet; }
+        }
         #endregion
         #region METHODS
         public void Update(float elapsedTime)
