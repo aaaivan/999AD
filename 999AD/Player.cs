@@ -114,8 +114,11 @@ namespace _999AD
         #region METHODS
         public static void Update(float elapsedTime)
         {
-            CheckMovementInput();
-            CheckAttackInput(elapsedTime);
+            if (healthPoints > 0)
+            {
+                CheckMovementInput();
+                CheckAttackInput(elapsedTime);
+            }
             Move(elapsedTime);
             AnimationStateMachine(elapsedTime);
             if (invulnerable)

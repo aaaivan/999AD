@@ -19,11 +19,11 @@ namespace _999AD
     {
         public enum GameStates
         {
-            playing, dead, total
+            titleScreen, controls, credits, intro, playing, pause, dead, ending, quit, confirmQuit, total
         }
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        public static readonly int min_gameWidth = 1920 / 5; //pixels on the x axis
+        public static readonly int min_gameWidth = 1920/5; //pixels on the x axis
         public static readonly int min_gameHeight = 1080 / 5; //pixels on the y axis
         public static  int gameWidth; //pixels on the x axis
         public static int gameHeight; //pixels on the y axis
@@ -32,6 +32,8 @@ namespace _999AD
         static RenderTarget2D renderTarget_zoom1;
         static RenderTarget2D renderTarger_zoom0dot5;
         public static int scale;
+        public static MouseState currentMouseState;
+        public static MouseState previousMouseState;
         public static KeyboardState previousKeyboard;
         public static KeyboardState currentKeyboard;
         public static GamePadState previousGamePad;
@@ -41,17 +43,15 @@ namespace _999AD
         private static Song finalBossMusic;
         SoundEffects soundEffects = new SoundEffects();
 
+        bool gameInitialized;
         //<debug>
         SpriteFont spriteFont;
         Texture2D white;
         //</debug>
-
 #if LEVEL_EDITOR
         LevelEditor levelEditor;
         public static int editorWidth;
         public static int editorHeight;
-        public static MouseState mouseState;
-        public static MouseState previousMouseState;
         public static int tilesPerRow=11;
         public static int infoBoxHeightPx = 20;
 #endif
@@ -74,8 +74,8 @@ namespace _999AD
             gameWidth = min_gameWidth;
             gameHeight = min_gameHeight;
 #if LEVEL_EDITOR
-            mouseState = Mouse.GetState();
-            previousMouseState = mouseState;
+            currentMouseState = Mouse.GetState();
+            previousMouseState = currentMouseState;
             editorWidth= gameWidth + Tile.tileSize * tilesPerRow;
             editorHeight= gameHeight + infoBoxHeightPx;
             scale = MathHelper.Min(GraphicsDevice.DisplayMode.Width / editorWidth, GraphicsDevice.DisplayMode.Height / editorHeight);
@@ -91,7 +91,6 @@ namespace _999AD
             //scale = 1;
             renderTarget_zoom1 = new RenderTarget2D(GraphicsDevice, gameWidth, gameHeight);
             renderTarger_zoom0dot5 = new RenderTarget2D(GraphicsDevice, gameWidth*2, gameHeight*2);
-            nativeRenderTarget = renderTarget_zoom1;
             viewportRectangle = new Rectangle(
                 0,
                 0,
@@ -102,7 +101,7 @@ namespace _999AD
             graphics.ApplyChanges();
             previousKeyboard = Keyboard.GetState();
             previousGamePad = GamePad.GetState(PlayerIndex.One);
-
+            previousMouseState = Mouse.GetState();
 #endif
             base.Initialize();
         }
@@ -121,7 +120,6 @@ namespace _999AD
             spriteFont = Content.Load<SpriteFont>(@"fonts\monologue");
             white = Content.Load<Texture2D>("whiteTile");
             //</debug>
-
 #if LEVEL_EDITOR
             MapsManager.Inizialize(Content.Load<Texture2D>("tiles"));
             CameraManager.Inizialize
@@ -153,7 +151,7 @@ namespace _999AD
                                           Content.Load<SpriteFont>(@"fonts\arial14"),
                                           Content.Load<Texture2D>("whiteTile"));
 #else
-            currentGameState = GameStates.playing;
+            currentGameState = GameStates.titleScreen;
             MapsManager.Inizialize(Content.Load<Texture2D>("tiles"));
             CameraManager.Inizialize
             (
@@ -181,12 +179,11 @@ namespace _999AD
             );
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
             ProjectilesManager.Inizialize(Content.Load<Texture2D>("animatedSprites"));
-            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(300,80));
+            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(100,185));
             RoomsManager.Inizialize();
             GameEvents.Inizialize();
             FireBallsManager.Inizialize(Content.Load<Texture2D>("animatedSprites"));
-            LavaGeyserManager.Inizialize(Content.Load<Texture2D>("animatedSprites"),
-                                         Content.Load<Texture2D>("whiteTile"));
+            LavaGeyserManager.Inizialize(Content.Load<Texture2D>("animatedSprites"));
             EnemyManager.Initialise(Content.Load<Texture2D>(@"characters\enemy1"), Content.Load<Texture2D>(@"characters\enemy2"));
             MidBoss.Initialise(Content.Load<Texture2D>(@"characters\midboss"));
             FinalBoss.Inizialize(Content.Load<Texture2D>(@"characters\finalBoss"),
@@ -195,13 +192,24 @@ namespace _999AD
                                                    Content.Load<Texture2D>(@"characters\damagedWing"),
                                                    Content.Load<Texture2D>(@"characters\deadWing")});
             CollectablesManager.Inizialize(Content.Load<Texture2D>("animatedSprites"));
-            MonologuesManager.Inizialize(Content.Load<Texture2D>("dialogueBox"),
-                                         Content.Load<Texture2D>("arrowDialogue"),
-                                         Content.Load<Texture2D>("interact"),
+            MonologuesManager.Inizialize(Content.Load<Texture2D>("animatedSprites"),
                                          Content.Load<SpriteFont>(@"fonts\monologue"));
             DoorsManager.Inizialize(Content.Load<Texture2D>("animatedSprites"));
             AnimatedSpritesManager.Inizialize(Content.Load<Texture2D>("animatedSprites"));
-
+            PlayerDeathManager.Initialize(Content.Load<Texture2D>(@"menus\deathScreen"),
+                                          Content.Load<Texture2D>(@"menus\menuOptions"));
+            MenusManager.Initialize(Content.Load<Texture2D>(@"menus\menuOptions"),
+                new Texture2D[]
+                {
+                    Content.Load<Texture2D>(@"menus\titleScreen"),
+                    Content.Load<Texture2D>(@"menus\controls"),
+                    Content.Load<Texture2D>(@"menus\credits"),
+                    Content.Load<Texture2D>(@"menus\pause"),
+                    Content.Load<Texture2D>(@"menus\quit"),
+                });
+            CutscenesManager.Initialize(Content.Load<Texture2D>(@"characters\enemy1"),
+                                        Content.Load<Texture2D>(@"characters\player"),
+                                        Content.Load<SpriteFont>(@"fonts\monologue"));
             soundEffects.Initialise
                 (
                 //Player Sound Effects
@@ -224,7 +232,8 @@ namespace _999AD
                 Content.Load<Song>(@"sounds\finAwaken"),
                 Content.Load<Song>(@"sounds\finRecover")
                 );
-
+            gameInitialized=true;
+            Zoom1();
 #endif
         }
 
@@ -262,18 +271,41 @@ namespace _999AD
 
             currentKeyboard = Keyboard.GetState();
             currentGamePad = GamePad.GetState(PlayerIndex.One);
+            currentMouseState = Mouse.GetState();
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             // TODO: Add your update logic here
 #if LEVEL_EDITOR
-            mouseState = Mouse.GetState();
-            levelEditor.Update(mouseState, previousMouseState, tilesPerRow, infoBoxHeightPx);
+            levelEditor.Update(currentMouseState, previousMouseState, tilesPerRow, infoBoxHeightPx);
             CameraManager.Update(elapsedTime);
             PlatformsManager.platformsRoomManagers[levelEditor.currentRoomNumber].Update(elapsedTime);
-            previousMouseState = mouseState;
 #else
             switch(currentGameState)
             {
+                case GameStates.titleScreen:
+                    if (!gameInitialized)
+                        LoadContent();
+                    MenusManager.menus[(int)MenusManager.MenuType.titleScreen].Update();
+                    break;
+                case GameStates.controls:
+                    MenusManager.menus[(int)MenusManager.MenuType.controls].Update();
+                    break;
+                case GameStates.credits:
+                    MenusManager.menus[(int)MenusManager.MenuType.credits].Update();
+                    break;
+                case GameStates.intro:
+                    if (CutscenesManager.cutscenes[(int)CutscenesManager.CutsceneType.intro].active)
+                        CutscenesManager.cutscenes[(int)CutscenesManager.CutsceneType.intro].Update(elapsedTime);
+                    else
+                        currentGameState = GameStates.playing;
+                    break;
                 case GameStates.playing:
+                    if ((currentKeyboard.IsKeyDown(Keys.P) && !previousKeyboard.IsKeyDown(Keys.P)) ||
+                        (currentKeyboard.IsKeyDown(Keys.M) && !previousKeyboard.IsKeyDown(Keys.M)) ||
+                        (currentGamePad.Buttons.Start== ButtonState.Pressed && previousGamePad.Buttons.Start == ButtonState.Released))
+                    {
+                        currentGameState = GameStates.pause;
+                        break;
+                    }
                     RoomsManager.Update(elapsedTime, soundEffects);
                     Player.Update(elapsedTime);
                     ProjectilesManager.Update(elapsedTime);
@@ -281,14 +313,42 @@ namespace _999AD
                     Collisions.Update(elapsedTime, soundEffects);
                     CollectablesManager.Update(elapsedTime);
                     break;
+                case GameStates.pause:
+                    if ((currentKeyboard.IsKeyDown(Keys.P) && !previousKeyboard.IsKeyDown(Keys.P)) ||
+                        (currentKeyboard.IsKeyDown(Keys.M) && !previousKeyboard.IsKeyDown(Keys.M)) ||
+                        (currentGamePad.Buttons.Start == ButtonState.Pressed && previousGamePad.Buttons.Start == ButtonState.Released))
+                    {
+                        MenusManager.menus[(int)MenusManager.MenuType.pause].Reset();
+                        currentGameState = GameStates.playing;
+                        break;
+                    }
+                    MenusManager.menus[(int)MenusManager.MenuType.pause].Update();
+                    break;
+                case GameStates.confirmQuit:
+                    MenusManager.menus[(int)MenusManager.MenuType.confirmQuit].Update();
+                    if (currentGameState == GameStates.titleScreen)
+                        gameInitialized = false;
+                    break;
                 case GameStates.dead:
                     PlayerDeathManager.Update(elapsedTime);
+                    break;
+                case GameStates.ending:
+                    if (!CutscenesManager.cutscenes[(int)CutscenesManager.CutsceneType.ending].active)
+                    {
+                        currentGameState = GameStates.credits;
+                        gameInitialized = false;
+                    }
+                    CutscenesManager.cutscenes[(int)CutscenesManager.CutsceneType.ending].Update(elapsedTime);
+                    break;
+                case GameStates.quit:
+                    Exit();
                     break;
             }
 
 #endif
             previousKeyboard = currentKeyboard;
             previousGamePad = currentGamePad;
+            previousMouseState = currentMouseState;
             base.Update(gameTime);
         }
 
@@ -298,9 +358,6 @@ namespace _999AD
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.SetRenderTarget(nativeRenderTarget);
-            GraphicsDevice.Clear(Color.Black);
-
             // TODO: Add your drawing code here
 #if LEVEL_EDITOR
             spriteBatch.Begin();
@@ -317,22 +374,83 @@ namespace _999AD
             spriteBatch.End();
 #else
             spriteBatch.Begin();
-            Camera.Draw(spriteBatch);
-            RoomsManager.Draw(spriteBatch);
-            CollectablesManager.Draw(spriteBatch);
+            switch(currentGameState)
+            {
+                case GameStates.titleScreen:
+                    GraphicsDevice.SetRenderTarget(renderTarget_zoom1);
+                    GraphicsDevice.Clear(Color.Black);
+                    MenusManager.menus[(int)MenusManager.MenuType.titleScreen].Draw(spriteBatch);
+                    break;
+                case GameStates.controls:
+                    GraphicsDevice.SetRenderTarget(renderTarget_zoom1);
+                    GraphicsDevice.Clear(Color.Black);
+                    MenusManager.menus[(int)MenusManager.MenuType.controls].Draw(spriteBatch);
+                    break;
+                case GameStates.credits:
+                    GraphicsDevice.SetRenderTarget(renderTarget_zoom1);
+                    GraphicsDevice.Clear(Color.Black);
+                    MenusManager.menus[(int)MenusManager.MenuType.credits].Draw(spriteBatch);
+                    break;
+                case GameStates.intro:
+                    GraphicsDevice.SetRenderTarget(renderTarget_zoom1);
+                    GraphicsDevice.Clear(Color.Black);
+                    CutscenesManager.cutscenes[(int)CutscenesManager.CutsceneType.intro].Draw(spriteBatch);
+                    break;
+                case GameStates.playing:
+                    GraphicsDevice.SetRenderTarget(nativeRenderTarget);
+                    GraphicsDevice.Clear(Color.Black);
+                    Camera.Draw(spriteBatch);
+                    RoomsManager.Draw(spriteBatch);
+                    CollectablesManager.Draw(spriteBatch);
+                    break;
+                case GameStates.pause:
+                    GraphicsDevice.SetRenderTarget(renderTarget_zoom1);
+                    GraphicsDevice.Clear(Color.Black);
+                    MenusManager.menus[(int)MenusManager.MenuType.pause].Draw(spriteBatch);
+                    break;
+                case GameStates.dead:
+                    GraphicsDevice.SetRenderTarget(nativeRenderTarget);
+                    GraphicsDevice.Clear(Color.Black);
+                    Camera.Draw(spriteBatch);
+                    RoomsManager.Draw(spriteBatch);
+                    CollectablesManager.Draw(spriteBatch);
+                    GraphicsDevice.SetRenderTarget(renderTarget_zoom1);
+                    GraphicsDevice.Clear(Color.Black);
+                    PlayerDeathManager.Draw(spriteBatch);
+                    break;
+                case GameStates.ending:
+                    GraphicsDevice.SetRenderTarget(renderTarget_zoom1);
+                    GraphicsDevice.Clear(Color.Black);
+                    CutscenesManager.cutscenes[(int)CutscenesManager.CutsceneType.ending].Draw(spriteBatch);
+                    break;
+                case GameStates.confirmQuit:
+                    GraphicsDevice.SetRenderTarget(renderTarget_zoom1);
+                    GraphicsDevice.Clear(Color.Black);
+                    MenusManager.menus[(int)MenusManager.MenuType.confirmQuit].Draw(spriteBatch);
+                    break;
+            }
 
             //<debug>
             //spriteBatch.Draw(white, Camera.RelativeRectangle(Player.CollisionRectangle), Color.Green);
             //MouseState mouseState = Mouse.GetState();
-            //spriteBatch.DrawString(spriteFont, (mouseState.X / 5 + (int)Camera.position.X) + "," + (mouseState.Y / 5 + (int)Camera.position.Y), new Vector2(10, 10), Color.Blue);
-            //spriteBatch.DrawString(spriteFont, Player.position.X + "," + Player.position.Y, new Vector2(10, 10), Color.Blue);
+            //spriteBatch.DrawString(spriteFont, (currentMouseState.X / 5 + (int)Camera.position.X) + "," + (currentMouseState.Y / 5 + (int)Camera.position.Y), new Vector2(10, 10), Color.Blue);
+            spriteBatch.DrawString(spriteFont, Player.position.X + "," + Player.position.Y, new Vector2(10, 10), Color.Blue);
             //spriteBatch.DrawString(spriteFont, Player.healthPoints+"", new Vector2(10, 10), Color.Blue);
             //</debug>
 
             spriteBatch.End();
             GraphicsDevice.SetRenderTarget(null);
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            spriteBatch.Draw(nativeRenderTarget, viewportRectangle, Color.White);
+            if (currentGameState == GameStates.playing)
+                spriteBatch.Draw(nativeRenderTarget, viewportRectangle, Color.White);
+            else if (currentGameState == GameStates.dead)
+            {
+                spriteBatch.Draw(nativeRenderTarget, viewportRectangle, Color.White);
+                spriteBatch.Draw(renderTarget_zoom1, viewportRectangle, Color.White);
+            }
+            else
+                spriteBatch.Draw(renderTarget_zoom1, viewportRectangle, Color.White);
+
             spriteBatch.End();
 #endif
             base.Draw(gameTime);
