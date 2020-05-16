@@ -219,7 +219,7 @@ namespace _999AD
             //If the player goes outside the given range,
             //The state will be changed acccordingly
             //Else, the Projectile attack will be delivered
-            if (Math.Abs(currentPoint.X - Player.CollisionRectangle.X) < meleeDistance)
+            if (Math.Abs(currentPoint.X - Player.CollisionRectangle.X) < meleeDistance && Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 5)
             {
                 enemyState = EnemyState.melee;
             }
@@ -259,7 +259,7 @@ namespace _999AD
             //If the player goes outside the given range,
             //The state will be changed accordingly
             //Else, the Melee attack will be delivered
-            if (Math.Abs(currentPoint.X - Player.CollisionRectangle.X)>=meleeDistance)
+            if (Math.Abs(currentPoint.X - Player.CollisionRectangle.X)>=meleeDistance && Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 5)
             {
                 enemyState = EnemyState.attack;
             }
@@ -320,7 +320,7 @@ namespace _999AD
         {
             moving = true;
 
-            if(Math.Abs(currentPoint.X - Player.CollisionRectangle.X)<shootDistance)
+            if(Math.Abs(currentPoint.X - Player.CollisionRectangle.X)<shootDistance && Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 5)
             {
                 movementSpeed = 0f;
                 if (Enemy2CollisionRect.X + 5 < Player.CollisionRectangle.X)

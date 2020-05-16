@@ -34,11 +34,9 @@ namespace _999AD
                 (
                     new Enemy1[]
                     {
-                        //new Enemy1(new Vector2(300,185), new Vector2(500,185))
                     },
                     new Enemy2[]
                     {
-                        //new Enemy2(new Vector2(400,185), new Vector2(500,185))
                     }
                 ),
 
@@ -66,9 +64,8 @@ namespace _999AD
                 (
                     new Enemy1[]
                     {
-                        new Enemy1(new Vector2(150, 200), new Vector2(400, 200)),
-                        new Enemy1( new Vector2(200, 200), new Vector2(500, 200)),
-                        new Enemy1( new Vector2(250, 200), new Vector2(600, 200))
+                        new Enemy1(new Vector2(300, 192), new Vector2(500, 192)),
+                        new Enemy1( new Vector2(250, 87), new Vector2(450, 87)),
                     },
                     new Enemy2[]
                     {
@@ -96,9 +93,12 @@ namespace _999AD
                 (
                     new Enemy1[]
                     {
+                        new Enemy1(new Vector2(130,120), new Vector2(230,120)),
+                        new Enemy1(new Vector2(110,616), new Vector2(220,616))
                     },
                     new Enemy2[]
                     {
+                        new Enemy2(new Vector2(100,937), new Vector2(125,937))
                     }
                 ),
                 new EnemyRoomManager // churchBellTower2
@@ -108,28 +108,25 @@ namespace _999AD
                     },
                     new Enemy2[]
                     {
+                        new Enemy2(new Vector2(120,1177), new Vector2(400,1177))
                     }
                 ),
                 new EnemyRoomManager // Midboss
                 (
                     new Enemy1[]
                     {
-                        //For testing purposes only
-                        //new Enemy1(e1Spritesheet, new Vector2(150, 168)),
-                        //new Enemy1(e1Spritesheet, new Vector2(200, 168)),
-                        //new Enemy1(e1Spritesheet, new Vector2(250, 168))
                     },
                     new Enemy2[]
                     {
-                        //For testing purposes only
-                        //new Enemy2(e2Spritesheet, new Vector2(150,190)),
-                        //new Enemy2(e2Spritesheet, new Vector2(250,190))
                     }
                 ),
                 new EnemyRoomManager // churchGroundFloor0
                 (
                     new Enemy1[]
                     {
+                        new Enemy1(new Vector2(250,400), new Vector2(375,400)),
+                        new Enemy1(new Vector2(875,375), new Vector2(925,375)),
+                        new Enemy1(new Vector2(80,304), new Vector2(180,304))
                     },
                     new Enemy2[]
                     {
@@ -148,6 +145,7 @@ namespace _999AD
                 (
                     new Enemy1[]
                     {
+                        new Enemy1(new Vector2(860,200), new Vector2(985,200))
                     },
                     new Enemy2[]
                     {
@@ -157,9 +155,11 @@ namespace _999AD
                 (
                     new Enemy1[]
                     {
+                        new Enemy1(new Vector2(1125,344), new Vector2(1275,344))
                     },
                     new Enemy2[]
                     {
+                        new Enemy2(new Vector2(1150,441), new Vector2(1300,441))
                     }
                 ),
 
@@ -167,9 +167,12 @@ namespace _999AD
                 (
                     new Enemy1[]
                     {
+                        new Enemy1(new Vector2(155,120), new Vector2(320,120)),
+                        new Enemy1(new Vector2(170,232), new Vector2(170,232))
                     },
                     new Enemy2[]
                     {
+                        new Enemy2(new Vector2(220,232), new Vector2(320,232))
                     }
                 ),
 
