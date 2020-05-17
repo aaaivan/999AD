@@ -15,10 +15,10 @@ namespace _999AD
         public static MonologuesRoomManager[] monologuesRoomManagers;
         #endregion
         #region CONSTRUCTOR
-        public static void Inizialize(Texture2D dialogueBox,Texture2D arrow, Texture2D interactSymbol, SpriteFont spriteFont)
+        public static void Inizialize(Texture2D spritesheet, SpriteFont spriteFont)
         {
-            Monologue.Inizialize(dialogueBox,arrow, spriteFont);
-            MonologuesRoomManager.Inizialize(interactSymbol);
+            Monologue.Inizialize(spritesheet, spriteFont);
+            MonologuesRoomManager.Inizialize(spritesheet);
             monologuesRoomManagers = new MonologuesRoomManager[(int)RoomsManager.Rooms.total]
             {
                 new MonologuesRoomManager(  //tutorial0

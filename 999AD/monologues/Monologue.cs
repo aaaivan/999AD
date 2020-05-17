@@ -12,8 +12,9 @@ namespace _999AD
     class Monologue
     {
         #region DECLARATIONS
-        public static Texture2D dialogueBox;
-        public static Texture2D arrow;
+        public static Texture2D spritesheet;
+        public static Rectangle sourceRectangle_dialogueBox;
+        public static Rectangle sourceRectangle_arrow;
         public static SpriteFont spriteFont;
         static Rectangle boxRectangle;
         static Vector2 stringPosition;
@@ -42,14 +43,15 @@ namespace _999AD
             sentences = _sentences;
             playAutomatically = _playAutomatically;
         }
-        public static void Inizialize(Texture2D _dialogueBox, Texture2D _arrow, SpriteFont _spriteFont)
+        public static void Inizialize(Texture2D _spritesheet, SpriteFont _spriteFont)
         {
-            dialogueBox = _dialogueBox;
+            spritesheet = _spritesheet;
             spriteFont = _spriteFont;
-            arrow = _arrow;
-            boxRectangle= new Rectangle((Game1.gameWidth - dialogueBox.Width) / 2, 10, dialogueBox.Width, dialogueBox.Height);
+            sourceRectangle_dialogueBox = new Rectangle(24, 173, 360, 48);
+            sourceRectangle_arrow = new Rectangle(384, 173, 8, 8);
+            boxRectangle= new Rectangle((Game1.gameWidth - sourceRectangle_dialogueBox.Width) / 2, 10, sourceRectangle_dialogueBox.Width, sourceRectangle_dialogueBox.Height);
             stringPosition = new Vector2(boxRectangle.X + 50, boxRectangle.Y + 4);
-            arrowRectangle = new Rectangle(boxRectangle.Right-4-arrow.Width, boxRectangle.Bottom - 4 - arrow.Height, arrow.Width, arrow.Height);
+            arrowRectangle = new Rectangle(boxRectangle.Right-4- sourceRectangle_arrow.Width, boxRectangle.Bottom - 4 - sourceRectangle_arrow.Height, sourceRectangle_arrow.Width, sourceRectangle_arrow.Height);
         }
         #endregion
         #region PROPERTIES
@@ -61,6 +63,8 @@ namespace _999AD
         #region METHODS
         public void Update(float elapsedTime)
         {
+            if (!active)
+                return;
             if (currentSentence == sentences.Length)
             {
                 active = false;
@@ -69,7 +73,8 @@ namespace _999AD
             }
             if (endOfSentence)
             {
-                if (Game1.currentKeyboard.IsKeyDown(Keys.Enter) && !Game1.previousKeyboard.IsKeyDown(Keys.Enter))
+                if (Game1.currentKeyboard.IsKeyDown(Keys.Enter) && !Game1.previousKeyboard.IsKeyDown(Keys.Enter) ||
+                (Game1.currentGamePad.Buttons.A == ButtonState.Pressed && Game1.previousGamePad.Buttons.A == ButtonState.Released))
                 {
                     endOfSentence = false;
                     currentSentence++;
@@ -78,7 +83,8 @@ namespace _999AD
             }
             else
             {
-                if (Game1.currentKeyboard.IsKeyDown(Keys.Enter) && !Game1.previousKeyboard.IsKeyDown(Keys.Enter))
+                if ((Game1.currentKeyboard.IsKeyDown(Keys.Enter) && !Game1.previousKeyboard.IsKeyDown(Keys.Enter)) ||
+                (Game1.currentGamePad.Buttons.A == ButtonState.Pressed && Game1.previousGamePad.Buttons.A == ButtonState.Released))
                 {
                     currentLength = sentences[currentSentence].Length;
                     stringDisplayed = sentences[currentSentence].Substring(0, currentLength);
@@ -109,10 +115,10 @@ namespace _999AD
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(dialogueBox, boxRectangle, Color.White);
+            spriteBatch.Draw(spritesheet, boxRectangle,sourceRectangle_dialogueBox , Color.White);
             spriteBatch.DrawString(spriteFont, stringDisplayed, stringPosition, Color.White);
             if (currentSentence != sentences.Length - 1)
-                spriteBatch.Draw(arrow, arrowRectangle, Color.White);
+                spriteBatch.Draw(spritesheet, arrowRectangle,sourceRectangle_arrow, Color.White);
         }
         #endregion
     }
