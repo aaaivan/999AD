@@ -19,7 +19,7 @@ namespace _999AD
     {
         public enum GameStates
         {
-            titleScreen, controls, credits, intro, playing, pause, dead, ending, quit, confirmQuit, total
+            titleScreen, controls, credits, intro, playing, pause,  dead, ending, quit, confirmQuit, doubleJump, wallJump,total
         }
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -123,24 +123,24 @@ namespace _999AD
             (
                 new Texture2D[(int)RoomsManager.Rooms.total]
                 {
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\midboss"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\tutorial0"),
+                    Content.Load<Texture2D>(@"backgrounds\tutorial1"),
+                    Content.Load<Texture2D>(@"backgrounds\tutorial2"),
+                    Content.Load<Texture2D>(@"backgrounds\tutorial3"),
+                    Content.Load<Texture2D>(@"backgrounds\tutorial4"),
+                    Content.Load<Texture2D>(@"backgrounds\bellTower0"),
+                    Content.Load<Texture2D>(@"backgrounds\bellTower1"),
+                    Content.Load<Texture2D>(@"backgrounds\bellTower2"),
+                    Content.Load<Texture2D>(@"backgrounds\midBoss"),
+                    Content.Load<Texture2D>(@"backgrounds\groundFloor"),
+                    Content.Load<Texture2D>(@"backgrounds\altarRoom"),
+                    Content.Load<Texture2D>(@"backgrounds\firstFloor"),
+                    Content.Load<Texture2D>(@"backgrounds\secondFloor"),
+                    Content.Load<Texture2D>(@"backgrounds\descent"),
+                    Content.Load<Texture2D>(@"backgrounds\finalBoss"),
+                    Content.Load<Texture2D>(@"backgrounds\escape0"),
+                    Content.Load<Texture2D>(@"backgrounds\escape1"),
+                    Content.Load<Texture2D>(@"backgrounds\escape2"),
                 }
             );
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
@@ -203,6 +203,9 @@ namespace _999AD
                     Content.Load<Texture2D>(@"menus\credits"),
                     Content.Load<Texture2D>(@"menus\pause"),
                     Content.Load<Texture2D>(@"menus\quit"),
+                    Content.Load<Texture2D>(@"menus\doubleJump"),
+                    Content.Load<Texture2D>(@"menus\wallJump"),
+
                 });
             CutscenesManager.Initialize(Content.Load<Texture2D>(@"characters\enemy1"),
                                         Content.Load<Texture2D>(@"characters\player"),
@@ -213,6 +216,7 @@ namespace _999AD
                 Content.Load<SoundEffect>(@"sounds\pJump"),
                 Content.Load<SoundEffect>(@"sounds\pShoot"),
                 Content.Load<SoundEffect>(@"sounds\pHurt"),
+                Content.Load<SoundEffect>(@"sounds\pickup"),
 
                 //Enemy Sound Effects
                 Content.Load<SoundEffect>(@"sounds\enemyAttack"),
@@ -341,6 +345,12 @@ namespace _999AD
                 case GameStates.quit:
                     Exit();
                     break;
+                case GameStates.doubleJump:
+                    MenusManager.menus[(int)MenusManager.MenuType.doubleJump].Update();
+                    break;
+                case GameStates.wallJump:
+                    MenusManager.menus[(int)MenusManager.MenuType.wallJump].Update();
+                    break;
             }
 
 #endif
@@ -402,6 +412,7 @@ namespace _999AD
                     Camera.Draw(spriteBatch);
                     RoomsManager.Draw(spriteBatch);
                     CollectablesManager.Draw(spriteBatch);
+                    Player.DrawGUI(spriteBatch);
                     break;
                 case GameStates.pause:
                     GraphicsDevice.SetRenderTarget(renderTarget_zoom1);
@@ -409,13 +420,10 @@ namespace _999AD
                     MenusManager.menus[(int)MenusManager.MenuType.pause].Draw(spriteBatch);
                     break;
                 case GameStates.dead:
-                    GraphicsDevice.SetRenderTarget(nativeRenderTarget);
+                    GraphicsDevice.SetRenderTarget(renderTarget_zoom1);
                     GraphicsDevice.Clear(Color.Black);
                     Camera.Draw(spriteBatch);
                     RoomsManager.Draw(spriteBatch);
-                    CollectablesManager.Draw(spriteBatch);
-                    GraphicsDevice.SetRenderTarget(renderTarget_zoom1);
-                    GraphicsDevice.Clear(Color.Black);
                     PlayerDeathManager.Draw(spriteBatch);
                     break;
                 case GameStates.ending:
@@ -428,26 +436,32 @@ namespace _999AD
                     GraphicsDevice.Clear(Color.Black);
                     MenusManager.menus[(int)MenusManager.MenuType.confirmQuit].Draw(spriteBatch);
                     break;
+                case GameStates.doubleJump:
+                    GraphicsDevice.SetRenderTarget(renderTarget_zoom1);
+                    GraphicsDevice.Clear(Color.Black);
+                    MenusManager.menus[(int)MenusManager.MenuType.doubleJump].Draw(spriteBatch);
+                    break;
+                case GameStates.wallJump:
+                    GraphicsDevice.SetRenderTarget(renderTarget_zoom1);
+                    GraphicsDevice.Clear(Color.Black);
+                    MenusManager.menus[(int)MenusManager.MenuType.wallJump].Draw(spriteBatch);
+                    break;
             }
 
             //<debug>
             //spriteBatch.Draw(white, Camera.RelativeRectangle(Player.CollisionRectangle), Color.Green);
             //MouseState mouseState = Mouse.GetState();
             //spriteBatch.DrawString(spriteFont, (currentMouseState.X / 5 + (int)Camera.position.X) + "," + (currentMouseState.Y / 5 + (int)Camera.position.Y), new Vector2(10, 10), Color.Blue);
-            spriteBatch.DrawString(spriteFont, Player.position.X + "," + Player.position.Y, new Vector2(10, 10), Color.Blue);
+            //spriteBatch.DrawString(spriteFont, Player.position.X + "," + Player.position.Y, new Vector2(10, 20), Color.Blue);
             //spriteBatch.DrawString(spriteFont, Player.healthPoints+"", new Vector2(10, 10), Color.Blue);
             //</debug>
 
             spriteBatch.End();
+
             GraphicsDevice.SetRenderTarget(null);
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             if (currentGameState == GameStates.playing)
                 spriteBatch.Draw(nativeRenderTarget, viewportRectangle, Color.White);
-            else if (currentGameState == GameStates.dead)
-            {
-                spriteBatch.Draw(nativeRenderTarget, viewportRectangle, Color.White);
-                spriteBatch.Draw(renderTarget_zoom1, viewportRectangle, Color.White);
-            }
             else
                 spriteBatch.Draw(renderTarget_zoom1, viewportRectangle, Color.White);
 

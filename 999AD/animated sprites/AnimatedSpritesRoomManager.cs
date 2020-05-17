@@ -52,12 +52,23 @@ namespace _999AD
                 return;
             temporaryAnimaterSprites = animatedSprites;
         }
-        public void Draw(SpriteBatch spriteBatch)
+        public void DrawInFront(SpriteBatch spriteBatch)
         {
             foreach (AnimatedSprite animatedSprite in animatedSprites)
-                animatedSprite.Draw(spriteBatch);
+                if (animatedSprite.DrawInFront)
+                    animatedSprite.Draw(spriteBatch);
             foreach (AnimatedSprite animatedSprite in temporaryAnimaterSprites)
-                animatedSprite.Draw(spriteBatch);
+                if (animatedSprite.DrawInFront)
+                    animatedSprite.Draw(spriteBatch);
+        }
+        public void DrawOnTheBack(SpriteBatch spriteBatch)
+        {
+            foreach (AnimatedSprite animatedSprite in animatedSprites)
+                if (!animatedSprite.DrawInFront)
+                    animatedSprite.Draw(spriteBatch);
+            foreach (AnimatedSprite animatedSprite in temporaryAnimaterSprites)
+                if (!animatedSprite.DrawInFront)
+                    animatedSprite.Draw(spriteBatch);
         }
         #endregion
     }

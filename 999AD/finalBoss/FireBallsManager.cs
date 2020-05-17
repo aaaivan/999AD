@@ -192,10 +192,13 @@ namespace _999AD
         }
         public static bool FireballIntersectsRectangle(Rectangle collisionRect)
         {
-            foreach(FireBall fb in fireballs)
+            for (int i = fireballs.Count-1; i>=0; i--)
             {
-                if (fb.CollisionRectangle.Intersects(collisionRect))
+                if (fireballs[i].CollisionRectangle.Intersects(collisionRect))
+                {
+                    fireballs.RemoveAt(i);
                     return true;
+                }
             }
             return false;
         }

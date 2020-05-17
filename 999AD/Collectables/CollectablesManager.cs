@@ -86,6 +86,7 @@ namespace _999AD
                 new CollectablesRoomManager(new Collectable[]   //finalBoss
                 {
                     new Collectable(new Point(20,416), Collectable.ItemType.goldKey),
+                    new Collectable(new Point(386, 416), Collectable.ItemType.heart)
                 }),
                 new CollectablesRoomManager(new Collectable[]   //escape0
                 {

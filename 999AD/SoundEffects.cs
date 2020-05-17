@@ -19,6 +19,7 @@ namespace _999AD
         static private SoundEffect pJumpInstance;
         static private SoundEffect pShootInstance;
         static private SoundEffect pHurtInstance;
+        static private SoundEffect pickUpItem;
         #endregion
 
         #region ENEMY1-SOUND-EFFECTS
@@ -53,7 +54,7 @@ namespace _999AD
         #region CONSTRUCTOR
         static public void Initialise
             (
-            SoundEffect pJump, SoundEffect pShoot, SoundEffect pHurt,
+            SoundEffect pJump, SoundEffect pShoot, SoundEffect pHurt, SoundEffect pickUp,
             SoundEffect enemyAttack, SoundEffect enemyHurt,
             SoundEffect e2Attack,
             SoundEffect midMove, SoundEffect midAttack, SoundEffect midHurt,
@@ -64,6 +65,7 @@ namespace _999AD
             pJumpInstance = pJump;
             pShootInstance = pShoot;
             pHurtInstance = pHurt;
+            pickUpItem= pickUp;
 
             //Enemy Variables
             //Enemy 1
@@ -107,7 +109,10 @@ namespace _999AD
             get { return pHurtInstance.CreateInstance(); }
         }
         #endregion
-
+        static public SoundEffectInstance PickUpItem
+        {
+            get { return pickUpItem.CreateInstance(); }
+        }
         #region ENEMY 1
         static public SoundEffectInstance Enemy1Attack
         {

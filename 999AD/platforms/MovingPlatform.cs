@@ -171,8 +171,8 @@ namespace _999AD
                 else if (angleRadiants<0)
                     angleRadiants += MathHelper.Pi * 2;
                 platformMidpointPosition.X = rotationCenter.X + radius * (float)Math.Sin(angleRadiants);
+                platformMidpointPosition.Y = rotationCenter.Y - radius * (float)Math.Cos(angleRadiants);
             }
-            platformMidpointPosition.Y = rotationCenter.Y - radius * (float)Math.Cos(angleRadiants);
             if (disappearing)
             {
                 if (transparent)
@@ -228,9 +228,8 @@ namespace _999AD
         }
         public MovingPlatform DeepCopy()
         {
-
             return new MovingPlatform(textureType, radius, centerStartingPoint, centerEndingPoint,
-                angularSpeed, linearSpeed, active, angleRadiants*180/ MathHelper.Pi, linearSpeed_pixelsPerSecond,
+                angularSpeed, linearSpeed_pixelsPerSecond, active, angleRadiants*180/ MathHelper.Pi, (float)normalizedLinearProgression,
                 centerRestingTime, moveOnce, disappearing, maxTransparentTime, maxSolidTime, delay);
         }
         public void Draw(SpriteBatch spriteBatch)

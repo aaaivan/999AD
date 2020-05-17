@@ -25,13 +25,15 @@ namespace _999AD
         Vector2 position;
         Animation animation;
         bool removeWhenInactive;
+        bool drawInFront;
         #endregion
         #region CONSTRUCTORS
-        public AnimatedSprite(Vector2 _position, SpriteType _spriteType, bool _removeWhenInactive=true)
+        public AnimatedSprite(Vector2 _position, SpriteType _spriteType, bool _removeWhenInactive=true, bool _drawInfront=false)
         {
             position = _position;
             removeWhenInactive = _removeWhenInactive;
             animation = animations[(int)_spriteType].DeepCopy();
+            drawInFront = _drawInfront;
         }
         public static void Inizialize(Texture2D _spritesheet)
         {
@@ -57,6 +59,10 @@ namespace _999AD
         public bool Active
         {
             get { return (!removeWhenInactive) || animation.Active; }
+        }
+        public bool DrawInFront
+        {
+            get { return drawInFront; }
         }
         #endregion
         #region METHODS

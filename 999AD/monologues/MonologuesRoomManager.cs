@@ -32,6 +32,12 @@ namespace _999AD
             sourceRectangle_interactSymbol = new Rectangle(384, 181, 7, 20);
         }
         #endregion
+        #region PROPERTIES
+        public int IndexPlaying
+        {
+            get { return indexPlaying; }
+        }
+        #endregion
         #region METHODS
         public void Update(float elapsedTime)
         {
@@ -43,12 +49,12 @@ namespace _999AD
                     {
                         drawInteractSymbol = true;
                         interactSymbolRectangle = monologues[i].InteractSymbolLocation(sourceRectangle_interactSymbol.Width, sourceRectangle_interactSymbol.Height);
-                        if (monologues[i].PlayAutomatically ||
-                            (Game1.currentKeyboard.IsKeyDown(Keys.Enter) && !Game1.previousKeyboard.IsKeyDown(Keys.Enter)) ||
+                        if ((Game1.currentKeyboard.IsKeyDown(Keys.Enter) && !Game1.previousKeyboard.IsKeyDown(Keys.Enter)) ||
                             (Game1.currentGamePad.Buttons.A == ButtonState.Pressed && Game1.previousGamePad.Buttons.A == ButtonState.Released))
                         {
                             monologues[i].active = true;
                             indexPlaying = i;
+                            Player.haltInput = true;
                         }
                         return;
                     }
@@ -60,10 +66,19 @@ namespace _999AD
                 if (!monologues[indexPlaying].active)
                 {
                     indexPlaying = -1;
+                    Player.haltInput = false;
                     return;
                 }
                 monologues[indexPlaying].Update(elapsedTime);
             }
+        }
+        public void PlayMonologue(int index)
+        {
+            if (indexPlaying != -1 || index<0 || index>=monologues.Length)
+                return;
+            monologues[index].active = true;
+            indexPlaying = index;
+            Player.haltInput = true;
         }
         public void Draw(SpriteBatch spriteBatch)
         {

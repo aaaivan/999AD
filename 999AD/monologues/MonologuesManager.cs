@@ -24,6 +24,22 @@ namespace _999AD
                 new MonologuesRoomManager(  //tutorial0
                     new Monologue[]
                     {
+                        new Monologue(new Rectangle(0,0,0,0),
+                            new string[]
+                            {
+                                "A forsaken place, one of disgrace and\n" +
+                                "mistakes. I came here wielding a sword,\n" +
+                                "and left unarmed.",
+                                "Never again shall I use such weapons, \n" +
+                                "but nevertheless, I have skills I shall \n" +
+                                "have to re-learn to aid me."
+                            }),
+                        new Monologue(new Rectangle(0,0,0,0),
+                            new string[]
+                            {
+                                "Perhaps...\n" +
+                                "A sword would have made things easier..."
+                            }),
                     }),
                 new MonologuesRoomManager(  //tutorial1
                     new Monologue[]
@@ -104,6 +120,13 @@ namespace _999AD
                 new MonologuesRoomManager(  //escape0
                     new Monologue[]
                     {
+                        new Monologue(new Rectangle(0,0,0,0),
+                            new string[]
+                            {
+                                "This place is coming down.\n" +
+                                "I'd better hurry before I get stuck\n" +
+                                "here."
+                            })
                     }),
                 new MonologuesRoomManager(  //escape1
                     new Monologue[]
@@ -114,6 +137,12 @@ namespace _999AD
                     {
                     }),
             };
+        }
+        #endregion
+        #region PROPERTIES
+        public static bool MonologuePlaying
+        {
+            get { return monologuesRoomManagers[(int)RoomsManager.CurrentRoom].IndexPlaying != -1; }
         }
         #endregion
     }

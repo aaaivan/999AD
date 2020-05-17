@@ -64,6 +64,7 @@ namespace _999AD
             animation.Update(elapsedTime);
             if (rectangle.Intersects(Player.CollisionRectangle))
             {
+                SoundEffects.PickUpItem.Play();
                 collected = true;
                 animation.Reset();
             }
