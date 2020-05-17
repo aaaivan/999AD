@@ -299,9 +299,9 @@ namespace _999AD
         //Function to handle the boss death
         public static void Death()
         {
-            SoundEffects.MidbossHurt.Play();
             if (bossAnimations[(int)bossState] != bossAnimations[(int)BossState.death])
             {
+                SoundEffects.MidbossHurt.Play();
                 bossAnimations[(int)bossState] = bossAnimations[(int)BossState.death];
             }
             else if (!bossAnimations[(int)bossState].Active)
