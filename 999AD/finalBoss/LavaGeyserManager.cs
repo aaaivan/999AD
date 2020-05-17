@@ -16,7 +16,7 @@ namespace _999AD
         static readonly Random rand= new Random();
         #endregion
         #region CONSTRUCTOR
-        static public void Inizialize(Texture2D spritesheet, Texture2D whiteTexture)
+        static public void Inizialize(Texture2D spritesheet)
         {
             LavaGeyser.Inizialize(spritesheet);
             lavaGeysers = new List<LavaGeyser>();

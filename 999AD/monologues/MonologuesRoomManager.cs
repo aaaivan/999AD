@@ -12,7 +12,8 @@ namespace _999AD
     class MonologuesRoomManager
     {
         #region DECLARATIONS
-        static Texture2D interactSymbol;
+        static Texture2D spritesheet;
+        static Rectangle sourceRectangle_interactSymbol;
         static bool drawInteractSymbol;
         static Rectangle interactSymbolRectangle;
         Monologue[] monologues;
@@ -25,9 +26,10 @@ namespace _999AD
             indexPlaying = -1;
             monologues = _monologues;
         }
-        public static void Inizialize(Texture2D _interactSymbol)
+        public static void Inizialize(Texture2D _spritesheet)
         {
-            interactSymbol = _interactSymbol;
+            spritesheet = _spritesheet;
+            sourceRectangle_interactSymbol = new Rectangle(384, 181, 7, 20);
         }
         #endregion
         #region METHODS
@@ -40,9 +42,10 @@ namespace _999AD
                     if (monologues[i].interactionRectangle.Intersects(Player.CollisionRectangle))
                     {
                         drawInteractSymbol = true;
-                        interactSymbolRectangle = monologues[i].InteractSymbolLocation(interactSymbol.Width, interactSymbol.Height);
+                        interactSymbolRectangle = monologues[i].InteractSymbolLocation(sourceRectangle_interactSymbol.Width, sourceRectangle_interactSymbol.Height);
                         if (monologues[i].PlayAutomatically ||
-                            (Game1.currentKeyboard.IsKeyDown(Keys.Enter) && !Game1.previousKeyboard.IsKeyDown(Keys.Enter)))
+                            (Game1.currentKeyboard.IsKeyDown(Keys.Enter) && !Game1.previousKeyboard.IsKeyDown(Keys.Enter)) ||
+                            (Game1.currentGamePad.Buttons.A == ButtonState.Pressed && Game1.previousGamePad.Buttons.A == ButtonState.Released))
                         {
                             monologues[i].active = true;
                             indexPlaying = i;
@@ -67,7 +70,7 @@ namespace _999AD
             if (indexPlaying != -1)
                 monologues[indexPlaying].Draw(spriteBatch);
             else if (drawInteractSymbol)
-                spriteBatch.Draw(interactSymbol, Camera.RelativeRectangle(interactSymbolRectangle), Color.White);
+                spriteBatch.Draw(spritesheet, Camera.RelativeRectangle(interactSymbolRectangle), sourceRectangle_interactSymbol, Color.White);
         }
         #endregion
     }

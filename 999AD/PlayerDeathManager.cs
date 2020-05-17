@@ -12,16 +12,22 @@ namespace _999AD
     static class PlayerDeathManager
     {
         #region DECLARATIONS
-        static SpriteFont spriteFont;
-        static readonly string youDied= "YOU DIED";
-        static readonly string enterToContinue= "Press Enter to continue.";
+        static Texture2D background;
+        static Texture2D spritesheet;
+        static Rectangle sourceRectangle_Continue;
+        static Vector2 position_Continue;
+        static float alphaValue;
         static readonly float timeBeforeResuming= 4;
         static float elapsedTimeBeforeResuming;
         #endregion
         #region CONSTRUCTOR
-        public static void Initialize(SpriteFont _spriteFont)
+        public static void Initialize(Texture2D _background, Texture2D _spritesheetOptions)
         {
-            spriteFont = _spriteFont;
+            background = _background;
+            spritesheet = _spritesheetOptions;
+            sourceRectangle_Continue = new Rectangle(0, 96, 120, 24);
+            position_Continue = new Vector2((Game1.min_gameWidth - sourceRectangle_Continue.Width) / 2, 150);
+            alphaValue = 0;
             elapsedTimeBeforeResuming = 0;
         }
         #endregion
@@ -31,9 +37,13 @@ namespace _999AD
             if (elapsedTimeBeforeResuming < timeBeforeResuming)
             {
                 elapsedTimeBeforeResuming += elapsedTime;
+                alphaValue = MathHelper.Lerp(0, 1, elapsedTimeBeforeResuming / timeBeforeResuming);
+                if (elapsedTimeBeforeResuming >= timeBeforeResuming)
+                    alphaValue = 1;
                 return;
             }
-            else if(Game1.currentKeyboard.IsKeyDown(Keys.Enter))
+            else if (Game1.currentKeyboard.IsKeyDown(Keys.Enter) ||
+                (Game1.currentGamePad.Buttons.A == ButtonState.Pressed))
             {
                 elapsedTimeBeforeResuming = 0;
                 Game1.currentGameState = Game1.GameStates.playing;
@@ -189,6 +199,11 @@ namespace _999AD
 
                 }
             }
+        }
+        public static void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(background, new Vector2(0, 0), Color.White * alphaValue);
+            spriteBatch.Draw(spritesheet, position_Continue, sourceRectangle_Continue, Color.Red * alphaValue);
         }
         #endregion
     }

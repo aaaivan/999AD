@@ -51,6 +51,8 @@
     <Compile Include="collectables\Collectable.cs" />
     <Compile Include="collectables\CollectablesManager.cs" />
     <Compile Include="Collisions.cs" />
+    <Compile Include="cutscenes\Cutscene.cs" />
+    <Compile Include="cutscenes\CutscenesManager.cs" />
     <Compile Include="doors\Door.cs" />
     <Compile Include="doors\DoorsRoomManager.cs" />
     <Compile Include="doors\DoorsManager.cs" />
@@ -68,6 +70,8 @@
     <Compile Include="finalBoss\LavaGeyserManager.cs" />
     <Compile Include="map\LevelEditor.cs" />
     <Compile Include="Enemies\MidBoss.cs" />
+    <Compile Include="menus\Menu.cs" />
+    <Compile Include="menus\MenusManager.cs" />
     <Compile Include="monologues\Monologue.cs" />
     <Compile Include="monologues\MonologuesManager.cs" />
     <Compile Include="monologues\MonologuesRoomManager.cs" />

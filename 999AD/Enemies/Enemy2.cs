@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 
 namespace _999AD
 {
@@ -59,7 +60,7 @@ namespace _999AD
 
         //Vector for projectile velocity
         //First value is horizontal distance, second value is vertical distance
-        public readonly Vector2 projectileInitialVelocity = new Vector2(500, -150);
+        public readonly Vector2 projectileInitialVelocity = new Vector2(500, -60);
 
         #endregion
 
@@ -218,7 +219,7 @@ namespace _999AD
             //If the player goes outside the given range,
             //The state will be changed acccordingly
             //Else, the Projectile attack will be delivered
-            if (Math.Abs(currentPoint.X - Player.CollisionRectangle.X) < meleeDistance)
+            if (Math.Abs(currentPoint.X - Player.CollisionRectangle.X) < meleeDistance && Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 5)
             {
                 enemyState = EnemyState.melee;
             }
@@ -230,6 +231,7 @@ namespace _999AD
             {
                 if(elapsedShotTime>timeUntilShot)
                 {
+                    SoundEffects.Enemy2Attack.Play();
                     ProjectilesManager.ShootEnemyProjectile(currentPoint, projectileInitialVelocity * (isFacingLeft ? new Vector2(-1, 1) : new Vector2(1, 1)));
                     elapsedShotTime = 0;
                 }
@@ -257,7 +259,7 @@ namespace _999AD
             //If the player goes outside the given range,
             //The state will be changed accordingly
             //Else, the Melee attack will be delivered
-            if (Math.Abs(currentPoint.X - Player.CollisionRectangle.X)>=meleeDistance)
+            if (Math.Abs(currentPoint.X - Player.CollisionRectangle.X)>=meleeDistance && Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 5)
             {
                 enemyState = EnemyState.attack;
             }
@@ -270,6 +272,7 @@ namespace _999AD
             {
                 if(elapsedMeleeTime>timeUntilMelee)
                 {
+                    SoundEffects.Enemy2Melee.Play();
                     Player.takeDamage();
                     elapsedMeleeTime = 0;
                     //knockback = true;
@@ -289,7 +292,8 @@ namespace _999AD
             if(Enemy2CollisionRect.Intersects(collisionRect))
             {
                 enemyHP--;
-                enemyColor = Color.Red * 0.5f;
+                SoundEffects.EnemyHurt.Play();
+                enemyColor = Color.Red * 0.6f;
                 return true;
             }
             return false;
@@ -298,6 +302,7 @@ namespace _999AD
         //Function to handle the enemy death
         public void Death()
         {
+            SoundEffects.EnemyHurt.Play();
             enemyColor = Color.White;
             if (enemyAnimations[(int)enemyState] != enemyAnimations[(int)EnemyState.death])
             {
@@ -315,7 +320,7 @@ namespace _999AD
         {
             moving = true;
 
-            if(Math.Abs(currentPoint.X - Player.CollisionRectangle.X)<shootDistance)
+            if(Math.Abs(currentPoint.X - Player.CollisionRectangle.X)<shootDistance && Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 5)
             {
                 movementSpeed = 0f;
                 if (Enemy2CollisionRect.X + 5 < Player.CollisionRectangle.X)
@@ -408,8 +413,9 @@ namespace _999AD
                 if(Math.Abs(Player.CollisionRectangle.Bottom-Enemy2CollisionRect.Top)<=5)
                 {
                     Player.Rebound(0.75f);
+                    SoundEffects.EnemyHurt.Play();
                     enemyHP--;
-                    enemyColor = Color.Red * 0.5f;
+                    enemyColor = Color.Red * 0.6f;
                 }
                 else
                 {

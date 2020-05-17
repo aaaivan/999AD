@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace _999AD
 {
@@ -40,9 +41,9 @@ namespace _999AD
         bool hit = false;
 
         //Variables for knocking back the player
-        readonly int knockbackDistance = 40;
-        int distanceKnocked;
-        bool knockback = false;
+        //readonly int knockbackDistance = 40;
+        //int distanceKnocked;
+        //bool knockback = false;
 
         public EnemyState enemyState = EnemyState.idle;
         readonly int maxHP = 2;
@@ -70,7 +71,7 @@ namespace _999AD
             currentPoint = enemyPoint;
 
             movementSpeed = 0f;
-            distanceKnocked = 0;
+            //distanceKnocked = 0;
 
         }
         public static void Inizialize(Texture2D spritesheet)
@@ -119,7 +120,7 @@ namespace _999AD
         public void Update(float elapsedTime)
         {
 
-            if (dead)
+            if(dead)
             {
                 return;
             }
@@ -178,6 +179,7 @@ namespace _999AD
         {
             if(!hit)
             {
+                SoundEffects.Enemy1Attack.Play();
                 movementSpeed = 80;
                 if(isFacingLeft)
                 {
@@ -202,39 +204,41 @@ namespace _999AD
 
             else
             {
-                KnockBack();
-            }
-
-        }
-
-        //Function that handles the player knock back
-        public void KnockBack()
-        {
-            if(!isFacingLeft)
-            {
-                if(knockback)
-                {
-                    Player.position.X -= 2;
-                    distanceKnocked += 2;
-                }
-            }
-            else
-            {
-                if(knockback)
-                {
-                    Player.position.X += 2;
-                    distanceKnocked += 2;
-                }
-            }
-
-            if(distanceKnocked>=knockbackDistance)
-            {
-                knockback = false;
+                Player.Rebound(0.2f, 1.4f, Player.Center.X > currentPoint.X);
                 hit = false;
-                distanceKnocked = 0;
-                enemyState = EnemyState.idle;
+                //KnockBack();
             }
+
         }
+
+        ////Function that handles the player knock back
+        //public void KnockBack()
+        //{
+        //    if(!isFacingLeft)
+        //    {
+        //        if(knockback)
+        //        {
+        //            Player.position.X -= 2;
+        //            distanceKnocked += 2;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if(knockback)
+        //        {
+        //            Player.position.X += 2;
+        //            distanceKnocked += 2;
+        //        }
+        //    }
+
+        //    if(distanceKnocked>=knockbackDistance)
+        //    {
+        //        knockback = false;
+        //        hit = false;
+        //        distanceKnocked = 0;
+        //        enemyState = EnemyState.idle;
+        //    }
+        //}
 
         //Function that returns boolean if the enemy is hit by projectile
         public bool Enemy1HitByRect(Rectangle collisionRect)
@@ -242,7 +246,8 @@ namespace _999AD
             if(Enemy1CollisionRect.Intersects(collisionRect))
             {
                 enemyHP--;
-                enemyColor = Color.Red * 0.3f;
+                SoundEffects.EnemyHurt.Play();
+                enemyColor = Color.Red * 0.6f;
                 return true;
             }
             return false;
@@ -255,7 +260,7 @@ namespace _999AD
             {
                 Player.takeDamage();
                 hit = true;
-                knockback = true;
+                //knockback = true;
                 movementSpeed = 0;
             }
         }
@@ -263,7 +268,11 @@ namespace _999AD
         //Function to change states from idle
         public void ChangeFromIdle()
         {
-            if((Math.Abs(currentPoint.X - Player.CollisionRectangle.X) <= collisionDistance)&&(Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 15))
+            if((Math.Abs(currentPoint.Y-Player.CollisionRectangle.Y)<15&&(Player.CollisionRectangle.X>enemyPoint2.X+15||Player.CollisionRectangle.Right<enemyPoint.X-15)))
+            {
+                enemyState = EnemyState.idle;
+            }
+            else if((Math.Abs(currentPoint.X - Player.CollisionRectangle.X) <= collisionDistance) && (Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 15))
             {
                 enemyState = EnemyState.attack;
             }
@@ -272,6 +281,7 @@ namespace _999AD
         //Function to handle the enemy death
         public void Death()
         {
+            SoundEffects.EnemyHurt.Play();
             enemyColor = Color.White;
             if(enemyAnimations[(int)enemyState]!=enemyAnimations[(int)EnemyState.death])
             {
@@ -291,8 +301,9 @@ namespace _999AD
                 if(Math.Abs(Player.CollisionRectangle.Bottom-Enemy1CollisionRect.Top)<=5)
                 {
                     enemyHP--;
+                    SoundEffects.EnemyHurt.Play();
                     Player.Rebound(0.75f);
-                    enemyColor = Color.Red * 0.5f;
+                    enemyColor = Color.Red * 0.6f;
                 }
             }
         }

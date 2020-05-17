@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace _999AD
 {
@@ -49,8 +51,8 @@ namespace _999AD
         {
             Reset(_position);
             spritesheet = _spritesheet;
-            doubleJumpUnlocked=false;
-            wallJumpUnlocked= false;
+            doubleJumpUnlocked =false;
+            wallJumpUnlocked = false;
             //fill following statements with sprite info
             animations = new List<Animation>();
             animations.Add(new Animation(new Rectangle(0, 0, 128, 24), 16, 24, 8, 0.3f, true));
@@ -58,7 +60,7 @@ namespace _999AD
             animations.Add(new Animation( new Rectangle(0, 48, 80, 24), 16, 24, 5, 0.06f, false, true));
             animations.Add(new Animation( new Rectangle(0, 72, 112, 24), 16, 24, 7, 0.06f, false, false));
             animations.Add(new Animation( new Rectangle(0, 96, 64, 24), 16, 24, 4, 0.1f, true));
-            animations.Add(new Animation( new Rectangle(0, 120, 96, 24), 16, 24, 5, 0.1f, false, true));
+            animations.Add(new Animation( new Rectangle(0, 120, 160, 24), 16, 24, 10, 0.1f, false, true));
         }
         public static void Reset(Vector2 _position)
         {
@@ -112,8 +114,11 @@ namespace _999AD
         #region METHODS
         public static void Update(float elapsedTime)
         {
-            CheckMovementInput();
-            CheckAttackInput(elapsedTime);
+            if (healthPoints > 0)
+            {
+                CheckMovementInput();
+                CheckAttackInput(elapsedTime);
+            }
             Move(elapsedTime);
             AnimationStateMachine(elapsedTime);
             if (invulnerable)
@@ -139,8 +144,6 @@ namespace _999AD
                     {
                         animations[(int)AnimationTypes.attack].Reset();
                         animations[(int)AnimationTypes.jump].Reset();
-                        animations[(int)AnimationTypes.die].Reset();
-                        currentAnimation = AnimationTypes.idle;
                         Game1.currentGameState = Game1.GameStates.dead;
                     }
                     break;
@@ -174,6 +177,7 @@ namespace _999AD
                 {
                     ProjectilesManager.ShootPlayerProjectile(isFacingRight ? (position + new Vector2(width, 0)) : position, ProjectileInitialVelocity);
                     elapsedShotTime = 0;
+                    SoundEffects.PlayerAttack.Play();
                     if (currentAnimation != AnimationTypes.die)
                         currentAnimation = AnimationTypes.attack;
                 }
@@ -198,6 +202,7 @@ namespace _999AD
                     if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack)
                         currentAnimation = AnimationTypes.jump;
                     jumpSpeed.Y = initialJumpSpeed.Y;
+                    SoundEffects.PlayerJump.Play();
                     if (Game1.currentKeyboard.IsKeyDown(Keys.D))
                         jumpSpeed.X = initialJumpSpeed.X;
                     else if (Game1.currentKeyboard.IsKeyDown(Keys.A))
@@ -211,6 +216,7 @@ namespace _999AD
                     if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack)
                         currentAnimation = AnimationTypes.jump;
                     jumpSpeed.Y = initialJumpSpeed.Y;
+                    SoundEffects.PlayerJump.Play();
                     canDoubleJump = false;
                     isOnTheWall = false;
                     isWallJumping = true;
@@ -225,6 +231,7 @@ namespace _999AD
                     if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack)
                         currentAnimation = AnimationTypes.jump;
                     jumpSpeed.Y = initialJumpSpeed.Y;
+                    SoundEffects.PlayerJump.Play();
                     canDoubleJump = false;
                     return;
                 }
@@ -490,6 +497,7 @@ namespace _999AD
         public static void Rebound(float ratioReboundToNormalJump)
         {
             jumpSpeed.Y = initialJumpSpeed.Y * ratioReboundToNormalJump;
+            SoundEffects.PlayerJump.Play();
             canDoubleJump = true;
             isTouchingTheGround = false;
             isOnMovingPlatform = false;
@@ -499,6 +507,7 @@ namespace _999AD
         {
             jumpSpeed.X = initialJumpSpeed.X * ratioReboundToNormalJump_X * (toTheRight ? 1 : -1);
             jumpSpeed.Y = initialJumpSpeed.Y * ratioReboundToNormalJump_Y;
+            SoundEffects.PlayerJump.Play();
             canDoubleJump = true;
             isTouchingTheGround = false;
             isOnMovingPlatform = false;
@@ -509,7 +518,8 @@ namespace _999AD
             if (invulnerable && !damageEvenIfInvulnerable)
                 return;
             healthPoints -= damage;
-            if (healthPoints<=0)
+            SoundEffects.PlayerHurt.Play();
+            if (healthPoints==0)
             {
                 currentAnimation = AnimationTypes.die;
             }
@@ -527,6 +537,7 @@ namespace _999AD
         public static void ReplenishHealth()
         {
             healthPoints = maxHealthPoints;
+            animations[(int)AnimationTypes.die].Reset();
             currentAnimation = AnimationTypes.idle;
         }
         public static void Draw(SpriteBatch spriteBatch)
@@ -538,6 +549,11 @@ namespace _999AD
                                          animations[(int)currentAnimation].Frame.Height),
                 animations[(int)currentAnimation].Frame, Color.White*(invulnerable?alphaValue:1), 0f, Vector2.Zero,
                 isFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+
+            for(int i=0;i<healthPoints;i++)
+            {
+                spriteBatch.Draw(Collectable.Sprites, new Vector2(5 + i * 16, 5), new Rectangle(0, 110, 16, 19), Color.White);
+            }
         }
         #endregion
     }

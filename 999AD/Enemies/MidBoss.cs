@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace _999AD
 {
@@ -27,14 +29,14 @@ namespace _999AD
         static float elapsedChangeTime;
 
         //Size Variables
-        public static readonly int bossWidth = 20;
-        public static readonly int bossHeight = 26;
+        public static readonly int bossWidth = 48;
+        public static readonly int bossHeight = 48;
 
         //Position Variables
         static Vector2 point1;
         static Vector2 point2;
         static Vector2 bossPoint;
-        static bool isFacingRight = false;
+        static bool isFacingLeft = true;
 
         //Movement Variables
         static float movementSpeed;
@@ -42,7 +44,7 @@ namespace _999AD
 
         //Vector for projectile velocity
         //First value is horizontal distance, second value is vertical distance
-        public static readonly Vector2 projectileInitialVelocity = new Vector2(500, -150);
+        public static readonly Vector2 projectileInitialVelocity = new Vector2(500, -75);
 
         public static BossState bossState = BossState.idle;
         static readonly int maxHP = 10;
@@ -60,17 +62,17 @@ namespace _999AD
             bossSheet = BossSheet;
             bossAnimations = new Animation[(int)BossState.total]
             {
-                new Animation(new Rectangle(0,0,104,20),20,26,4,1f,true),
-                new Animation(new Rectangle(0,26,52,20),20,26,2,1f,true),
-                new Animation(new Rectangle(0,52,52,20),20,26,2,1f,true),
-                new Animation(new Rectangle(0,78,52,20),20,26,2,1f,false, true),
+                new Animation(new Rectangle(0,0,240,48),48,48,5,0.2f,true),
+                new Animation(new Rectangle(0,48,480,48),48,48,10,0.2f,true),
+                new Animation(new Rectangle(0,96,624,48),48,48,13,0.2f,true),
+                new Animation(new Rectangle(0,144,336,48),48,48,7,0.2f,false, true),
             };
             Reset();
         }
         public static void Reset()
         {
-            point1 = new Vector2(200, 200);
-            point2 = new Vector2(100, 200);
+            point1 = new Vector2(350, 193);
+            point2 = new Vector2(150, 193);
             bossColor = Color.White;
 
             bossHP = maxHP;
@@ -132,11 +134,11 @@ namespace _999AD
             //Updating direction the midboss faces
             if(BossCollisionRect.X + 5 < Player.CollisionRectangle.X)
             {
-                isFacingRight = true;
+                isFacingLeft = true;
             }
             else
             {
-                isFacingRight = false;
+                isFacingLeft = false;
             }
 
             //Switch case statement for the bossState
@@ -168,17 +170,17 @@ namespace _999AD
             //If the boss is moving to the second point, it will be drawn without being flipped
             if(moveToP2)
             {
-                spriteBatch.Draw(bossSheet, Camera.RelativeRectangle(BossDrawRect), bossAnimations[(int)bossState].Frame, bossColor, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+                spriteBatch.Draw(bossSheet, Camera.RelativeRectangle(BossDrawRect), bossAnimations[(int)bossState].Frame, bossColor, 0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0f);
             }
             //If the boss is moving back to the first point, it will be drawn without being flipped
             else if(moveToP1)
             {
-                spriteBatch.Draw(bossSheet, Camera.RelativeRectangle(BossDrawRect), bossAnimations[(int)bossState].Frame, bossColor, 0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0f);
+                spriteBatch.Draw(bossSheet, Camera.RelativeRectangle(BossDrawRect), bossAnimations[(int)bossState].Frame, bossColor, 0f, Vector2.Zero, SpriteEffects.None, 0f);
             }
             //If the boss is not moving, it will be flipped around depending upon the position of the player
             else
             {
-                spriteBatch.Draw(bossSheet, Camera.RelativeRectangle(BossDrawRect), bossAnimations[(int)bossState].Frame, bossColor, 0f, Vector2.Zero, isFacingRight ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
+                spriteBatch.Draw(bossSheet, Camera.RelativeRectangle(BossDrawRect), bossAnimations[(int)bossState].Frame, bossColor, 0f, Vector2.Zero, isFacingLeft ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
             }
         }
 
@@ -187,8 +189,9 @@ namespace _999AD
         {
             if(elapsedShotTime > timeUntilShot)
             {
-                ProjectilesManager.ShootBossProjectile(isFacingRight ? bossPoint : (bossPoint - new Vector2(bossWidth-5, 0)), projectileInitialVelocity * (isFacingRight ? new Vector2(1, 1) : new Vector2(-1, 1)));
+                ProjectilesManager.ShootBossProjectile(isFacingLeft ? bossPoint : (bossPoint - new Vector2(bossWidth-5, 0)), projectileInitialVelocity * (isFacingLeft ? new Vector2(1, 1) : new Vector2(-1, 1)));
                 elapsedShotTime = 0;
+                SoundEffects.MidbossAttack.Play();
                 bossState = BossState.idle;
             }
             else
@@ -210,6 +213,7 @@ namespace _999AD
                 moveToP1 = true;
             }
 
+            SoundEffects.MidbossMove.Play();
             if(moveToP2)
             {
                 bossPoint.X -= movementSpeed * elapsedTime;
@@ -242,6 +246,7 @@ namespace _999AD
             if (BossCollisionRect.Intersects(collisionRect))
             {
                 bossHP -= 1;
+                SoundEffects.MidbossHurt.Play();
                 bossColor = Color.Red * 0.8f;
                 return true;
             }
@@ -294,6 +299,7 @@ namespace _999AD
         //Function to handle the boss death
         public static void Death()
         {
+            SoundEffects.MidbossHurt.Play();
             if (bossAnimations[(int)bossState] != bossAnimations[(int)BossState.death])
             {
                 bossAnimations[(int)bossState] = bossAnimations[(int)BossState.death];

@@ -15,6 +15,7 @@ namespace _999AD
         int totalFrames; //number of frames for the animation
         Rectangle[] sourceRectangles;
         int currentFrame;
+        int previousFrame;
         float timePerFrame;
         float elapsedFrameTime;
         bool loop; //false if the animation should only be played once
@@ -27,6 +28,7 @@ namespace _999AD
                         float _timePerFrame, bool _loop, bool _keepLastFrameWhenInactive = false)
         {
             currentFrame = 0;
+            previousFrame = 0;
             elapsedFrameTime = 0;
             active = true;
             totalFrames = _totalFrames;
@@ -68,12 +70,21 @@ namespace _999AD
         {
             get { return timePerFrame * sourceRectangles.Length; }
         }
+        public int FrameIndex
+        {
+            get { return currentFrame; }
+        }
+        public int FreviousFrameIndex
+        {
+            get { return previousFrame; }
+        }
         #endregion
         #region METHODS
         public void Update(float elapsedTime)
         {
             if (!active)
                 return;
+            previousFrame = currentFrame;
             elapsedFrameTime += elapsedTime;
             if (elapsedFrameTime >= timePerFrame)
             {
