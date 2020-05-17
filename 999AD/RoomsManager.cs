@@ -27,7 +27,7 @@ namespace _999AD
         #region CONSTRUCTOR
         public static void Inizialize()
         {
-            currentRoom = Rooms.tutorial3;
+            currentRoom = Rooms.tutorial0;
             previousRoom = Rooms.tutorial4;
             CameraManager.SwitchCamera(currentRoom);
         }
@@ -491,7 +491,7 @@ namespace _999AD
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
                     }
-                    else if (Player.position.Y> MapsManager.maps[(int)currentRoom].RoomHeightPx+24)
+                    else if (Player.position.Y> MapsManager.maps[(int)currentRoom].RoomHeightPx)
                     {
                         Player.takeDamage(Player.maxHealthPoints, true);
                     }
@@ -579,7 +579,7 @@ namespace _999AD
                     break;
             }
         }
-        public static void Update(float elapsedTime, SoundEffects soundEffects)
+        public static void Update(float elapsedTime)
         {
             switchRoom();
             CameraManager.Update(elapsedTime);
@@ -590,9 +590,9 @@ namespace _999AD
             }
             if(currentRoom==Rooms.midBoss)
             {
-               MidBoss.Update(elapsedTime, soundEffects);
+               MidBoss.Update(elapsedTime);
             }
-            EnemyManager.enemyRoomManagers[(int)currentRoom].Update(elapsedTime, soundEffects);
+            EnemyManager.enemyRoomManagers[(int)currentRoom].Update(elapsedTime);
             FireBallsManager.Update(elapsedTime);
             LavaGeyserManager.Update(elapsedTime);
             PlatformsManager.platformsRoomManagers[(int)currentRoom].Update(elapsedTime);

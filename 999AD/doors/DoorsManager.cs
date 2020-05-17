@@ -88,6 +88,7 @@ namespace _999AD
                     ),
                     new DoorsRoomManager(new Door[] //finalBoss
                     {
+                        new Door(new Point(752, 408), Door.TextureType.goldDoor, Collectable.ItemType.goldKey),
                     }
                     ),
                     new DoorsRoomManager(new Door[] //escape0

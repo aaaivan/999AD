@@ -245,6 +245,15 @@ namespace _999AD
             leftWingAnimation = WingAnimations.stoneToIdle;
             rightWingAnimations[(int)rightWingAnimation].Reset();
             leftWingAnimations[(int)leftWingAnimation].Reset();
+            MediaPlayer.Play(SoundEffects.FinaBossSoundTrack);
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;
+        }
+        public static void MediaPlayer_MediaStateChanged(object sender, System.EventArgs e)
+        {
+            // 0.0f is silent, 1.0f is full volume
+            MediaPlayer.Volume -= 0.1f;
+            MediaPlayer.Play(SoundEffects.FinaBossSoundTrack);
         }
         public static void Update(float elapsedTime)
         {
@@ -367,6 +376,7 @@ namespace _999AD
                                     rightWingAnimations[(int)rightWingAnimation].Reset();
                                     leftWingAnimations[(int)leftWingAnimation].Reset();
                                 }
+                                SoundEffects.FinalBossAttack.Play();
                                 break;
                             }
                         case Phases.two:
@@ -447,6 +457,7 @@ namespace _999AD
                                     rightWingAnimations[(int)rightWingAnimation].Reset();
                                     leftWingAnimations[(int)leftWingAnimation].Reset();
                                 }
+                                SoundEffects.FinalBossAttack.Play();
                                 break;
                             }
                         case Phases.three:
@@ -556,6 +567,7 @@ namespace _999AD
                                     rightWingAnimations[(int)rightWingAnimation].Reset();
                                     leftWingAnimations[(int)leftWingAnimation].Reset();
                                 }
+                                SoundEffects.FinalBossAttack.Play();
                                 break;
                             }
                         case Phases.four:
@@ -643,6 +655,7 @@ namespace _999AD
                                     rightWingAnimations[(int)rightWingAnimation].Reset();
                                     leftWingAnimations[(int)leftWingAnimation].Reset();
                                 }
+                                SoundEffects.FinalBossAttack.Play();
                                 break;
                             }
                     }
@@ -662,6 +675,12 @@ namespace _999AD
                     break;
                 case BossAnimations.recovering:
                     {
+                        if (bossAnimations[(int)bossAnimation].FrameIndex == 0
+                            && bossAnimations[(int)bossAnimation].FreviousFrameIndex != 0)
+                            SoundEffects.FinalBossRecover.Play();
+                        else if (bossAnimations[(int)bossAnimation].FrameIndex == 2 &&
+                            bossAnimations[(int)bossAnimation].FreviousFrameIndex != 2)
+                            SoundEffects.FinalBossAwaken.Play();
                         elapsedRecoveryTime += elapsedTime;
                         if(elapsedRecoveryTime>= recoveryTime)
                         {
@@ -690,7 +709,6 @@ namespace _999AD
                             case Phases.one:
                                 if (rightWingHP+leftWingHP==3)
                                 {
-
                                     bossHP = maxBossHp;
                                     elapsedRecoveryTime = 0;
                                     currentPhase = Phases.two;
@@ -710,7 +728,7 @@ namespace _999AD
                                     bossAnimations[(int)BossAnimations.attack].Reset();
                                     rightWingAnimations[(int)rightWingAnimation].Reset();
                                     leftWingAnimations[(int)leftWingAnimation].Reset();
-
+                                    SoundEffects.FinalBossHurt.Play();
                                     FireBallsManager.AddGhostFireball(3);
                                 }
                                 break;
@@ -736,6 +754,7 @@ namespace _999AD
                                     bossAnimations[(int)BossAnimations.attack].Reset();
                                     rightWingAnimations[(int)rightWingAnimation].Reset();
                                     leftWingAnimations[(int)leftWingAnimation].Reset();
+                                    SoundEffects.FinalBossHurt.Play();
                                     FireBallsManager.ThrowAtPlayer(20,2,0.1f);
                                 }
                                 break;
@@ -761,6 +780,7 @@ namespace _999AD
                                     bossAnimations[(int)BossAnimations.attack].Reset();
                                     rightWingAnimations[(int)rightWingAnimation].Reset();
                                     leftWingAnimations[(int)leftWingAnimation].Reset();
+                                    SoundEffects.FinalBossHurt.Play();
                                     LavaGeyserManager.SweepAcross(1,0f, 100, 159, 609, true);
                                 }
                                 break;
@@ -782,6 +802,7 @@ namespace _999AD
                                     rightWingAnimations[(int)rightWingAnimation].Reset();
                                     leftWingAnimations[(int)leftWingAnimation].Reset();
                                     elapsedRecoveryTime = 0;
+                                    SoundEffects.FinalBossHurt.Play();
                                     FireBallsManager.Reset();
                                     LavaGeyserManager.Reset();
                                 }
@@ -798,6 +819,7 @@ namespace _999AD
                         if (BossDrawRectangle.Y>MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomHeightPx)
                         {
                             dead = true;
+                            MediaPlayer.Stop();
                         }
                         break;
                     }

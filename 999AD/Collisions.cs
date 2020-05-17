@@ -11,10 +11,10 @@ namespace _999AD
 {
     static class Collisions
     {
-        public static void Update(float elapsedTiem, SoundEffects soundEffects)
+        public static void Update(float elapsedTiem)
         {
             PlayerCollisions(elapsedTiem);
-            PlayerProjectilesCollisions(soundEffects);
+            PlayerProjectilesCollisions();
             BossProjectilesCollisions();
             EnemyProjectilesCollisions();
         }
@@ -58,7 +58,7 @@ namespace _999AD
             }
             #endregion
         }
-        static void PlayerProjectilesCollisions(SoundEffects soundEffects)
+        static void PlayerProjectilesCollisions()
         {
             foreach(Projectile projectile in ProjectilesManager.playerProjectiles)
             {
@@ -70,13 +70,13 @@ namespace _999AD
 
                 if(RoomsManager.CurrentRoom==RoomsManager.Rooms.midBoss)
                 {
-                    if (!MidBoss.Dead && MidBoss.BossHitByRect(projectile.Rectangle, soundEffects))
+                    if (!MidBoss.Dead && MidBoss.BossHitByRect(projectile.Rectangle))
                         projectile.active = false;
                 }
 
                 foreach(Enemy1 enemy in EnemyManager.enemyRoomManagers[(int)RoomsManager.CurrentRoom].enemiesType1)
                 {
-                    if(!enemy.Dead && enemy.Enemy1HitByRect(projectile.Rectangle, soundEffects))
+                    if(!enemy.Dead && enemy.Enemy1HitByRect(projectile.Rectangle))
                     {
                         projectile.active = false;
                     }
@@ -84,7 +84,7 @@ namespace _999AD
 
                 foreach(Enemy2 enemy in EnemyManager.enemyRoomManagers[(int)RoomsManager.CurrentRoom].enemiesType2)
                 {
-                    if(!enemy.Dead && enemy.Enemy2HitByRect(projectile.Rectangle, soundEffects))
+                    if(!enemy.Dead && enemy.Enemy2HitByRect(projectile.Rectangle))
                     {
                         projectile.active = false;
                     }

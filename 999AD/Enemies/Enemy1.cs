@@ -117,7 +117,7 @@ namespace _999AD
         #region METHODS
 
         //Update Function
-        public void Update(float elapsedTime, SoundEffects soundEffects)
+        public void Update(float elapsedTime)
         {
 
             if(dead)
@@ -145,7 +145,7 @@ namespace _999AD
                 isFacingLeft = false;
             }
 
-            CheckCollisions(soundEffects);
+            CheckCollisions();
 
             //Switch case statement for the enemyState
             switch(enemyState)
@@ -154,10 +154,10 @@ namespace _999AD
                     ChangeFromIdle();
                     break;
                 case EnemyState.attack:
-                    Attack(elapsedTime, soundEffects);
+                    Attack(elapsedTime);
                     break;
                 case EnemyState.death:
-                    Death(soundEffects);
+                    Death();
                     break;
             }
         }
@@ -175,11 +175,11 @@ namespace _999AD
         }
 
         //Function to handle Attack
-        public void Attack(float elapsedTime, SoundEffects soundEffects)
+        public void Attack(float elapsedTime)
         {
             if(!hit)
             {
-                MediaPlayer.Play(soundEffects.Enemy1Attack);
+                SoundEffects.Enemy1Attack.Play();
                 movementSpeed = 80;
                 if(isFacingLeft)
                 {
@@ -241,12 +241,12 @@ namespace _999AD
         //}
 
         //Function that returns boolean if the enemy is hit by projectile
-        public bool Enemy1HitByRect(Rectangle collisionRect, SoundEffects soundEffects)
+        public bool Enemy1HitByRect(Rectangle collisionRect)
         {
             if(Enemy1CollisionRect.Intersects(collisionRect))
             {
                 enemyHP--;
-                soundEffects.EnemyHurt.Play();
+                SoundEffects.EnemyHurt.Play();
                 enemyColor = Color.Red * 0.6f;
                 return true;
             }
@@ -279,9 +279,9 @@ namespace _999AD
         }
 
         //Function to handle the enemy death
-        public void Death(SoundEffects soundEffects)
+        public void Death()
         {
-            soundEffects.EnemyHurt.Play();
+            SoundEffects.EnemyHurt.Play();
             enemyColor = Color.White;
             if(enemyAnimations[(int)enemyState]!=enemyAnimations[(int)EnemyState.death])
             {
@@ -294,14 +294,14 @@ namespace _999AD
         }
 
         //Function to check for collisions between enemy 1 and player
-        public void CheckCollisions(SoundEffects soundEffects)
+        public void CheckCollisions()
         {
             if(!dead && Player.CollisionRectangle.Intersects(Enemy1CollisionRect))
             {
                 if(Math.Abs(Player.CollisionRectangle.Bottom-Enemy1CollisionRect.Top)<=5)
                 {
                     enemyHP--;
-                    soundEffects.EnemyHurt.Play();
+                    SoundEffects.EnemyHurt.Play();
                     Player.Rebound(0.75f);
                     enemyColor = Color.Red * 0.6f;
                 }

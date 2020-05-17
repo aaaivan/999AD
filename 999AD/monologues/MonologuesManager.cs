@@ -28,6 +28,20 @@ namespace _999AD
                 new MonologuesRoomManager(  //tutorial1
                     new Monologue[]
                     {
+                        new Monologue(new Rectangle(592, 194, 16, 16),
+                            new string[]
+                            {
+                                "\"Not all paths lead to the right way,\n"+
+                                "yet the right way is the one with the\n" +
+                                "most danger.",
+                                "You will become a great saviour to\n" +
+                                "mankind, but your praises will remain\n" +
+                                "unsung.",
+                                "If you still seek to redeem yourself,\n"+
+                                "you will undoubtedly face the fourth\n" +
+                                "horseman.\"",
+                                "I wonder what this means..."
+                            })
                     }),
                 new MonologuesRoomManager(  //tutorial2
                     new Monologue[]
@@ -44,6 +58,12 @@ namespace _999AD
                 new MonologuesRoomManager(  //churchBellTower0
                     new Monologue[]
                     {
+                        new Monologue(new Rectangle(193, 923, 87, 55),
+                            new string[]
+                            {
+                                "Mmmh... Is seems like something would\n" +
+                                "fit inside the two holes on this altar...",
+                            }),
                     }),
                 new MonologuesRoomManager(  //churchBellTower1
                     new Monologue[]

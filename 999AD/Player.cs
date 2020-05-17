@@ -177,6 +177,7 @@ namespace _999AD
                 {
                     ProjectilesManager.ShootPlayerProjectile(isFacingRight ? (position + new Vector2(width, 0)) : position, ProjectileInitialVelocity);
                     elapsedShotTime = 0;
+                    SoundEffects.PlayerAttack.Play();
                     if (currentAnimation != AnimationTypes.die)
                         currentAnimation = AnimationTypes.attack;
                 }
@@ -201,6 +202,7 @@ namespace _999AD
                     if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack)
                         currentAnimation = AnimationTypes.jump;
                     jumpSpeed.Y = initialJumpSpeed.Y;
+                    SoundEffects.PlayerJump.Play();
                     if (Game1.currentKeyboard.IsKeyDown(Keys.D))
                         jumpSpeed.X = initialJumpSpeed.X;
                     else if (Game1.currentKeyboard.IsKeyDown(Keys.A))
@@ -214,6 +216,7 @@ namespace _999AD
                     if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack)
                         currentAnimation = AnimationTypes.jump;
                     jumpSpeed.Y = initialJumpSpeed.Y;
+                    SoundEffects.PlayerJump.Play();
                     canDoubleJump = false;
                     isOnTheWall = false;
                     isWallJumping = true;
@@ -228,6 +231,7 @@ namespace _999AD
                     if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack)
                         currentAnimation = AnimationTypes.jump;
                     jumpSpeed.Y = initialJumpSpeed.Y;
+                    SoundEffects.PlayerJump.Play();
                     canDoubleJump = false;
                     return;
                 }
@@ -493,6 +497,7 @@ namespace _999AD
         public static void Rebound(float ratioReboundToNormalJump)
         {
             jumpSpeed.Y = initialJumpSpeed.Y * ratioReboundToNormalJump;
+            SoundEffects.PlayerJump.Play();
             canDoubleJump = true;
             isTouchingTheGround = false;
             isOnMovingPlatform = false;
@@ -502,6 +507,7 @@ namespace _999AD
         {
             jumpSpeed.X = initialJumpSpeed.X * ratioReboundToNormalJump_X * (toTheRight ? 1 : -1);
             jumpSpeed.Y = initialJumpSpeed.Y * ratioReboundToNormalJump_Y;
+            SoundEffects.PlayerJump.Play();
             canDoubleJump = true;
             isTouchingTheGround = false;
             isOnMovingPlatform = false;
@@ -512,6 +518,7 @@ namespace _999AD
             if (invulnerable && !damageEvenIfInvulnerable)
                 return;
             healthPoints -= damage;
+            SoundEffects.PlayerHurt.Play();
             if (healthPoints==0)
             {
                 currentAnimation = AnimationTypes.die;

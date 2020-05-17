@@ -14,6 +14,7 @@ namespace _999AD
         #region DECLARATIONS
         public enum SpriteType
         {
+            sign_tutorial1,
             invisibleTile,
             openBrassDoor, openGoldDoor, openBronzeDoor, openSilverDoor,
             displayDoubleJumpRelic, displayWallJumpRelic,
@@ -37,6 +38,7 @@ namespace _999AD
             spritesheet = _spritesheet;
             animations = new Animation[(int)SpriteType.total]
             {
+                new Animation(new Rectangle[]{ new Rectangle(336, 68, 10,9) }, 0, false),
                 new Animation(new Rectangle(336,40,64, 8),8,8,8, 0.1f, true),
                 new Animation(new Rectangle(0,0, 112, 40), 16, 40, 7, 0.1f, false, true),
                 new Animation(new Rectangle(112,0, 112, 40), 16, 40, 7, 0.1f, false, true),

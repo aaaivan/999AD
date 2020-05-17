@@ -40,9 +40,6 @@ namespace _999AD
         public static GamePadState currentGamePad;
         public static GameStates currentGameState;
 
-        private static Song finalBossMusic;
-        SoundEffects soundEffects = new SoundEffects();
-
         bool gameInitialized;
         //<debug>
         SpriteFont spriteFont;
@@ -157,29 +154,29 @@ namespace _999AD
             (
                 new Texture2D[(int)RoomsManager.Rooms.total]
                 {
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
-                    Content.Load<Texture2D>(@"backgrounds\room2"),
+                    Content.Load<Texture2D>(@"backgrounds\tutorial0"),
+                    Content.Load<Texture2D>(@"backgrounds\tutorial1"),
+                    Content.Load<Texture2D>(@"backgrounds\tutorial2"),
+                    Content.Load<Texture2D>(@"backgrounds\tutorial3"),
+                    Content.Load<Texture2D>(@"backgrounds\tutorial4"),
+                    Content.Load<Texture2D>(@"backgrounds\bellTower0"),
+                    Content.Load<Texture2D>(@"backgrounds\bellTower1"),
+                    Content.Load<Texture2D>(@"backgrounds\bellTower2"),
+                    Content.Load<Texture2D>(@"backgrounds\midBoss"),
+                    Content.Load<Texture2D>(@"backgrounds\groundFloor"),
+                    Content.Load<Texture2D>(@"backgrounds\altarRoom"),
+                    Content.Load<Texture2D>(@"backgrounds\firstFloor"),
+                    Content.Load<Texture2D>(@"backgrounds\secondFloor"),
+                    Content.Load<Texture2D>(@"backgrounds\descent"),
+                    Content.Load<Texture2D>(@"backgrounds\finalBoss"),
+                    Content.Load<Texture2D>(@"backgrounds\escape0"),
+                    Content.Load<Texture2D>(@"backgrounds\escape1"),
+                    Content.Load<Texture2D>(@"backgrounds\escape2"),
                 }
             );
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
             ProjectilesManager.Inizialize(Content.Load<Texture2D>("animatedSprites"));
-            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(100,185));
+            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(16,185));
             RoomsManager.Inizialize();
             GameEvents.Inizialize();
             FireBallsManager.Inizialize(Content.Load<Texture2D>("animatedSprites"));
@@ -210,27 +207,28 @@ namespace _999AD
             CutscenesManager.Initialize(Content.Load<Texture2D>(@"characters\enemy1"),
                                         Content.Load<Texture2D>(@"characters\player"),
                                         Content.Load<SpriteFont>(@"fonts\monologue"));
-            soundEffects.Initialise
+            SoundEffects.Initialise
                 (
                 //Player Sound Effects
                 Content.Load<SoundEffect>(@"sounds\pJump"),
-                Content.Load<Song>(@"sounds\pShoot"),
+                Content.Load<SoundEffect>(@"sounds\pShoot"),
                 Content.Load<SoundEffect>(@"sounds\pHurt"),
 
                 //Enemy Sound Effects
-                Content.Load<Song>(@"sounds\enemyAttack"),
+                Content.Load<SoundEffect>(@"sounds\enemyAttack"),
                 Content.Load<SoundEffect>(@"sounds\enemyHurt"),
                 Content.Load<SoundEffect>(@"sounds\e2Attack"),
 
                 //Midboss Sound Effects
-                Content.Load<Song>(@"sounds\midMove"),
+                Content.Load<SoundEffect>(@"sounds\midMove"),
                 Content.Load<SoundEffect>(@"sounds\midAttack"),
-                Content.Load<Song>(@"sounds\midHurt"),
+                Content.Load<SoundEffect>(@"sounds\midHurt"),
 
-                Content.Load<Song>(@"sounds\finAttack"),
-                Content.Load<Song>(@"sounds\finHurt"),
-                Content.Load<Song>(@"sounds\finAwaken"),
-                Content.Load<Song>(@"sounds\finRecover")
+                Content.Load<SoundEffect>(@"sounds\finAttack"),
+                Content.Load<SoundEffect>(@"sounds\finHurt"),
+                Content.Load<SoundEffect>(@"sounds\finAwaken"),
+                Content.Load<SoundEffect>(@"sounds\finRecover"),
+                Content.Load<Song>(@"sounds\finalBossMusic")
                 );
             gameInitialized=true;
             Zoom1();
@@ -306,11 +304,11 @@ namespace _999AD
                         currentGameState = GameStates.pause;
                         break;
                     }
-                    RoomsManager.Update(elapsedTime, soundEffects);
+                    RoomsManager.Update(elapsedTime);
                     Player.Update(elapsedTime);
                     ProjectilesManager.Update(elapsedTime);
                     GameEvents.Update(elapsedTime);
-                    Collisions.Update(elapsedTime, soundEffects);
+                    Collisions.Update(elapsedTime);
                     CollectablesManager.Update(elapsedTime);
                     break;
                 case GameStates.pause:
@@ -360,6 +358,8 @@ namespace _999AD
         {
             // TODO: Add your drawing code here
 #if LEVEL_EDITOR
+            GraphicsDevice.SetRenderTarget(nativeRenderTarget);
+            GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
             levelEditor.Draw(spriteBatch, tilesPerRow, infoBoxHeightPx, editorWidth, editorHeight);
             PlatformsManager.platformsRoomManagers[levelEditor.currentRoomNumber].Draw(spriteBatch);

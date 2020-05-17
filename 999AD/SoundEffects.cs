@@ -11,58 +11,59 @@ using Microsoft.Xna.Framework.Media;
 
 namespace _999AD
 {
-    class SoundEffects
+    static class SoundEffects
     {
         #region DECLARATIONS
         #region PLAYER-SOUND-EFFECTS
         //SFX for the Player
-        private SoundEffectInstance pJumpInstance;
-        private Song pShootInstance;
-        private SoundEffectInstance pHurtInstance;
+        static private SoundEffect pJumpInstance;
+        static private SoundEffect pShootInstance;
+        static private SoundEffect pHurtInstance;
         #endregion
 
         #region ENEMY1-SOUND-EFFECTS
         //SFX for the first enemy
-        private Song e1AttackInstance;
+        static private SoundEffect e1AttackInstance;
         #endregion
 
         #region ENEMY2-SOUND-EFFECTS
         //SFX for the second enemy
-        private Song e2MeleeInstance; // Same as e1Attack
-        private SoundEffectInstance e2AttackInstance;
-        private SoundEffectInstance enemyHurtInstance; // Shared with enemy 1
+        static private SoundEffect e2MeleeInstance; // Same as e1Attack
+        static private SoundEffect e2AttackInstance;
+        static private SoundEffect enemyHurtInstance; // Shared with enemy 1
         #endregion
 
         #region MIDBOSS-SOUND-EFFECTS
         //SFX for the mid boss
-        private Song midMoveInstance;
-        private SoundEffectInstance midAttackInstance;
-        private Song midHurtInstance;
+        static private SoundEffect midMoveInstance;
+        static private SoundEffect midAttackInstance;
+        static private SoundEffect midHurtInstance;
         #endregion
 
         #region FINALBOSS-SOUND-EFFECTS
         //SFX for the final boss
-        private Song finAttackInstance;
-        private Song finHurtInstance;
-        private Song finAwakenInstance; // Spread its wings
-        private Song finRecoverInstance; // Breath heavily
+        static private SoundEffect finAttackInstance;
+        static private SoundEffect finHurtInstance;
+        static private SoundEffect finAwakenInstance; // Spread its wings
+        static private SoundEffect finRecoverInstance; // Breath heavily
+        private static Song finalBossMusic;
         #endregion
         #endregion
 
         #region CONSTRUCTOR
-        public void Initialise
+        static public void Initialise
             (
-            SoundEffect pJump, Song pShoot, SoundEffect pHurt,
-            Song enemyAttack, SoundEffect enemyHurt,
+            SoundEffect pJump, SoundEffect pShoot, SoundEffect pHurt,
+            SoundEffect enemyAttack, SoundEffect enemyHurt,
             SoundEffect e2Attack,
-            Song midMove, SoundEffect midAttack, Song midHurt,
-            Song finAttack, Song finHurt, Song finAwaken, Song finRecover
+            SoundEffect midMove, SoundEffect midAttack, SoundEffect midHurt,
+            SoundEffect finAttack, SoundEffect finHurt, SoundEffect finAwaken, SoundEffect finRecover, Song finMusic
             )
         {
             //Player Variables
-            pJumpInstance = pJump.CreateInstance();
+            pJumpInstance = pJump;
             pShootInstance = pShoot;
-            pHurtInstance = pHurt.CreateInstance();
+            pHurtInstance = pHurt;
 
             //Enemy Variables
             //Enemy 1
@@ -70,12 +71,12 @@ namespace _999AD
 
             //Enemy 2
             e2MeleeInstance = enemyAttack;
-            e2AttackInstance = e2Attack.CreateInstance();
-            enemyHurtInstance = enemyHurt.CreateInstance();
+            e2AttackInstance = e2Attack;
+            enemyHurtInstance = enemyHurt;
 
             //Midboss
             midMoveInstance = midMove;
-            midAttackInstance = midAttack.CreateInstance();
+            midAttackInstance = midAttack;
             midHurtInstance = midHurt;
 
             //Final boss
@@ -83,6 +84,7 @@ namespace _999AD
             finHurtInstance = finHurt;
             finAwakenInstance = finAwaken;
             finRecoverInstance = finRecover;
+            finalBossMusic = finMusic;
 
         }
         #endregion
@@ -90,84 +92,88 @@ namespace _999AD
         #region PROPERTIES
         //Returns Songs and SoundEffects to the other classes to allow them to play the required effects
         #region PLAYER
-        public SoundEffectInstance PlayerJump
+        static public SoundEffectInstance PlayerJump
         {
-            get { return pJumpInstance; }
+            get { return pJumpInstance.CreateInstance(); }
         }
 
-        public Song PlayerAttack
+        static public SoundEffectInstance PlayerAttack
         {
-            get { return pShootInstance; }
+            get { return pShootInstance.CreateInstance(); }
         }
 
-        public SoundEffectInstance PlayerHurt
+        static public SoundEffectInstance PlayerHurt
         {
-            get { return pHurtInstance; }
+            get { return pHurtInstance.CreateInstance(); }
         }
         #endregion
 
         #region ENEMY 1
-        public Song Enemy1Attack
+        static public SoundEffectInstance Enemy1Attack
         {
-            get { return e1AttackInstance; }
+            get { return e1AttackInstance.CreateInstance(); }
         }
 
         #endregion
 
         #region ENEMY 2
-        public Song Enemy2Melee
+        static public SoundEffectInstance Enemy2Melee
         {
-            get { return e2MeleeInstance; }
+            get { return e2MeleeInstance.CreateInstance(); }
         }
 
-        public SoundEffectInstance Enemy2Attack
+        static public SoundEffectInstance Enemy2Attack
         {
-            get { return e2AttackInstance; }
+            get { return e2AttackInstance.CreateInstance(); }
         }
 
         //Shared for both Enemy 1 and 2
-        public SoundEffectInstance EnemyHurt
+        static public SoundEffectInstance EnemyHurt
         {
-            get { return enemyHurtInstance; }
+            get { return enemyHurtInstance.CreateInstance(); }
         }
         #endregion
 
         #region MIDBOSS
-        public Song MidbossMove
+        static public SoundEffectInstance MidbossMove
         {
-            get { return midMoveInstance; }
+            get { return midMoveInstance.CreateInstance(); }
         }
 
-        public SoundEffectInstance MidbossAttack
+        static public SoundEffectInstance MidbossAttack
         {
-            get { return midAttackInstance; }
+            get { return midAttackInstance.CreateInstance(); }
         }
 
-        public Song MidbossHurt
+        static public SoundEffectInstance MidbossHurt
         {
-            get { return midHurtInstance; }
+            get { return midHurtInstance.CreateInstance(); }
         }
         #endregion
 
         #region FINAL BOSS
-        public Song FinalBossAttack
+        static public SoundEffectInstance FinalBossAttack
         {
-            get { return finAttackInstance; }
+            get { return finAttackInstance.CreateInstance(); }
         }
 
-        public Song FinalBossHurt
+        static public SoundEffectInstance FinalBossHurt
         {
-            get { return finHurtInstance; }
+            get { return finHurtInstance.CreateInstance(); }
         }
 
-        public Song FinalBossAwaken
+        static public SoundEffectInstance FinalBossAwaken
         {
-            get { return finAwakenInstance; }
+            get { return finAwakenInstance.CreateInstance(); }
         }
 
-        public Song FinalBossRecover
+        static public SoundEffectInstance FinalBossRecover
         {
-            get { return finRecoverInstance; }
+            get { return finRecoverInstance.CreateInstance(); }
+        }
+        static public Song FinaBossSoundTrack
+        {
+            get { return finalBossMusic; }
         }
         #endregion
         #endregion

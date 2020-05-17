@@ -251,14 +251,14 @@ namespace _999AD
                     case Events.unlockDoubleJump:
                         Player.doubleJumpUnlocked = true;
                         AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.CurrentRoom].AddAnimatedSprite(
-                            new AnimatedSprite(new Vector2(208, 920), AnimatedSprite.SpriteType.displayDoubleJumpRelic, false));
+                            new AnimatedSprite(new Vector2(210, 923), AnimatedSprite.SpriteType.displayDoubleJumpRelic, false));
                         happening = Events.unlockDoubleJump;
                         elapsedEventsDuration = 0;
                         break;
                     case Events.unlockWallJump:
                         Player.wallJumpUnlocked = true;
                         AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.CurrentRoom].AddAnimatedSprite(
-                            new AnimatedSprite(new Vector2(256, 920), AnimatedSprite.SpriteType.displayWallJumpRelic, false));
+                            new AnimatedSprite(new Vector2(238, 923), AnimatedSprite.SpriteType.displayWallJumpRelic, false));
                         happening = Events.unlockWallJump;
                         elapsedEventsDuration = 0;
                         break;

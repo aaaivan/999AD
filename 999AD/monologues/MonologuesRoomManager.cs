@@ -42,7 +42,7 @@ namespace _999AD
                     if (monologues[i].interactionRectangle.Intersects(Player.CollisionRectangle))
                     {
                         drawInteractSymbol = true;
-                        interactSymbolRectangle = monologues[i].InteractSymbolLocation(spritesheet.Width, spritesheet.Height);
+                        interactSymbolRectangle = monologues[i].InteractSymbolLocation(sourceRectangle_interactSymbol.Width, sourceRectangle_interactSymbol.Height);
                         if (monologues[i].PlayAutomatically ||
                             (Game1.currentKeyboard.IsKeyDown(Keys.Enter) && !Game1.previousKeyboard.IsKeyDown(Keys.Enter)) ||
                             (Game1.currentGamePad.Buttons.A == ButtonState.Pressed && Game1.previousGamePad.Buttons.A == ButtonState.Released))
