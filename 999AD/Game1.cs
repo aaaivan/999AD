@@ -457,6 +457,7 @@ namespace _999AD
             //</debug>
 
             spriteBatch.End();
+
             GraphicsDevice.SetRenderTarget(null);
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             if (currentGameState == GameStates.playing)

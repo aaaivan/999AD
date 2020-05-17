@@ -229,7 +229,7 @@ namespace _999AD
         public MovingPlatform DeepCopy()
         {
             return new MovingPlatform(textureType, radius, centerStartingPoint, centerEndingPoint,
-                angularSpeed, linearSpeed, active, angleRadiants*180/ MathHelper.Pi, linearSpeed_pixelsPerSecond,
+                angularSpeed, linearSpeed_pixelsPerSecond, active, angleRadiants*180/ MathHelper.Pi, (float)normalizedLinearProgression,
                 centerRestingTime, moveOnce, disappearing, maxTransparentTime, maxSolidTime, delay);
         }
         public void Draw(SpriteBatch spriteBatch)

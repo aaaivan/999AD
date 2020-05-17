@@ -519,6 +519,8 @@ namespace _999AD
         {
             if (invulnerable && !damageEvenIfInvulnerable)
                 return;
+            if (healthPoints <= 0)
+                return;
             healthPoints -= damage;
             SoundEffects.PlayerHurt.Play();
             if (healthPoints==0)
