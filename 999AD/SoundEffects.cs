@@ -65,7 +65,7 @@ namespace _999AD
             pJumpInstance = pJump;
             pShootInstance = pShoot;
             pHurtInstance = pHurt;
-            pickUp = pickUpItem;
+            pickUpItem= pickUp;
 
             //Enemy Variables
             //Enemy 1

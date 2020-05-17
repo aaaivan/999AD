@@ -420,13 +420,10 @@ namespace _999AD
                     MenusManager.menus[(int)MenusManager.MenuType.pause].Draw(spriteBatch);
                     break;
                 case GameStates.dead:
-                    GraphicsDevice.SetRenderTarget(nativeRenderTarget);
+                    GraphicsDevice.SetRenderTarget(renderTarget_zoom1);
                     GraphicsDevice.Clear(Color.Black);
                     Camera.Draw(spriteBatch);
                     RoomsManager.Draw(spriteBatch);
-                    CollectablesManager.Draw(spriteBatch);
-                    GraphicsDevice.SetRenderTarget(renderTarget_zoom1);
-                    GraphicsDevice.Clear(Color.Black);
                     PlayerDeathManager.Draw(spriteBatch);
                     break;
                 case GameStates.ending:
@@ -464,11 +461,6 @@ namespace _999AD
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             if (currentGameState == GameStates.playing)
                 spriteBatch.Draw(nativeRenderTarget, viewportRectangle, Color.White);
-            else if (currentGameState == GameStates.dead)
-            {
-                spriteBatch.Draw(nativeRenderTarget, viewportRectangle, Color.White);
-                spriteBatch.Draw(renderTarget_zoom1, viewportRectangle, Color.White);
-            }
             else
                 spriteBatch.Draw(renderTarget_zoom1, viewportRectangle, Color.White);
 

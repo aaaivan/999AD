@@ -28,7 +28,6 @@ namespace _999AD
         int currentLength;
         bool endOfSentence;
         public bool active;
-        bool playAutomatically;
         #endregion
         #region CONSTRUCTOR
         public Monologue(Rectangle _interactionRectangle, string[] _sentences)
@@ -48,7 +47,7 @@ namespace _999AD
             spriteFont = _spriteFont;
             sourceRectangle_dialogueBox = new Rectangle(24, 173, 360, 48);
             sourceRectangle_arrow = new Rectangle(384, 173, 8, 8);
-            boxRectangle= new Rectangle((Game1.gameWidth - sourceRectangle_dialogueBox.Width) / 2, 10, sourceRectangle_dialogueBox.Width, sourceRectangle_dialogueBox.Height);
+            boxRectangle= new Rectangle((Game1.min_gameWidth - sourceRectangle_dialogueBox.Width) / 2, 10, sourceRectangle_dialogueBox.Width, sourceRectangle_dialogueBox.Height);
             stringPosition = new Vector2(boxRectangle.X + 50, boxRectangle.Y + 4);
             arrowRectangle = new Rectangle(boxRectangle.Right-4- sourceRectangle_arrow.Width, boxRectangle.Bottom - 4 - sourceRectangle_arrow.Height, sourceRectangle_arrow.Width, sourceRectangle_arrow.Height);
         }

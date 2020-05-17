@@ -280,7 +280,7 @@ namespace _999AD
                 {
                     case Events.keySpawns1_tutorial3:
                         CollectablesManager.collectablesRoomManagers[(int)RoomsManager.CurrentRoom].AddCollectableToMap(
-                            new Collectable(new Point(570, 132), Collectable.ItemType.brassKey));
+                            new Collectable(new Point(350, 132), Collectable.ItemType.brassKey));
                         happening = Events.keySpawns1_tutorial3;
                         elapsedEventsDuration = 0;
                         break;
