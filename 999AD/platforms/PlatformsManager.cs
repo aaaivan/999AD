@@ -499,13 +499,13 @@ namespace _999AD
                 (
                     new MovingPlatform[]
                     {
-                        new MovingPlatform(MovingPlatform.TextureType.dirt40_8, 205, FinalBoss.fireballsCenter, Vector2.Zero, 0.5f,0,false,0),
-                        new MovingPlatform(MovingPlatform.TextureType.dirt40_8, 205, FinalBoss.fireballsCenter, Vector2.Zero, 0.5f,0,false,120),
-                        new MovingPlatform(MovingPlatform.TextureType.dirt40_8, 205, FinalBoss.fireballsCenter,Vector2.Zero, 0.5f,0,false,240),
-                        new MovingPlatform(MovingPlatform.TextureType.dirt40_8, 160, FinalBoss.fireballsCenter,Vector2.Zero, -0.5f,0,false,180),
-                        new MovingPlatform(MovingPlatform.TextureType.dirt40_8, 160, FinalBoss.fireballsCenter, Vector2.Zero,-0.5f,0,false,60),
-                        new MovingPlatform(MovingPlatform.TextureType.dirt40_8, 160, FinalBoss.fireballsCenter,Vector2.Zero, -0.5f,0,false,300),
-                        new MovingPlatform(MovingPlatform.TextureType.dirt40_8, 0,
+                        new MovingPlatform(MovingPlatform.TextureType.marble40_8, 205, FinalBoss.fireballsCenter, Vector2.Zero, 0.5f,0,false,0),
+                        new MovingPlatform(MovingPlatform.TextureType.marble40_8, 205, FinalBoss.fireballsCenter, Vector2.Zero, 0.5f,0,false,120),
+                        new MovingPlatform(MovingPlatform.TextureType.marble40_8, 205, FinalBoss.fireballsCenter,Vector2.Zero, 0.5f,0,false,240),
+                        new MovingPlatform(MovingPlatform.TextureType.marble40_8, 160, FinalBoss.fireballsCenter,Vector2.Zero, -0.5f,0,false,180),
+                        new MovingPlatform(MovingPlatform.TextureType.marble40_8, 160, FinalBoss.fireballsCenter, Vector2.Zero,-0.5f,0,false,60),
+                        new MovingPlatform(MovingPlatform.TextureType.marble40_8, 160, FinalBoss.fireballsCenter,Vector2.Zero, -0.5f,0,false,300),
+                        new MovingPlatform(MovingPlatform.TextureType.marble40_8, 0,
                                             new Vector2(100, MapsManager.maps[(int)RoomsManager.Rooms.finalBoss].RoomHeightPx+50),
                                             new Vector2(100, 72), 0,30, false, 0,0,0,true)
                     }

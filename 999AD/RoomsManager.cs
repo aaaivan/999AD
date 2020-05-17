@@ -603,25 +603,26 @@ namespace _999AD
         }
         public static void Draw(SpriteBatch spriteBatch)
         {
-            MapsManager.maps[(int)currentRoom].Draw(spriteBatch);
-            Player.Draw(spriteBatch);
-            ProjectilesManager.Draw(spriteBatch);
+            AnimatedSpritesManager.animatedSpritesRoomManagers[(int)currentRoom].DrawOnTheBack(spriteBatch);
             PlatformsManager.platformsRoomManagers[(int)currentRoom].Draw(spriteBatch);
-            CollectablesManager.collectablesRoomManagers[(int)currentRoom].Draw(spriteBatch);
             if (currentRoom == Rooms.finalBoss)
             {
                 FinalBoss.Draw(spriteBatch);
             }
-            if(currentRoom==Rooms.midBoss)
+            else if (currentRoom == Rooms.midBoss)
             {
                 MidBoss.Draw(spriteBatch);
             }
             EnemyManager.enemyRoomManagers[(int)currentRoom].Draw(spriteBatch);
+            CollectablesManager.collectablesRoomManagers[(int)currentRoom].Draw(spriteBatch);
+            ProjectilesManager.Draw(spriteBatch);
+            Player.Draw(spriteBatch);
+            MapsManager.maps[(int)currentRoom].Draw(spriteBatch);
+            DoorsManager.doorsRoomManagers[(int)currentRoom].Draw(spriteBatch);
+            AnimatedSpritesManager.animatedSpritesRoomManagers[(int)currentRoom].DrawInFront(spriteBatch);
             FireBallsManager.Draw(spriteBatch);
             LavaGeyserManager.Draw(spriteBatch);
             MonologuesManager.monologuesRoomManagers[(int)currentRoom].Draw(spriteBatch);
-            DoorsManager.doorsRoomManagers[(int)currentRoom].Draw(spriteBatch);
-            AnimatedSpritesManager.animatedSpritesRoomManagers[(int)currentRoom].Draw(spriteBatch);
         }
         #endregion
     }

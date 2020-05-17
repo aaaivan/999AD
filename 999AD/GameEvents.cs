@@ -14,6 +14,7 @@ namespace _999AD
         public enum Events
         {
             none,
+            introMonologue,
 
             keySpawns1_tutorial3, keySpawns2_tutorial3,
 
@@ -27,6 +28,7 @@ namespace _999AD
 
             terrainCollapseFinalBoss, finalBossComesAlive, activatePlatformsFinalBoss, escapeFinalBossRoom,
 
+            monologue_escape0,
             lavaEruption1_escape0, lowerFloor1_escape0, removeFloor1_escape0,
             lavaEruption2_escape0, lavaEruption3_escape0, lavaEruption4_escape0,
             raiseFloor2_escape0, lavaEruption5_escape0, raiseFloor3_escape0, lavaEruption6_escape0,
@@ -34,22 +36,36 @@ namespace _999AD
             activatePlatform_escape1, raiseFloor1_escape1, lavaEruption1_escape1,
 
             lavaEruption_escape2,
+
+            finalMonologue, finalCutscene,
             total
         }
         public static readonly float[] eventsDuration = new float[(int)Events.total]
         {
+            0,//none
+
             0,
+
             0,0,
+
             0,0,
+
             0, 
+
             0,0,
+
             0,0,
+
             2, 4, 0, 0,
+
+            0,
             0, 3.1f, 0,
             2.5f, 1f, 0,
             0, 0, 4.2f, 0,
+
             0,0,0,
-            2.2f
+            2.2f,
+            0,0
         };
         public static float elapsedEventsDuration;
         public static bool[] eventAlreadyHappened;
@@ -128,6 +144,15 @@ namespace _999AD
         {
             switch (RoomsManager.CurrentRoom)
             {
+                case RoomsManager.Rooms.tutorial0:
+                    if (!eventAlreadyHappened[(int)Events.introMonologue])
+                        TriggerEvent(Events.introMonologue);
+                    else if (FinalBoss.Dead && Player.position.X < 200 && Player.position.Y <= 176 - Player.height &&
+                        !eventAlreadyHappened[(int)Events.finalMonologue])
+                        TriggerEvent(Events.finalMonologue);
+                    else if (eventAlreadyHappened[(int)Events.finalMonologue] && !MonologuesManager.MonologuePlaying)
+                        TriggerEvent(Events.finalCutscene);
+                    break;
                 case RoomsManager.Rooms.tutorial3:
                     if (EnemyManager.enemyRoomManagers[(int)RoomsManager.CurrentRoom].enemiesType1[0].Dead &&
                         !eventAlreadyHappened[(int)Events.keySpawns1_tutorial3])
@@ -183,6 +208,8 @@ namespace _999AD
                         TriggerEvent(Events.escapeFinalBossRoom);
                     break;
                 case RoomsManager.Rooms.escape0:
+                    if (Player.position.X < 1752 && !eventAlreadyHappened[(int)Events.monologue_escape0])
+                        TriggerEvent(Events.monologue_escape0);
                     if (Player.position.X < MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomWidthtPx - 248 && !eventAlreadyHappened[(int)Events.lavaEruption1_escape0])
                         TriggerEvent(Events.lavaEruption1_escape0);
                     if (Player.position.X < MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomWidthtPx - 416 && !eventAlreadyHappened[(int)Events.lowerFloor1_escape0])
@@ -226,7 +253,28 @@ namespace _999AD
         }
         public static void TriggerEvent(Events _event)
         {
-            if (RoomsManager.CurrentRoom== RoomsManager.Rooms.tutorial3)
+            if (RoomsManager.CurrentRoom == RoomsManager.Rooms.tutorial0)
+            {
+                switch (_event)
+                {
+                    case Events.introMonologue:
+                        MonologuesManager.monologuesRoomManagers[(int)RoomsManager.CurrentRoom].PlayMonologue(0);
+                        happening = Events.introMonologue;
+                        elapsedEventsDuration = 0;
+                        break;
+                    case Events.finalMonologue:
+                        MonologuesManager.monologuesRoomManagers[(int)RoomsManager.CurrentRoom].PlayMonologue(1);
+                        happening = Events.finalMonologue;
+                        elapsedEventsDuration = 0;
+                        break;
+                    case Events.finalCutscene:
+                        Game1.currentGameState = Game1.GameStates.ending;
+                        happening = Events.finalMonologue;
+                        elapsedEventsDuration = 0;
+                        break;
+                }
+            }
+            else if (RoomsManager.CurrentRoom == RoomsManager.Rooms.tutorial3)
             {
                 switch (_event)
                 {
@@ -265,7 +313,8 @@ namespace _999AD
                 }
             }
             else if (RoomsManager.CurrentRoom == RoomsManager.Rooms.midBoss)
-                switch(_event)
+            {
+                switch (_event)
                 {
                     case Events.keyAndPowerUpSpawn_midBoss:
                         CollectablesManager.collectablesRoomManagers[(int)RoomsManager.CurrentRoom].AddCollectableToMap(
@@ -277,9 +326,10 @@ namespace _999AD
                         break;
 
                 }
+            }
             else if (RoomsManager.CurrentRoom == RoomsManager.Rooms.churchGroundFloor0)
             {
-                switch(_event)
+                switch (_event)
                 {
                     case Events.activateMovingPlatforms_churchGroundFloor0:
                         PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[16].active = true;
@@ -299,17 +349,17 @@ namespace _999AD
                         break;
                 }
             }
-            else if (RoomsManager.CurrentRoom== RoomsManager.Rooms.church1stFloor0)
+            else if (RoomsManager.CurrentRoom == RoomsManager.Rooms.church1stFloor0)
             {
-                switch(_event)
+                switch (_event)
                 {
                     case Events.showInvisibleTiles_church1stFloor0:
                         List<AnimatedSprite> animatedSprites = new List<AnimatedSprite>();
-                        for (int row=0; row< MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles; row++)
+                        for (int row = 0; row < MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles; row++)
                         {
                             for (int col = 0; col < MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles; col++)
                             {
-                                if (MapsManager.maps[(int)RoomsManager.CurrentRoom].array[row, col].tileType== Tile.TileType.solidEmpty)
+                                if (MapsManager.maps[(int)RoomsManager.CurrentRoom].array[row, col].tileType == Tile.TileType.solidEmpty)
                                 {
                                     animatedSprites.Add(new AnimatedSprite(new Vector2(col * Tile.tileSize, row * Tile.tileSize),
                                         AnimatedSprite.SpriteType.invisibleTile));
@@ -380,12 +430,17 @@ namespace _999AD
             {
                 switch (_event)
                 {
+                    case Events.monologue_escape0:
+                        MonologuesManager.monologuesRoomManagers[(int)RoomsManager.CurrentRoom].PlayMonologue(0);
+                        happening = Events.introMonologue;
+                        elapsedEventsDuration = 0;
+                        break;
                     case Events.lavaEruption1_escape0:
-                        LavaGeyserManager.ShootGeyser(new float[] { MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomWidthtPx -308 }, 0, -1000);
-                        List<int[]> tilesToRemove= new List<int[]>();
-                        for (int i=0; i<10; i++)
+                        LavaGeyserManager.ShootGeyser(new float[] { MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomWidthtPx - 308 }, 0, -1000);
+                        List<int[]> tilesToRemove = new List<int[]>();
+                        for (int i = 0; i < 10; i++)
                         {
-                            for (int j=0; j<3; j++)
+                            for (int j = 0; j < 3; j++)
                             {
                                 tilesToRemove.Add(new int[2] {
                                     MapsManager.maps[(int)RoomsManager.Rooms.escape0].roomHeightTiles - i-1,
@@ -393,7 +448,7 @@ namespace _999AD
                                 });
                             }
                         }
-                        MapsManager.maps[(int)RoomsManager.CurrentRoom].RemoveGroupOfTiles(tilesToRemove, 0.01f,3,0.3f);
+                        MapsManager.maps[(int)RoomsManager.CurrentRoom].RemoveGroupOfTiles(tilesToRemove, 0.01f, 3, 0.3f);
                         happening = Events.lavaEruption1_escape0;
                         elapsedEventsDuration = 0;
                         break;
@@ -410,11 +465,11 @@ namespace _999AD
                         elapsedEventsDuration = 0;
                         break;
                     case Events.lavaEruption2_escape0:
-                        LavaGeyserManager.ShootGeyser(new float[] 
+                        LavaGeyserManager.ShootGeyser(new float[]
                         {
                             MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomWidthtPx - 664,
                             MapsManager.maps[(int)RoomsManager.Rooms.escape0].RoomWidthtPx - 640
-                        },0);
+                        }, 0);
                         happening = Events.lavaEruption2_escape0;
                         elapsedEventsDuration = 0;
                         break;
@@ -464,7 +519,7 @@ namespace _999AD
             }
             else if (RoomsManager.CurrentRoom == RoomsManager.Rooms.escape1)
             {
-                switch(_event)
+                switch (_event)
                 {
                     case Events.activatePlatform_escape1:
                         PlatformsManager.platformsRoomManagers[(int)RoomsManager.Rooms.escape1].movingPlatforms[0].active = true;
@@ -486,7 +541,7 @@ namespace _999AD
             }
             else if (RoomsManager.CurrentRoom == RoomsManager.Rooms.escape2)
             {
-                switch(_event)
+                switch (_event)
                 {
                     case Events.lavaEruption_escape2:
                         LavaGeyserManager.ShootGeyser(new float[] { 396 }, 0f);

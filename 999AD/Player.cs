@@ -45,6 +45,7 @@ namespace _999AD
         static float elapsedInvulnerabilityTime;
         static bool invulnerable;
         static float alphaValue;
+        public static bool haltInput;
         #endregion
         #region CONSTRUCTOR
         public static void Inizialize(Texture2D _spritesheet, Vector2 _position)
@@ -78,6 +79,7 @@ namespace _999AD
             elapsedInvulnerabilityTime = 0;
             invulnerable = false;
             alphaValue = 1;
+            haltInput = false;
             currentAnimation = AnimationTypes.idle;
         }
         #endregion
@@ -114,7 +116,7 @@ namespace _999AD
         #region METHODS
         public static void Update(float elapsedTime)
         {
-            if (healthPoints > 0)
+            if (healthPoints > 0 && !haltInput)
             {
                 CheckMovementInput();
                 CheckAttackInput(elapsedTime);
@@ -549,8 +551,10 @@ namespace _999AD
                                          animations[(int)currentAnimation].Frame.Height),
                 animations[(int)currentAnimation].Frame, Color.White*(invulnerable?alphaValue:1), 0f, Vector2.Zero,
                 isFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
-
-            for(int i=0;i<healthPoints;i++)
+        }
+        public static void DrawGUI(SpriteBatch spriteBatch)
+        {
+            for (int i = 0; i < healthPoints; i++)
             {
                 spriteBatch.Draw(Collectable.Sprites, new Vector2(5 + i * 16, 5), new Rectangle(0, 110, 16, 19), Color.White);
             }

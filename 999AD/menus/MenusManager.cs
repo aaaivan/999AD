@@ -14,7 +14,7 @@ namespace _999AD
         #region DECLARATIONS
         public enum MenuType
         {
-            titleScreen, controls, credits, pause, confirmQuit, total
+            titleScreen, controls, credits, pause, confirmQuit, doubleJump, wallJump,  total
         }
         public static Menu[] menus;
         #endregion
@@ -91,6 +91,18 @@ namespace _999AD
                                 new Rectangle(156,124,72,24), //no
                                 new Rectangle(156,148,72,24), //yes
                             }),
+                new Menu(backgrounds[5],
+                            new Rectangle[]{new Rectangle(0, 96, 120, 24) },
+                            new Game1.GameStates[]{ Game1.GameStates.playing},
+                            Game1.GameStates.playing,
+                            new Rectangle[]{ new Rectangle(132,124,120,24) }
+                            ),
+                new Menu(backgrounds[6],
+                            new Rectangle[]{new Rectangle(0, 96, 120, 24) },
+                            new Game1.GameStates[]{ Game1.GameStates.playing},
+                            Game1.GameStates.playing,
+                            new Rectangle[]{ new Rectangle(132,124,120,24) }
+                            ),
             };
         }
         #endregion

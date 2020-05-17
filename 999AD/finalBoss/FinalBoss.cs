@@ -247,13 +247,6 @@ namespace _999AD
             leftWingAnimations[(int)leftWingAnimation].Reset();
             MediaPlayer.Play(SoundEffects.FinaBossSoundTrack);
             MediaPlayer.IsRepeating = true;
-            MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;
-        }
-        public static void MediaPlayer_MediaStateChanged(object sender, System.EventArgs e)
-        {
-            // 0.0f is silent, 1.0f is full volume
-            MediaPlayer.Volume -= 0.1f;
-            MediaPlayer.Play(SoundEffects.FinaBossSoundTrack);
         }
         public static void Update(float elapsedTime)
         {
@@ -782,6 +775,8 @@ namespace _999AD
                                     leftWingAnimations[(int)leftWingAnimation].Reset();
                                     SoundEffects.FinalBossHurt.Play();
                                     LavaGeyserManager.SweepAcross(1,0f, 100, 159, 609, true);
+                                    CollectablesManager.collectablesRoomManagers[(int)RoomsManager.CurrentRoom].AddCollectableToMap(
+                                        new Collectable(new Point(376, 475), Collectable.ItemType.heart));
                                 }
                                 break;
                             case Phases.four:

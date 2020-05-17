@@ -31,7 +31,7 @@ namespace _999AD
         bool playAutomatically;
         #endregion
         #region CONSTRUCTOR
-        public Monologue(Rectangle _interactionRectangle, string[] _sentences, bool _playAutomatically=false)
+        public Monologue(Rectangle _interactionRectangle, string[] _sentences)
         {
             elapsedTimeBetweenChars = 0;
             stringDisplayed = "";
@@ -41,7 +41,6 @@ namespace _999AD
             active = false;
             interactionRectangle = _interactionRectangle;
             sentences = _sentences;
-            playAutomatically = _playAutomatically;
         }
         public static void Inizialize(Texture2D _spritesheet, SpriteFont _spriteFont)
         {
@@ -52,12 +51,6 @@ namespace _999AD
             boxRectangle= new Rectangle((Game1.gameWidth - sourceRectangle_dialogueBox.Width) / 2, 10, sourceRectangle_dialogueBox.Width, sourceRectangle_dialogueBox.Height);
             stringPosition = new Vector2(boxRectangle.X + 50, boxRectangle.Y + 4);
             arrowRectangle = new Rectangle(boxRectangle.Right-4- sourceRectangle_arrow.Width, boxRectangle.Bottom - 4 - sourceRectangle_arrow.Height, sourceRectangle_arrow.Width, sourceRectangle_arrow.Height);
-        }
-        #endregion
-        #region PROPERTIES
-        public bool PlayAutomatically
-        {
-            get { return playAutomatically; }
         }
         #endregion
         #region METHODS

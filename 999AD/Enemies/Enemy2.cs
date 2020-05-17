@@ -302,11 +302,11 @@ namespace _999AD
         //Function to handle the enemy death
         public void Death()
         {
-            SoundEffects.EnemyHurt.Play();
             enemyColor = Color.White;
             if (enemyAnimations[(int)enemyState] != enemyAnimations[(int)EnemyState.death])
             {
                 enemyAnimations[(int)enemyState] = enemyAnimations[(int)EnemyState.death];
+                SoundEffects.EnemyHurt.Play();
             }
             else if (!enemyAnimations[(int)enemyState].Active)
             {
