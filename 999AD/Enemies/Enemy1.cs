@@ -37,7 +37,7 @@ namespace _999AD
         float movementSpeed;
 
         //Distance between which enemy notices the player
-        readonly int collisionDistance = 30;
+        readonly int collisionDistance = 50;
         bool hit = false;
 
         //Variables for knocking back the player
@@ -247,7 +247,7 @@ namespace _999AD
             {
                 enemyHP--;
                 soundEffects.EnemyHurt.Play();
-                enemyColor = Color.Red * 0.3f;
+                enemyColor = Color.Red * 0.6f;
                 return true;
             }
             return false;
@@ -268,7 +268,11 @@ namespace _999AD
         //Function to change states from idle
         public void ChangeFromIdle()
         {
-            if((Math.Abs(currentPoint.X - Player.CollisionRectangle.X) <= collisionDistance)&&(Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 5))
+            if((Math.Abs(currentPoint.Y-Player.CollisionRectangle.Y)<15&&(Player.CollisionRectangle.X>enemyPoint2.X+15||Player.CollisionRectangle.Right<enemyPoint.X-15)))
+            {
+                enemyState = EnemyState.idle;
+            }
+            else if((Math.Abs(currentPoint.X - Player.CollisionRectangle.X) <= collisionDistance) && (Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 15))
             {
                 enemyState = EnemyState.attack;
             }
@@ -299,7 +303,7 @@ namespace _999AD
                     enemyHP--;
                     soundEffects.EnemyHurt.Play();
                     Player.Rebound(0.75f);
-                    enemyColor = Color.Red * 0.5f;
+                    enemyColor = Color.Red * 0.6f;
                 }
             }
         }

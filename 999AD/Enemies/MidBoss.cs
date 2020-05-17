@@ -44,7 +44,7 @@ namespace _999AD
 
         //Vector for projectile velocity
         //First value is horizontal distance, second value is vertical distance
-        public static readonly Vector2 projectileInitialVelocity = new Vector2(500, -150);
+        public static readonly Vector2 projectileInitialVelocity = new Vector2(500, -75);
 
         public static BossState bossState = BossState.idle;
         static readonly int maxHP = 10;

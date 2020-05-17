@@ -181,7 +181,7 @@ namespace _999AD
             );
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
             ProjectilesManager.Inizialize(Content.Load<Texture2D>("animatedSprites"));
-            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(100,100)); //300,80
+            Player.Inizialize(Content.Load <Texture2D>(@"characters\player"), new Vector2(100,80)); //300,80
             RoomsManager.Inizialize();
             GameEvents.Inizialize();
             FireBallsManager.Inizialize(Content.Load<Texture2D>("animatedSprites"));

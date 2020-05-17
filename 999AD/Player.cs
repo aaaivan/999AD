@@ -539,6 +539,11 @@ namespace _999AD
                                          animations[(int)currentAnimation].Frame.Height),
                 animations[(int)currentAnimation].Frame, Color.White*(invulnerable?alphaValue:1), 0f, Vector2.Zero,
                 isFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+
+            for(int i=0;i<healthPoints;i++)
+            {
+                spriteBatch.Draw(Collectable.Sprites, new Vector2(5 + i * 16, 5), new Rectangle(0, 110, 16, 19), Color.White);
+            }
         }
         #endregion
     }
