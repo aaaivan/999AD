@@ -145,6 +145,8 @@ namespace _999AD
                 isFacingLeft = false;
             }
 
+            CheckCollisions();
+
             //Switch case statement for the enemyState
             switch(enemyState)
             {
@@ -175,7 +177,6 @@ namespace _999AD
         //Function to handle Attack
         public void Attack(float elapsedTime)
         {
-            CheckCollisions();
             if(!hit)
             {
                 SoundEffects.Enemy1Attack.Play();
@@ -267,7 +268,6 @@ namespace _999AD
         //Function to change states from idle
         public void ChangeFromIdle()
         {
-            CheckCollisions();
             if((Math.Abs(currentPoint.Y-Player.CollisionRectangle.Y)<15&&(Player.CollisionRectangle.X>enemyPoint2.X+15||Player.CollisionRectangle.Right<enemyPoint.X-15)))
             {
                 enemyState = EnemyState.idle;
@@ -281,10 +281,10 @@ namespace _999AD
         //Function to handle the enemy death
         public void Death()
         {
+            SoundEffects.EnemyHurt.Play();
             enemyColor = Color.White;
             if(enemyAnimations[(int)enemyState]!=enemyAnimations[(int)EnemyState.death])
             {
-                SoundEffects.EnemyHurt.Play();
                 enemyAnimations[(int)enemyState] = enemyAnimations[(int)EnemyState.death];
             }
             else if(!enemyAnimations[(int)enemyState].Active)

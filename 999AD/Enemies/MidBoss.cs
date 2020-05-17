@@ -116,11 +116,6 @@ namespace _999AD
         //Update Function
         public static void Update(float elapsedTime)
         {
-            if(dead)
-            {
-                return;
-            }
-
             //Updating the animation of the boss sprite
             bossAnimations[(int)bossState].Update(elapsedTime);
 
@@ -299,9 +294,9 @@ namespace _999AD
         //Function to handle the boss death
         public static void Death()
         {
+            SoundEffects.MidbossHurt.Play();
             if (bossAnimations[(int)bossState] != bossAnimations[(int)BossState.death])
             {
-                SoundEffects.MidbossHurt.Play();
                 bossAnimations[(int)bossState] = bossAnimations[(int)BossState.death];
             }
             else if (!bossAnimations[(int)bossState].Active)
