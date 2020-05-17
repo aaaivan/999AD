@@ -133,7 +133,7 @@ namespace _999AD
         //Update Function
         public void Update(float elapsedTime)
         {
-            if(dead)
+            if (dead)
             {
                 return;
             }
@@ -143,13 +143,13 @@ namespace _999AD
 
             //If the enemy HP goes below 0, its state will be set to death
             //This will play the death animation
-            if(enemyHP<=0)
+            if (enemyHP <= 0)
             {
                 enemyState = EnemyState.death;
             }
 
             //Updating direction the enemy faces
-            if(Enemy2CollisionRect.X + 10 < Player.CollisionRectangle.X)
+            if (Enemy2CollisionRect.X + 10 < Player.CollisionRectangle.X)
             {
                 isFacingLeft = true;
             }
@@ -157,8 +157,6 @@ namespace _999AD
             {
                 isFacingLeft = false;
             }
-
-            CheckCollisions();
 
             //Switch case statement for the enemyState
             switch (enemyState)
@@ -181,18 +179,18 @@ namespace _999AD
         //Draw Function
         public void Draw(SpriteBatch spriteBatch)
         {
-            if(dead)
+            if (dead)
             {
                 return;
             }
 
             //If the enemy is moving to the second point, it will be drawn without being flipped
-            if(moveToP2 && moving)
+            if (moveToP2 && moving)
             {
                 spriteBatch.Draw(enemySheet, Camera.RelativeRectangle(Enemy2DrawRect), enemyAnimations[(int)enemyState].Frame, enemyColor, 0f, Vector2.Zero, SpriteEffects.None, 0f);
             }
             //If the enemy is moving back to the first point, it will be drawn flipped
-            else if(moveToP1 && moving)
+            else if (moveToP1 && moving)
             {
                 spriteBatch.Draw(enemySheet, Camera.RelativeRectangle(Enemy2DrawRect), enemyAnimations[(int)enemyState].Frame, enemyColor, 0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0f);
             }
@@ -206,6 +204,7 @@ namespace _999AD
         //Function to handle Attack
         public void Attack(float elapsedTime)
         {
+            CheckCollisions();
             moving = false;
             if (Enemy2CollisionRect.X + 5 < Player.CollisionRectangle.X)
             {
@@ -223,13 +222,13 @@ namespace _999AD
             {
                 enemyState = EnemyState.melee;
             }
-            else if(Math.Abs(currentPoint.X-Player.CollisionRectangle.X)>=shootDistance)
+            else if (Math.Abs(currentPoint.X - Player.CollisionRectangle.X) >= shootDistance)
             {
                 enemyState = EnemyState.idle;
             }
             else
             {
-                if(elapsedShotTime>timeUntilShot)
+                if (elapsedShotTime > timeUntilShot)
                 {
                     SoundEffects.Enemy2Attack.Play();
                     ProjectilesManager.ShootEnemyProjectile(currentPoint, projectileInitialVelocity * (isFacingLeft ? new Vector2(-1, 1) : new Vector2(1, 1)));
@@ -245,6 +244,7 @@ namespace _999AD
         //Function to handle Melee Attack
         public void Melee(float elapsedTime)
         {
+            CheckCollisions();
             moving = false;
 
             if (Enemy2CollisionRect.X + 5 < Player.CollisionRectangle.X)
@@ -259,18 +259,18 @@ namespace _999AD
             //If the player goes outside the given range,
             //The state will be changed accordingly
             //Else, the Melee attack will be delivered
-            if (Math.Abs(currentPoint.X - Player.CollisionRectangle.X)>=meleeDistance && Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 5)
+            if (Math.Abs(currentPoint.X - Player.CollisionRectangle.X) >= meleeDistance && Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 5)
             {
                 enemyState = EnemyState.attack;
             }
-            else if(Math.Abs(currentPoint.X - Player.CollisionRectangle.X)>=shootDistance)
+            else if (Math.Abs(currentPoint.X - Player.CollisionRectangle.X) >= shootDistance)
             {
                 enemyState = EnemyState.idle;
             }
 
             else
             {
-                if(elapsedMeleeTime>timeUntilMelee)
+                if (elapsedMeleeTime > timeUntilMelee)
                 {
                     SoundEffects.Enemy2Melee.Play();
                     Player.takeDamage();
@@ -289,7 +289,7 @@ namespace _999AD
         //Function that returns boolean if the enemy is hit by projectile
         public bool Enemy2HitByRect(Rectangle collisionRect)
         {
-            if(Enemy2CollisionRect.Intersects(collisionRect))
+            if (Enemy2CollisionRect.Intersects(collisionRect))
             {
                 enemyHP--;
                 SoundEffects.EnemyHurt.Play();
@@ -305,8 +305,8 @@ namespace _999AD
             enemyColor = Color.White;
             if (enemyAnimations[(int)enemyState] != enemyAnimations[(int)EnemyState.death])
             {
-                enemyAnimations[(int)enemyState] = enemyAnimations[(int)EnemyState.death];
                 SoundEffects.EnemyHurt.Play();
+                enemyAnimations[(int)enemyState] = enemyAnimations[(int)EnemyState.death];
             }
             else if (!enemyAnimations[(int)enemyState].Active)
             {
@@ -318,9 +318,10 @@ namespace _999AD
         //Function to handle the enemy behaviour when idle
         public void Idle(float elapsedTime)
         {
+            CheckCollisions();
             moving = true;
 
-            if(Math.Abs(currentPoint.X - Player.CollisionRectangle.X)<shootDistance && Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 5)
+            if (Math.Abs(currentPoint.X - Player.CollisionRectangle.X) < shootDistance && Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 5)
             {
                 movementSpeed = 0f;
                 if (Enemy2CollisionRect.X + 5 < Player.CollisionRectangle.X)
@@ -332,29 +333,29 @@ namespace _999AD
             else
             {
                 movementSpeed = 25f;
-                if(currentPoint==enemyPoint)
+                if (currentPoint == enemyPoint)
                 {
                     moveToP2 = true;
                 }
-                else if(currentPoint==enemyPoint2)
+                else if (currentPoint == enemyPoint2)
                 {
                     moveToP1 = true;
                 }
 
-                if(moveToP2)
+                if (moveToP2)
                 {
                     currentPoint.X += movementSpeed * elapsedTime;
-                    if(currentPoint.X>=enemyPoint2.X)
+                    if (currentPoint.X >= enemyPoint2.X)
                     {
                         moveToP2 = false;
                         moveToP1 = true;
                     }
                 }
 
-                if(moveToP1)
+                if (moveToP1)
                 {
                     currentPoint.X -= movementSpeed * elapsedTime;
-                    if(currentPoint.X<=enemyPoint.X)
+                    if (currentPoint.X <= enemyPoint.X)
                     {
                         moveToP1 = false;
                         moveToP2 = true;
@@ -367,7 +368,7 @@ namespace _999AD
         //Function that returns boolean if the player is hit by projectile
         public bool PlayerHitByRect(Rectangle collisionRect)
         {
-            if(Player.CollisionRectangle.Intersects(collisionRect))
+            if (Player.CollisionRectangle.Intersects(collisionRect))
             {
                 Player.takeDamage();
                 return true;
@@ -400,7 +401,6 @@ namespace _999AD
                    Player.position.X = Enemy2CollisionRect.Right;
                }
             }
-
             knockback = false;
             melee = false;
         }*/
@@ -408,9 +408,9 @@ namespace _999AD
         //Function to check for collisions between enemy 2 and player
         public void CheckCollisions()
         {
-            if(!dead && Player.CollisionRectangle.Intersects(Enemy2CollisionRect))
+            if (!dead && Player.CollisionRectangle.Intersects(Enemy2CollisionRect))
             {
-                if(Math.Abs(Player.CollisionRectangle.Bottom-Enemy2CollisionRect.Top)<=5)
+                if (Math.Abs(Player.CollisionRectangle.Bottom - Enemy2CollisionRect.Top) <= 5)
                 {
                     Player.Rebound(0.75f);
                     SoundEffects.EnemyHurt.Play();
@@ -421,10 +421,10 @@ namespace _999AD
                 {
                     Player.takeDamage();
                     //knockback = true;
-                    if (Player.Center.X>currentPoint.X)
+                    if (Player.Center.X > currentPoint.X)
                         Player.position.X = currentPoint.X + width / 2;
                     else
-                        Player.position.X = currentPoint.X - width / 2-Player.width;
+                        Player.position.X = currentPoint.X - width / 2 - Player.width;
                 }
             }
             //KnockBack();

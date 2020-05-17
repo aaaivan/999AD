@@ -116,18 +116,23 @@ namespace _999AD
         //Update Function
         public static void Update(float elapsedTime)
         {
+            if (dead)
+            {
+                return;
+            }
+
             //Updating the animation of the boss sprite
             bossAnimations[(int)bossState].Update(elapsedTime);
 
             //If the boss HP goes below 0, its state will be set to death
             //This will play the death animation
-            if(bossHP<=0)
+            if (bossHP <= 0)
             {
                 bossState = BossState.death;
             }
 
             //Updating direction the midboss faces
-            if(BossCollisionRect.X + 5 < Player.CollisionRectangle.X)
+            if (BossCollisionRect.X + 5 < Player.CollisionRectangle.X)
             {
                 isFacingLeft = true;
             }
@@ -137,7 +142,7 @@ namespace _999AD
             }
 
             //Switch case statement for the bossState
-            switch(bossState)
+            switch (bossState)
             {
                 case BossState.idle:
                     ChangeFromIdle(elapsedTime);
@@ -157,18 +162,18 @@ namespace _999AD
         //Draw Function
         public static void Draw(SpriteBatch spriteBatch)
         {
-            if(dead)
+            if (dead)
             {
                 return;
             }
 
             //If the boss is moving to the second point, it will be drawn without being flipped
-            if(moveToP2)
+            if (moveToP2)
             {
                 spriteBatch.Draw(bossSheet, Camera.RelativeRectangle(BossDrawRect), bossAnimations[(int)bossState].Frame, bossColor, 0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0f);
             }
             //If the boss is moving back to the first point, it will be drawn without being flipped
-            else if(moveToP1)
+            else if (moveToP1)
             {
                 spriteBatch.Draw(bossSheet, Camera.RelativeRectangle(BossDrawRect), bossAnimations[(int)bossState].Frame, bossColor, 0f, Vector2.Zero, SpriteEffects.None, 0f);
             }
@@ -182,9 +187,9 @@ namespace _999AD
         //Function to handle Attack
         public static void Attack(float elapsedTime)
         {
-            if(elapsedShotTime > timeUntilShot)
+            if (elapsedShotTime > timeUntilShot)
             {
-                ProjectilesManager.ShootBossProjectile(isFacingLeft ? bossPoint : (bossPoint - new Vector2(bossWidth-5, 0)), projectileInitialVelocity * (isFacingLeft ? new Vector2(1, 1) : new Vector2(-1, 1)));
+                ProjectilesManager.ShootBossProjectile(isFacingLeft ? bossPoint : (bossPoint - new Vector2(bossWidth - 5, 0)), projectileInitialVelocity * (isFacingLeft ? new Vector2(1, 1) : new Vector2(-1, 1)));
                 elapsedShotTime = 0;
                 SoundEffects.MidbossAttack.Play();
                 bossState = BossState.idle;
@@ -199,20 +204,20 @@ namespace _999AD
         public static void Move(float elapsedTime)
         {
             movementSpeed = 100;
-            if(bossPoint==point1)
+            if (bossPoint == point1)
             {
                 moveToP2 = true;
             }
-            else if(bossPoint==point2)
+            else if (bossPoint == point2)
             {
                 moveToP1 = true;
             }
 
             SoundEffects.MidbossMove.Play();
-            if(moveToP2)
+            if (moveToP2)
             {
                 bossPoint.X -= movementSpeed * elapsedTime;
-                if(bossPoint.X<=point2.X)
+                if (bossPoint.X <= point2.X)
                 {
                     bossPoint = point2;
                     moveToP2 = false;
@@ -221,10 +226,10 @@ namespace _999AD
                 }
             }
 
-            if(moveToP1)
+            if (moveToP1)
             {
                 bossPoint.X += movementSpeed * elapsedTime;
-                if(bossPoint.X>=point1.X)
+                if (bossPoint.X >= point1.X)
                 {
                     bossPoint = point1;
                     moveToP1 = false;
@@ -232,7 +237,7 @@ namespace _999AD
                     bossState = BossState.idle;
                 }
             }
-            
+
         }
 
         //Function that returns boolean if the boss is hit by projectile
@@ -251,7 +256,7 @@ namespace _999AD
         //Function that returns boolean if the player is hit by projectile
         public static bool PlayerHitByRect(Rectangle collisionRect)
         {
-            if(Player.CollisionRectangle.Intersects(collisionRect))
+            if (Player.CollisionRectangle.Intersects(collisionRect))
             {
                 Player.takeDamage();
                 return true;
@@ -264,14 +269,14 @@ namespace _999AD
         public static void ChangeFromIdle(float elapsedTime)
         {
             if (elapsedChangeTime > timeUntilChange)
-                {
-                    ChangeState();
-                    elapsedChangeTime = 0;
-                }
-                else
-                {
-                    elapsedChangeTime += elapsedTime;
-                }
+            {
+                ChangeState();
+                elapsedChangeTime = 0;
+            }
+            else
+            {
+                elapsedChangeTime += elapsedTime;
+            }
         }
 
         //Function to change states
@@ -294,9 +299,9 @@ namespace _999AD
         //Function to handle the boss death
         public static void Death()
         {
-            SoundEffects.MidbossHurt.Play();
             if (bossAnimations[(int)bossState] != bossAnimations[(int)BossState.death])
             {
+                SoundEffects.MidbossHurt.Play();
                 bossAnimations[(int)bossState] = bossAnimations[(int)BossState.death];
             }
             else if (!bossAnimations[(int)bossState].Active)

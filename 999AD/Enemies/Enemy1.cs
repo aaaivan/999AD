@@ -59,7 +59,7 @@ namespace _999AD
         {
             enemyPoint = EnemyPoint;
             enemyPoint2 = EnemyPoint2;
-            if (enemyPoint.X>enemyPoint2.X)
+            if (enemyPoint.X > enemyPoint2.X)
             {
                 Vector2 tempVector = enemyPoint2;
                 enemyPoint2 = enemyPoint;
@@ -120,7 +120,7 @@ namespace _999AD
         public void Update(float elapsedTime)
         {
 
-            if(dead)
+            if (dead)
             {
                 return;
             }
@@ -130,13 +130,13 @@ namespace _999AD
 
             //If the enemy HP goes below 0, its state will be set to death
             //This will play the death animation
-            if(enemyHP<=0)
+            if (enemyHP <= 0)
             {
                 enemyState = EnemyState.death;
             }
 
             //Updating the direction the enemy faces
-            if(Enemy1CollisionRect.X + 5 < Player.CollisionRectangle.X)
+            if (Enemy1CollisionRect.X + 5 < Player.CollisionRectangle.X)
             {
                 isFacingLeft = true;
             }
@@ -145,10 +145,8 @@ namespace _999AD
                 isFacingLeft = false;
             }
 
-            CheckCollisions();
-
             //Switch case statement for the enemyState
-            switch(enemyState)
+            switch (enemyState)
             {
                 case EnemyState.idle:
                     ChangeFromIdle();
@@ -165,7 +163,7 @@ namespace _999AD
         //Draw Function
         public void Draw(SpriteBatch spriteBatch)
         {
-            if(dead)
+            if (dead)
             {
                 return;
             }
@@ -177,14 +175,15 @@ namespace _999AD
         //Function to handle Attack
         public void Attack(float elapsedTime)
         {
-            if(!hit)
+            CheckCollisions();
+            if (!hit)
             {
                 SoundEffects.Enemy1Attack.Play();
                 movementSpeed = 80;
-                if(isFacingLeft)
+                if (isFacingLeft)
                 {
                     currentPoint.X += movementSpeed * elapsedTime;
-                    if (currentPoint.X> enemyPoint2.X)
+                    if (currentPoint.X > enemyPoint2.X)
                     {
                         currentPoint.X = enemyPoint2.X;
                         enemyState = EnemyState.idle;
@@ -243,7 +242,7 @@ namespace _999AD
         //Function that returns boolean if the enemy is hit by projectile
         public bool Enemy1HitByRect(Rectangle collisionRect)
         {
-            if(Enemy1CollisionRect.Intersects(collisionRect))
+            if (Enemy1CollisionRect.Intersects(collisionRect))
             {
                 enemyHP--;
                 SoundEffects.EnemyHurt.Play();
@@ -256,7 +255,7 @@ namespace _999AD
         //Function to handle if Player is hit by Enemy 1
         public void PlayerHitByEnemy1()
         {
-            if(Enemy1CollisionRect.Intersects(Player.CollisionRectangle))
+            if (Enemy1CollisionRect.Intersects(Player.CollisionRectangle))
             {
                 Player.takeDamage();
                 hit = true;
@@ -268,11 +267,12 @@ namespace _999AD
         //Function to change states from idle
         public void ChangeFromIdle()
         {
-            if((Math.Abs(currentPoint.Y-Player.CollisionRectangle.Y)<15&&(Player.CollisionRectangle.X>enemyPoint2.X+15||Player.CollisionRectangle.Right<enemyPoint.X-15)))
+            CheckCollisions();
+            if ((Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 15 && (Player.CollisionRectangle.X > enemyPoint2.X + 15 || Player.CollisionRectangle.Right < enemyPoint.X - 15)))
             {
                 enemyState = EnemyState.idle;
             }
-            else if((Math.Abs(currentPoint.X - Player.CollisionRectangle.X) <= collisionDistance) && (Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 15))
+            else if ((Math.Abs(currentPoint.X - Player.CollisionRectangle.X) <= collisionDistance) && (Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 15))
             {
                 enemyState = EnemyState.attack;
             }
@@ -282,12 +282,12 @@ namespace _999AD
         public void Death()
         {
             enemyColor = Color.White;
-            if(enemyAnimations[(int)enemyState]!=enemyAnimations[(int)EnemyState.death])
+            if (enemyAnimations[(int)enemyState] != enemyAnimations[(int)EnemyState.death])
             {
-                enemyAnimations[(int)enemyState] = enemyAnimations[(int)EnemyState.death];
                 SoundEffects.EnemyHurt.Play();
+                enemyAnimations[(int)enemyState] = enemyAnimations[(int)EnemyState.death];
             }
-            else if(!enemyAnimations[(int)enemyState].Active)
+            else if (!enemyAnimations[(int)enemyState].Active)
             {
                 dead = true;
             }
@@ -296,9 +296,9 @@ namespace _999AD
         //Function to check for collisions between enemy 1 and player
         public void CheckCollisions()
         {
-            if(!dead && Player.CollisionRectangle.Intersects(Enemy1CollisionRect))
+            if (!dead && Player.CollisionRectangle.Intersects(Enemy1CollisionRect))
             {
-                if(Math.Abs(Player.CollisionRectangle.Bottom-Enemy1CollisionRect.Top)<=5)
+                if (Math.Abs(Player.CollisionRectangle.Bottom - Enemy1CollisionRect.Top) <= 5)
                 {
                     enemyHP--;
                     SoundEffects.EnemyHurt.Play();
