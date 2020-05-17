@@ -50,7 +50,7 @@ namespace _999AD
                         drawInteractSymbol = true;
                         interactSymbolRectangle = monologues[i].InteractSymbolLocation(sourceRectangle_interactSymbol.Width, sourceRectangle_interactSymbol.Height);
                         if ((Game1.currentKeyboard.IsKeyDown(Keys.Enter) && !Game1.previousKeyboard.IsKeyDown(Keys.Enter)) ||
-                            (Game1.currentGamePad.Buttons.A == ButtonState.Pressed && Game1.previousGamePad.Buttons.A == ButtonState.Released))
+                            (Game1.currentGamePad.Buttons.X == ButtonState.Pressed && Game1.previousGamePad.Buttons.X == ButtonState.Released))
                         {
                             monologues[i].active = true;
                             indexPlaying = i;

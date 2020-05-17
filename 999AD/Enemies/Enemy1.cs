@@ -21,7 +21,7 @@ namespace _999AD
 
         #region DECLARATIONS
         static Texture2D enemySheet;
-        static Animation[] enemyAnimations;
+        Animation[] enemyAnimations;
 
         //Size Variables
         public readonly int width = 42;
@@ -72,18 +72,18 @@ namespace _999AD
 
             movementSpeed = 0f;
             //distanceKnocked = 0;
+            enemyAnimations = new Animation[(int)EnemyState.total]
+            {
+                new Animation(new Rectangle(0,0,420,48),42,48,10,0.2f,true), // Animation for Idle
+                new Animation(new Rectangle(0,48,420,48),42,48,10,0.2f,true), //Animation for Attack - Dash
+                new Animation(new Rectangle(0,96,252,48),42,48,5,0.2f,false, true) //Animation for Death
+            };
+
 
         }
         public static void Inizialize(Texture2D spritesheet)
         {
             enemySheet = spritesheet;
-            enemyAnimations = new Animation[(int)EnemyState.total]
-            {
-                new Animation(new Rectangle(0,0,420,48),42,48,10,0.2f,true), // Animation for Idle
-                new Animation(new Rectangle(0,48,420,48),42,48,10,0.2f,true), //Animation for Attack - Dash
-                new Animation(new Rectangle(0,96,252,48),42,48,6,0.2f,false, true) //Animation for Death
-            };
-
         }
         #endregion
 
@@ -178,7 +178,6 @@ namespace _999AD
             CheckCollisions();
             if (!hit)
             {
-                SoundEffects.Enemy1Attack.Play();
                 movementSpeed = 80;
                 if (isFacingLeft)
                 {
@@ -275,6 +274,7 @@ namespace _999AD
             else if ((Math.Abs(currentPoint.X - Player.CollisionRectangle.X) <= collisionDistance) && (Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 15))
             {
                 enemyState = EnemyState.attack;
+                SoundEffects.Enemy1Attack.Play();
             }
         }
 

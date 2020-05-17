@@ -76,6 +76,7 @@ namespace _999AD
                         {
                             RoomsManager.CurrentRoom = RoomsManager.Rooms.tutorial1;
                             RoomsManager.PreviousRoom = RoomsManager.Rooms.tutorial0;
+                            CameraManager.SwitchCamera(RoomsManager.Rooms.tutorial1);
                             Player.position = new Vector2(18, 185);
                         }
                         else

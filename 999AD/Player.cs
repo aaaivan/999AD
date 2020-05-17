@@ -523,9 +523,10 @@ namespace _999AD
                 return;
             healthPoints -= damage;
             SoundEffects.PlayerHurt.Play();
-            if (healthPoints==0)
+            if (healthPoints<=0)
             {
                 currentAnimation = AnimationTypes.die;
+                healthPoints = 0;
             }
             else
             {

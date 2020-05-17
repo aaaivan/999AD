@@ -18,7 +18,7 @@ namespace _999AD
 
             keySpawns1_tutorial3, keySpawns2_tutorial3,
 
-            unlockDoubleJump, unlockWallJump,
+            unlockDoubleJump, showDoubleJumpScreen, unlockWallJump, showWallJumpScreen,
 
             keyAndPowerUpSpawn_midBoss,
 
@@ -48,7 +48,7 @@ namespace _999AD
 
             0,0,
 
-            0,0,
+            0.5f,0,0.5f,0,
 
             0, 
 
@@ -163,13 +163,17 @@ namespace _999AD
                     break;
                 case RoomsManager.Rooms.churchBellTower0:
                     if (Player.CollisionRectangle.Intersects(new Rectangle(196, 908, 96, 76)) &&
-                        CollectablesManager.TryRemoveFromInventory(Collectable.ItemType.doubleJump_powerup, new Vector2(220, 932)) &&
+                        CollectablesManager.TryRemoveFromInventory(Collectable.ItemType.doubleJump_powerup, new Vector2(223, 938)) &&
                         !eventAlreadyHappened[(int)Events.unlockDoubleJump])
                         TriggerEvent(Events.unlockDoubleJump);
+                    else if (eventAlreadyHappened[(int)Events.unlockDoubleJump] && !eventAlreadyHappened[(int)Events.showDoubleJumpScreen])
+                        TriggerEvent(Events.showDoubleJumpScreen);
                     else if (Player.CollisionRectangle.Intersects(new Rectangle(196, 908, 96, 76)) &&
-                        CollectablesManager.TryRemoveFromInventory(Collectable.ItemType.wallJump_powerup, new Vector2(220, 932)) &&
+                        CollectablesManager.TryRemoveFromInventory(Collectable.ItemType.wallJump_powerup, new Vector2(251, 938)) &&
                         !eventAlreadyHappened[(int)Events.unlockWallJump])
                         TriggerEvent(Events.unlockWallJump);
+                    else if (eventAlreadyHappened[(int)Events.unlockWallJump] && !eventAlreadyHappened[(int)Events.showWallJumpScreen])
+                        TriggerEvent(Events.showWallJumpScreen);
                     break;
                 case RoomsManager.Rooms.midBoss:
                     if (MidBoss.Dead && !eventAlreadyHappened[(int)Events.keyAndPowerUpSpawn_midBoss])
@@ -299,15 +303,25 @@ namespace _999AD
                     case Events.unlockDoubleJump:
                         Player.doubleJumpUnlocked = true;
                         AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.CurrentRoom].AddAnimatedSprite(
-                            new AnimatedSprite(new Vector2(210, 923), AnimatedSprite.SpriteType.displayDoubleJumpRelic, false));
+                            new AnimatedSprite(new Vector2(211, 926), AnimatedSprite.SpriteType.displayDoubleJumpRelic, false));
                         happening = Events.unlockDoubleJump;
+                        elapsedEventsDuration = 0;
+                        break;
+                    case Events.showDoubleJumpScreen:
+                        Game1.currentGameState = Game1.GameStates.doubleJump;
+                        happening = Events.showDoubleJumpScreen;
                         elapsedEventsDuration = 0;
                         break;
                     case Events.unlockWallJump:
                         Player.wallJumpUnlocked = true;
                         AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.CurrentRoom].AddAnimatedSprite(
-                            new AnimatedSprite(new Vector2(238, 923), AnimatedSprite.SpriteType.displayWallJumpRelic, false));
+                            new AnimatedSprite(new Vector2(239, 926), AnimatedSprite.SpriteType.displayWallJumpRelic, false));
                         happening = Events.unlockWallJump;
+                        elapsedEventsDuration = 0;
+                        break;
+                    case Events.showWallJumpScreen:
+                        Game1.currentGameState = Game1.GameStates.wallJump;
+                        happening = Events.showWallJumpScreen;
                         elapsedEventsDuration = 0;
                         break;
                 }
@@ -432,7 +446,7 @@ namespace _999AD
                 {
                     case Events.monologue_escape0:
                         MonologuesManager.monologuesRoomManagers[(int)RoomsManager.CurrentRoom].PlayMonologue(0);
-                        happening = Events.introMonologue;
+                        happening = Events.monologue_escape0;
                         elapsedEventsDuration = 0;
                         break;
                     case Events.lavaEruption1_escape0:

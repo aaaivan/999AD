@@ -95,7 +95,7 @@ namespace _999AD
             spriteBatch.Draw(spritesheet,
                 Camera.RelativeRectangle(new Vector2(position.X,0),size, MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomHeightPx),
                 whiteTexture,
-                Color.Red * 0.1f);
+                Color.Red * 0.3f);
             spriteBatch.Draw(spritesheet,
                 Camera.RelativeRectangle(position, size,size),
                 geyserTop,

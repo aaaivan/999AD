@@ -21,7 +21,7 @@ namespace _999AD
 
         #region DECLARATIONS
         static Texture2D enemySheet;
-        static Animation[] enemyAnimations;
+        Animation[] enemyAnimations;
 
         //Size Variables
         public readonly int width = 42;
@@ -89,17 +89,18 @@ namespace _999AD
             //knockback = false;
             //melee = false;
 
-        }
-        public static void Inizialize(Texture2D spritesheet)
-        {
-            enemySheet = spritesheet;
             enemyAnimations = new Animation[(int)EnemyState.total]
             {
                 new Animation(new Rectangle(0,0,440,48),44,48,10,0.4f,true), // Animation for Idle - Patrolling
                 new Animation(new Rectangle(0,48,616,48),56,48,11,0.4f,true), // Animation for Melee
                 new Animation(new Rectangle(0,96,704,48),44,48,16,0.4f,true), // Animation for Attack
-                new Animation(new Rectangle(0,144,264,48),44,48,6,0.4f,false, true), // Animation for Death
+                new Animation(new Rectangle(0,144,264,48),44,48,5,0.4f,false, true), // Animation for Death
             };
+
+        }
+        public static void Inizialize(Texture2D spritesheet)
+        {
+            enemySheet = spritesheet;
         }
         #endregion
 

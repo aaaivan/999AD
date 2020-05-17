@@ -439,11 +439,15 @@ namespace _999AD
                 case GameStates.doubleJump:
                     GraphicsDevice.SetRenderTarget(renderTarget_zoom1);
                     GraphicsDevice.Clear(Color.Black);
+                    Camera.Draw(spriteBatch);
+                    RoomsManager.Draw(spriteBatch);
                     MenusManager.menus[(int)MenusManager.MenuType.doubleJump].Draw(spriteBatch);
                     break;
                 case GameStates.wallJump:
                     GraphicsDevice.SetRenderTarget(renderTarget_zoom1);
                     GraphicsDevice.Clear(Color.Black);
+                    Camera.Draw(spriteBatch);
+                    RoomsManager.Draw(spriteBatch);
                     MenusManager.menus[(int)MenusManager.MenuType.wallJump].Draw(spriteBatch);
                     break;
             }

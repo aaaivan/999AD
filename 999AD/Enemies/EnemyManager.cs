@@ -108,7 +108,7 @@ namespace _999AD
                     },
                     new Enemy2[]
                     {
-                        new Enemy2(new Vector2(120,1177), new Vector2(400,1177))
+                        new Enemy2(new Vector2(220,1177), new Vector2(400,1177))
                     }
                 ),
                 new EnemyRoomManager // Midboss
