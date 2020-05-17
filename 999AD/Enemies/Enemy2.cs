@@ -158,6 +158,8 @@ namespace _999AD
                 isFacingLeft = false;
             }
 
+            CheckCollisions();
+
             //Switch case statement for the enemyState
             switch (enemyState)
             {
@@ -204,7 +206,6 @@ namespace _999AD
         //Function to handle Attack
         public void Attack(float elapsedTime)
         {
-            CheckCollisions();
             moving = false;
             if (Enemy2CollisionRect.X + 5 < Player.CollisionRectangle.X)
             {
@@ -244,7 +245,6 @@ namespace _999AD
         //Function to handle Melee Attack
         public void Melee(float elapsedTime)
         {
-            CheckCollisions();
             moving = false;
 
             if (Enemy2CollisionRect.X + 5 < Player.CollisionRectangle.X)
@@ -302,10 +302,10 @@ namespace _999AD
         //Function to handle the enemy death
         public void Death()
         {
+            SoundEffects.EnemyHurt.Play();
             enemyColor = Color.White;
             if (enemyAnimations[(int)enemyState] != enemyAnimations[(int)EnemyState.death])
             {
-                SoundEffects.EnemyHurt.Play();
                 enemyAnimations[(int)enemyState] = enemyAnimations[(int)EnemyState.death];
             }
             else if (!enemyAnimations[(int)enemyState].Active)
@@ -318,7 +318,6 @@ namespace _999AD
         //Function to handle the enemy behaviour when idle
         public void Idle(float elapsedTime)
         {
-            CheckCollisions();
             moving = true;
 
             if(Math.Abs(currentPoint.X - Player.CollisionRectangle.X)<shootDistance && Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 5)
