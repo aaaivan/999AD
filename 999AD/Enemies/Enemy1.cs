@@ -37,13 +37,13 @@ namespace _999AD
         float movementSpeed;
 
         //Distance between which enemy notices the player
-        readonly int collisionDistance = 50;
+        readonly int collisionDistance = 30;
         bool hit = false;
 
         //Variables for knocking back the player
-        readonly int knockbackDistance = 40;
-        int distanceKnocked;
-        bool knockback = false;
+        //readonly int knockbackDistance = 40;
+        //int distanceKnocked;
+        //bool knockback = false;
 
         public EnemyState enemyState = EnemyState.idle;
         readonly int maxHP = 2;
@@ -71,7 +71,7 @@ namespace _999AD
             currentPoint = enemyPoint;
 
             movementSpeed = 0f;
-            distanceKnocked = 0;
+            //distanceKnocked = 0;
 
         }
         public static void Inizialize(Texture2D spritesheet)
@@ -204,39 +204,41 @@ namespace _999AD
 
             else
             {
-                KnockBack();
-            }
-
-        }
-
-        //Function that handles the player knock back
-        public void KnockBack()
-        {
-            if(!isFacingLeft)
-            {
-                if(knockback)
-                {
-                    Player.position.X -= 2;
-                    distanceKnocked += 2;
-                }
-            }
-            else
-            {
-                if(knockback)
-                {
-                    Player.position.X += 2;
-                    distanceKnocked += 2;
-                }
-            }
-
-            if(distanceKnocked>=knockbackDistance)
-            {
-                knockback = false;
+                Player.Rebound(0.2f, 1.4f, Player.Center.X > currentPoint.X);
                 hit = false;
-                distanceKnocked = 0;
-                enemyState = EnemyState.idle;
+                //KnockBack();
             }
+
         }
+
+        ////Function that handles the player knock back
+        //public void KnockBack()
+        //{
+        //    if(!isFacingLeft)
+        //    {
+        //        if(knockback)
+        //        {
+        //            Player.position.X -= 2;
+        //            distanceKnocked += 2;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if(knockback)
+        //        {
+        //            Player.position.X += 2;
+        //            distanceKnocked += 2;
+        //        }
+        //    }
+
+        //    if(distanceKnocked>=knockbackDistance)
+        //    {
+        //        knockback = false;
+        //        hit = false;
+        //        distanceKnocked = 0;
+        //        enemyState = EnemyState.idle;
+        //    }
+        //}
 
         //Function that returns boolean if the enemy is hit by projectile
         public bool Enemy1HitByRect(Rectangle collisionRect, SoundEffects soundEffects)
@@ -258,7 +260,7 @@ namespace _999AD
             {
                 Player.takeDamage();
                 hit = true;
-                knockback = true;
+                //knockback = true;
                 movementSpeed = 0;
             }
         }
@@ -266,7 +268,7 @@ namespace _999AD
         //Function to change states from idle
         public void ChangeFromIdle()
         {
-            if((Math.Abs(currentPoint.X - Player.CollisionRectangle.X) <= collisionDistance)&&(Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 15))
+            if((Math.Abs(currentPoint.X - Player.CollisionRectangle.X) <= collisionDistance)&&(Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 5))
             {
                 enemyState = EnemyState.attack;
             }
