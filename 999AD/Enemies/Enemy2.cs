@@ -60,7 +60,7 @@ namespace _999AD
 
         //Vector for projectile velocity
         //First value is horizontal distance, second value is vertical distance
-        public readonly Vector2 projectileInitialVelocity = new Vector2(500, -150);
+        public readonly Vector2 projectileInitialVelocity = new Vector2(500, -60);
 
         #endregion
 
@@ -219,7 +219,7 @@ namespace _999AD
             //If the player goes outside the given range,
             //The state will be changed acccordingly
             //Else, the Projectile attack will be delivered
-            if (Math.Abs(currentPoint.X - Player.CollisionRectangle.X) < meleeDistance)
+            if (Math.Abs(currentPoint.X - Player.CollisionRectangle.X) < meleeDistance && Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 5)
             {
                 enemyState = EnemyState.melee;
             }
@@ -259,7 +259,7 @@ namespace _999AD
             //If the player goes outside the given range,
             //The state will be changed accordingly
             //Else, the Melee attack will be delivered
-            if (Math.Abs(currentPoint.X - Player.CollisionRectangle.X)>=meleeDistance)
+            if (Math.Abs(currentPoint.X - Player.CollisionRectangle.X)>=meleeDistance && Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 5)
             {
                 enemyState = EnemyState.attack;
             }
@@ -293,7 +293,7 @@ namespace _999AD
             {
                 enemyHP--;
                 soundEffects.EnemyHurt.Play();
-                enemyColor = Color.Red * 0.5f;
+                enemyColor = Color.Red * 0.6f;
                 return true;
             }
             return false;
@@ -320,7 +320,7 @@ namespace _999AD
         {
             moving = true;
 
-            if(Math.Abs(currentPoint.X - Player.CollisionRectangle.X)<shootDistance)
+            if(Math.Abs(currentPoint.X - Player.CollisionRectangle.X)<shootDistance && Math.Abs(currentPoint.Y - Player.CollisionRectangle.Y) < 5)
             {
                 movementSpeed = 0f;
                 if (Enemy2CollisionRect.X + 5 < Player.CollisionRectangle.X)
@@ -415,7 +415,7 @@ namespace _999AD
                     Player.Rebound(0.75f);
                     soundEffects.EnemyHurt.Play();
                     enemyHP--;
-                    enemyColor = Color.Red * 0.5f;
+                    enemyColor = Color.Red * 0.6f;
                 }
                 else
                 {
