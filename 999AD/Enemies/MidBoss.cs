@@ -213,7 +213,6 @@ namespace _999AD
                 moveToP1 = true;
             }
 
-            SoundEffects.MidbossMove.Play();
             if (moveToP2)
             {
                 bossPoint.X -= movementSpeed * elapsedTime;
@@ -288,6 +287,7 @@ namespace _999AD
                 if (randomNum == 0)
                 {
                     bossState = BossState.move;
+                    SoundEffects.MidbossMove.Play();
                 }
                 else if (randomNum == 1)
                 {
