@@ -407,6 +407,7 @@ namespace _999AD
                             tilesToRemove.Add(new int[2] { 56, col });
                             tilesToRemove.Add(new int[2] { 56, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - col - 1 });
                         }
+                        CollectablesManager.collectablesRoomManagers[(int)RoomsManager.CurrentRoom].RemoveCollectablesFromMap();
                         CameraManager.shakeForTime(eventsDuration[(int)Events.terrainCollapseFinalBoss]);
                         CameraManager.MoveCamera(0.3f, FinalBoss.fireballsCenter, 1);
                         MapsManager.maps[(int)RoomsManager.CurrentRoom].RemoveGroupOfTiles(tilesToRemove, 0.03f, 3);

@@ -40,6 +40,10 @@ namespace _999AD
         {
             collectables.Add(collectable);
         }
+        public void RemoveCollectablesFromMap()
+        {
+            collectables.Clear();
+        }
         public void ResetHearts()
         {
             for (int i=collectables.Count-1; i>=0; i--)
