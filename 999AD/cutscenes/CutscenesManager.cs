@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace _999AD
 {
@@ -18,7 +12,7 @@ namespace _999AD
         }
         public static Cutscene[] cutscenes;
         #endregion
-        #region
+        #region CONSTRUCTOR
         public static void Initialize(Texture2D enemySpritesheet, Texture2D playerSpritesheet, SpriteFont spriteFont)
         {
             Cutscene.Initialize(spriteFont);

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace _999AD
 {
@@ -173,6 +169,7 @@ namespace _999AD
                             Player.position = new Vector2(318, 233);
                         break;
                     case RoomsManager.Rooms.finalBoss:
+                        MediaPlayer.Stop();
                         if (!FinalBoss.Dead)
                             Player.position = new Vector2(734, 41);
                         else

@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 
 namespace _999AD
@@ -444,7 +439,7 @@ namespace _999AD
                                 }
                                 else
                                 {
-                                    FireBallsManager.RandomSweep((float)(0.8f + 0.5*rand.NextDouble()), 3, 4);
+                                    FireBallsManager.RandomSweep((float)(0.8f + 0.2*rand.NextDouble()), 2, 4);
                                     bossAnimation = BossAnimations.attack;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
                                     rightWingAnimations[(int)rightWingAnimation].Reset();

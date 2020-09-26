@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Media;
 
 namespace _999AD
 {
@@ -196,7 +191,8 @@ namespace _999AD
                 currentAnimation = AnimationTypes.walk;*/
 
             //W to Jump / Controller - A to Jump
-            if ((Game1.currentKeyboard.IsKeyDown(Keys.W) && !Game1.previousKeyboard.IsKeyDown(Keys.W)) ||
+            if ((Game1.currentKeyboard.IsKeyDown(Keys.Up) && !Game1.previousKeyboard.IsKeyDown(Keys.Up)) ||
+                (Game1.currentKeyboard.IsKeyDown(Keys.W) && !Game1.previousKeyboard.IsKeyDown(Keys.W)) ||
                 (Game1.currentGamePad.Buttons.A == ButtonState.Pressed && Game1.previousGamePad.Buttons.A == ButtonState.Released))
             {
                 if (isTouchingTheGround)
@@ -205,9 +201,15 @@ namespace _999AD
                         currentAnimation = AnimationTypes.jump;
                     jumpSpeed.Y = initialJumpSpeed.Y;
                     SoundEffects.PlayerJump.Play();
-                    if (Game1.currentKeyboard.IsKeyDown(Keys.D))
+                    if ((Game1.currentKeyboard.IsKeyDown(Keys.Right)) ||
+                        (Game1.currentKeyboard.IsKeyDown(Keys.D)) ||
+                        (Game1.currentGamePad.DPad.Right == ButtonState.Pressed) ||
+                        (Game1.currentGamePad.ThumbSticks.Left.X > 0.8f))
                         jumpSpeed.X = initialJumpSpeed.X;
-                    else if (Game1.currentKeyboard.IsKeyDown(Keys.A))
+                    else if ((Game1.currentKeyboard.IsKeyDown(Keys.Left)) ||
+                            (Game1.currentKeyboard.IsKeyDown(Keys.A)) ||
+                            (Game1.currentGamePad.DPad.Left == ButtonState.Pressed) ||
+                            (Game1.currentGamePad.ThumbSticks.Left.X < -0.8f))
                         jumpSpeed.X = -initialJumpSpeed.X;
                     isTouchingTheGround = false;
                     isOnMovingPlatform = false;
@@ -238,13 +240,19 @@ namespace _999AD
                     return;
                 }
             }
-            if ((Game1.currentKeyboard.IsKeyDown(Keys.D))||(Game1.currentGamePad.DPad.Right==ButtonState.Pressed))
+            if ((Game1.currentKeyboard.IsKeyDown(Keys.Right)) ||
+                (Game1.currentKeyboard.IsKeyDown(Keys.D))||
+                (Game1.currentGamePad.DPad.Right==ButtonState.Pressed)||
+                (Game1.currentGamePad.ThumbSticks.Left.X>0.8f))
             {
                 horizontalMovementSpeed += maxHorizontalMovementSpeed;
                 if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack && isTouchingTheGround)
                     currentAnimation = AnimationTypes.walk;
             }
-            if ((Game1.currentKeyboard.IsKeyDown(Keys.A))||(Game1.currentGamePad.DPad.Left==ButtonState.Pressed))
+            if ((Game1.currentKeyboard.IsKeyDown(Keys.Left)) ||
+                (Game1.currentKeyboard.IsKeyDown(Keys.A))||
+                (Game1.currentGamePad.DPad.Left==ButtonState.Pressed) ||
+                (Game1.currentGamePad.ThumbSticks.Left.X < -0.8f))
             {
                 horizontalMovementSpeed -= maxHorizontalMovementSpeed;
                 if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack && isTouchingTheGround)
