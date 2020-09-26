@@ -59,7 +59,7 @@ namespace _999AD
                         currentRoom = Rooms.tutorial4;
                         previousRoom = Rooms.tutorial0;
                         CameraManager.SwitchCamera(Rooms.tutorial4);
-                        Player.position.X = 0;
+                        Player.position.Y = 0;
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
