@@ -58,11 +58,18 @@
                     if (FinalBoss.BossHitByRectangle(projectile.Rectangle))
                         projectile.active = false;
                 }
-
-                if(RoomsManager.CurrentRoom==RoomsManager.Rooms.midBoss)
+                else if(RoomsManager.CurrentRoom==RoomsManager.Rooms.midBoss)
                 {
                     if (!MidBoss.Dead && MidBoss.BossHitByRect(projectile.Rectangle))
                         projectile.active = false;
+                }
+                else if (RoomsManager.CurrentRoom == RoomsManager.Rooms.churchAltarRoom)
+                {
+                    foreach(Torch t in TorchManager.torches)
+                    {
+                        if (t.TorchHitByRect(projectile.Rectangle))
+                            projectile.active = false;
+                    }
                 }
 
                 foreach(Enemy1 enemy in EnemyManager.enemyRoomManagers[(int)RoomsManager.CurrentRoom].enemiesType1)

@@ -41,6 +41,8 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="saveLoad\Achievements.cs" />
+    <Compile Include="saveLoad\AchievementsSaveData.cs" />
     <Compile Include="animated sprites\AnimatedSprite.cs" />
     <Compile Include="animated sprites\AnimatedSpritesManager.cs" />
     <Compile Include="animated sprites\AnimatedSpritesRoomManager.cs" />
@@ -66,8 +68,10 @@
     <Compile Include="finalBoss\LavaGeyser.cs" />
     <Compile Include="GameEvents.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="saveLoad\GameStats.cs" />
     <Compile Include="Gravity.cs" />
     <Compile Include="finalBoss\LavaGeyserManager.cs" />
+    <Compile Include="saveLoad\LoadSaveManager.cs" />
     <Compile Include="map\LevelEditor.cs" />
     <Compile Include="Enemies\MidBoss.cs" />
     <Compile Include="menus\Menu.cs" />
@@ -88,7 +92,10 @@
     <Compile Include="RoomsManager.cs" />
     <Compile Include="platforms\MovingPlatform.cs" />
     <Compile Include="map\Tile.cs" />
+    <Compile Include="saveLoad\GameSaveData.cs" />
     <Compile Include="SoundEffects.cs" />
+    <Compile Include="Torch.cs" />
+    <Compile Include="TorchManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

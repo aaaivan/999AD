@@ -20,7 +20,7 @@ namespace _999AD
         bool erupted;
         #endregion
         #region CONSTRUCTOR
-        public LavaGeyser(float xCenterPosition, float _timeBeforeErupting, int _initialYvelocity=-1400)
+        public LavaGeyser(float xCenterPosition, float _timeBeforeErupting, int _initialYvelocity=-1200)
         {
             yVelocity = 0;
             initialYVelocity = _initialYvelocity;

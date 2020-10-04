@@ -12,6 +12,8 @@ namespace _999AD
             heart,  total
         }
         #region DECLARIONS
+        public static int IDcounter;
+        public int ID { get; private set; }
         static Texture2D spritesheet;
         static Animation[] animations;
         Animation animation;
@@ -22,6 +24,13 @@ namespace _999AD
         #region CONSTRUCTORS
         public Collectable(Point position, ItemType _collectableType)
         {
+            if (_collectableType == ItemType.heart)
+                ID = -1;
+            else
+            {
+                ID = IDcounter;
+                IDcounter++;
+            }
             type = _collectableType;
             animation = animations[(int)type].DeepCopy();
             collected = false;

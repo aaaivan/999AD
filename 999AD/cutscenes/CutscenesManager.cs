@@ -24,6 +24,9 @@ namespace _999AD
                                 new Vector2(10,84),
                                 new string[]
                                 {
+                                    "\n\nNOTE: THIS GAME AUTOSAVES AT EVERY SCREEN TRANSITION." +
+                                    "\n\n\n" +
+                                    "                Press ENTER to start.",
                                     "Life starts, ends, and is accompanied by a great\n" +
                                     "many... mysteries. What concerns you right now,\n" +
                                     "Wandering Knight, is the end of said life,\n\n" +
@@ -57,6 +60,7 @@ namespace _999AD
                                     "There were more of these foul beasts, some may yet\n" +
                                     "have survived. Wander ever onwards, towards a\n" +
                                     "brighter tomorrow.",
+                                    ""
                                 }),
                 };
         }

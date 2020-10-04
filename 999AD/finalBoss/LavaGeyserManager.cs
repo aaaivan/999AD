@@ -29,7 +29,7 @@ namespace _999AD
         }
         #endregion
         #region METHODS
-        public static void ShootGeyser(float[] xPositions, float timeBeforeErupting, int initialYVelocity=-1400 )
+        public static void ShootGeyser(float[] xPositions, float timeBeforeErupting, int initialYVelocity=-1200 )
         {
             foreach (float f in xPositions)
             {

@@ -14,11 +14,11 @@ namespace _999AD
     {
         public enum GameStates
         {
-            titleScreen, controls, credits, intro, playing, pause,  dead, ending, quit, confirmQuit, doubleJump, wallJump,total
+            titleScreen, loadGame, controls, achievements, credits, intro, playing, pause, dead, ending, quit, confirmQuit, doubleJump, wallJump,total
         }
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        public static readonly int min_gameWidth = 1920/5; //pixels on the x axis
+        public static readonly int min_gameWidth = 1920 / 5; //pixels on the x axis
         public static readonly int min_gameHeight = 1080 / 5; //pixels on the y axis
         public static  int gameWidth; //pixels on the x axis
         public static int gameHeight; //pixels on the y axis
@@ -38,7 +38,7 @@ namespace _999AD
         bool gameInitialized;
         //<debug>
         SpriteFont spriteFont;
-        Texture2D white;
+        public static Texture2D white;
         //</debug>
 #if LEVEL_EDITOR
         LevelEditor levelEditor;
@@ -91,6 +91,7 @@ namespace _999AD
             graphics.PreferredBackBufferWidth = viewportRectangle.Width;
             graphics.PreferredBackBufferHeight = viewportRectangle.Height;
             graphics.ApplyChanges();
+            graphics.IsFullScreen = true;
             previousKeyboard = Keyboard.GetState();
             previousGamePad = GamePad.GetState(PlayerIndex.One);
             previousMouseState = Mouse.GetState();
@@ -108,10 +109,6 @@ namespace _999AD
 
             // TODO: use this.Content to load your game content here
 
-            //<debug>
-            spriteFont = Content.Load<SpriteFont>(@"fonts\monologue");
-            white = Content.Load<Texture2D>("whiteTile");
-            //</debug>
 #if LEVEL_EDITOR
             MapsManager.Inizialize(Content.Load<Texture2D>("tiles"));
             CameraManager.Inizialize
@@ -138,12 +135,17 @@ namespace _999AD
                     Content.Load<Texture2D>(@"backgrounds\escape2"),
                 }
             );
+            spriteFont = Content.Load<SpriteFont>(@"fonts\monologue");
             PlatformsManager.Inizialize(Content.Load<Texture2D>("platforms"));
             levelEditor = new LevelEditor(Content.Load<SpriteFont>(@"fonts\arial32"),
                                           Content.Load<SpriteFont>(@"fonts\arial14"),
                                           Content.Load<Texture2D>("whiteTile"));
 #else
             currentGameState = GameStates.titleScreen;
+            LoadSaveManager.Inizialize();
+            GameStats.Inizialize();
+            Achievements.Initialize(Content.Load<SpriteFont>(@"fonts\monologue"),
+                Content.Load<SpriteFont>(@"fonts\LiberationMono12"));
             MapsManager.Inizialize(Content.Load<Texture2D>("tiles"));
             CameraManager.Inizialize
             (
@@ -188,6 +190,7 @@ namespace _999AD
                                          Content.Load<SpriteFont>(@"fonts\monologue"));
             DoorsManager.Inizialize(Content.Load<Texture2D>("animatedSprites"));
             AnimatedSpritesManager.Inizialize(Content.Load<Texture2D>("animatedSprites"));
+            TorchManager.Initialize(Content.Load<Texture2D>("firePot"));
             PlayerDeathManager.Initialize(Content.Load<Texture2D>(@"menus\deathScreen"),
                                           Content.Load<Texture2D>(@"menus\menuOptions"));
             MenusManager.Initialize(Content.Load<Texture2D>(@"menus\menuOptions"),
@@ -200,7 +203,7 @@ namespace _999AD
                     Content.Load<Texture2D>(@"menus\quit"),
                     Content.Load<Texture2D>(@"menus\doubleJump"),
                     Content.Load<Texture2D>(@"menus\wallJump"),
-
+                    Content.Load<Texture2D>(@"menus\achievements"),
                 });
             CutscenesManager.Initialize(Content.Load<Texture2D>(@"characters\enemy1"),
                                         Content.Load<Texture2D>(@"characters\player"),
@@ -270,6 +273,7 @@ namespace _999AD
             currentGamePad = GamePad.GetState(PlayerIndex.One);
             currentMouseState = Mouse.GetState();
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            
             // TODO: Add your update logic here
 #if LEVEL_EDITOR
             levelEditor.Update(currentMouseState, previousMouseState, tilesPerRow, infoBoxHeightPx);
@@ -283,8 +287,17 @@ namespace _999AD
                         LoadContent();
                     MenusManager.menus[(int)MenusManager.MenuType.titleScreen].Update();
                     break;
+                case GameStates.loadGame:
+                    if (LoadSaveManager.LoadGame())
+                        currentGameState = GameStates.playing;
+                    else
+                        currentGameState = GameStates.titleScreen;
+                    break;
                 case GameStates.controls:
                     MenusManager.menus[(int)MenusManager.MenuType.controls].Update();
+                    break;
+                case GameStates.achievements:
+                    MenusManager.menus[(int)MenusManager.MenuType.achievements].Update();
                     break;
                 case GameStates.credits:
                     MenusManager.menus[(int)MenusManager.MenuType.credits].Update();
@@ -296,6 +309,7 @@ namespace _999AD
                         currentGameState = GameStates.playing;
                     break;
                 case GameStates.playing:
+                    GameStats.Update(elapsedTime);
                     if ((currentKeyboard.IsKeyDown(Keys.P) && !previousKeyboard.IsKeyDown(Keys.P)) ||
                         (currentKeyboard.IsKeyDown(Keys.M) && !previousKeyboard.IsKeyDown(Keys.M)) ||
                         (currentGamePad.Buttons.Start== ButtonState.Pressed && previousGamePad.Buttons.Start == ButtonState.Released))
@@ -327,12 +341,20 @@ namespace _999AD
                         gameInitialized = false;
                     break;
                 case GameStates.dead:
+                    GameStats.Update(elapsedTime);
                     PlayerDeathManager.Update(elapsedTime);
                     break;
                 case GameStates.ending:
                     if (!CutscenesManager.cutscenes[(int)CutscenesManager.CutsceneType.ending].active)
                     {
-                        currentGameState = GameStates.credits;
+                        LoadSaveManager.SaveHighScores(new AchievementsSaveData
+                            (true,
+                            (GameStats.deathsCount == 0) || Achievements.noDeath,
+                            (GameStats.hitsCount == 0) || Achievements.noHits,
+                            ((GameStats.gameTime < Achievements.bestTime) || (Achievements.bestTime == 0)) ? GameStats.gameTime : Achievements.bestTime
+                            )); ;
+                        LoadSaveManager.DeleteSaveFile();
+                        currentGameState = GameStates.achievements;
                         gameInitialized = false;
                     }
                     CutscenesManager.cutscenes[(int)CutscenesManager.CutsceneType.ending].Update(elapsedTime);
@@ -390,6 +412,12 @@ namespace _999AD
                     GraphicsDevice.SetRenderTarget(renderTarget_zoom1);
                     GraphicsDevice.Clear(Color.Black);
                     MenusManager.menus[(int)MenusManager.MenuType.controls].Draw(spriteBatch);
+                    break;
+                case GameStates.achievements:
+                    GraphicsDevice.SetRenderTarget(renderTarget_zoom1);
+                    GraphicsDevice.Clear(Color.Black);
+                    MenusManager.menus[(int)MenusManager.MenuType.achievements].Draw(spriteBatch);
+                    Achievements.Draw(spriteBatch);
                     break;
                 case GameStates.credits:
                     GraphicsDevice.SetRenderTarget(renderTarget_zoom1);

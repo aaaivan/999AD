@@ -6,7 +6,7 @@ namespace _999AD
     class CollectablesRoomManager
     {
         #region DECLARATIONS
-        List<Collectable> collectables;
+        public List<Collectable> collectables { get; private set; }
         List<Collectable> heartsBackUp;
         #endregion
         #region CONSTRUCTOR
@@ -42,7 +42,15 @@ namespace _999AD
         }
         public void RemoveCollectablesFromMap()
         {
-            collectables.Clear();
+            for (int i=0; i<collectables.Count;)
+            {
+                if(collectables[i].type==Collectable.ItemType.heart)
+                {
+                    i++;
+                    continue;
+                }
+                collectables.RemoveAt(i);
+            }
         }
         public void ResetHearts()
         {

@@ -41,15 +41,9 @@ namespace _999AD
                         new Monologue(new Rectangle(592, 194, 16, 16),
                             new string[]
                             {
-                                "\"Not all paths lead to the right way,\n"+
-                                "yet the right way is the one with the\n" +
-                                "most danger.",
-                                "You will become a great saviour to\n" +
-                                "mankind, but your praises will remain\n" +
-                                "unsung.",
-                                "If you still seek to redeem yourself,\n"+
-                                "you will undoubtedly face the fourth\n" +
-                                "horseman.\"",
+                                "\"Only after facing your demise, you shall\n"+
+                                "see the light again.\"\n" +
+                                "X X X   X",
                                 "I wonder what this means..."
                             })
                     }),

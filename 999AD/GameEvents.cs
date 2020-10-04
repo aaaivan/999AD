@@ -8,17 +8,20 @@ namespace _999AD
         public enum Events
         {
             none,
+
             introMonologue,
 
-            keySpawns1_tutorial3, keySpawns2_tutorial3,
+            keySpawns1_tutorial3, key1Collected_tutorial3, keySpawns2_tutorial3, key2Collected_tutorial3,
 
             unlockDoubleJump, showDoubleJumpScreen, unlockWallJump, showWallJumpScreen,
 
-            keyAndPowerUpSpawn_midBoss,
+            keyAndPowerUpSpawn_midBoss, pUpCollected_midBoss,
 
             activateMovingPlatforms_churchGroundFloor0, resetMovingPlatforms_churchGroundFloor0,
 
             showInvisibleTiles_church1stFloor0, hide_InvisibleTiles_church1stFloor0,
+
+            spawnKey_altar, keyCollected_altar,
 
             terrainCollapseFinalBoss, finalBossComesAlive, activatePlatformsFinalBoss, escapeFinalBossRoom,
 
@@ -40,11 +43,13 @@ namespace _999AD
 
             0,
 
-            0,0,
+            0,0,0,0,
 
             0.5f,0,0.5f,0,
 
-            0, 
+            0,0,
+
+            0,0,
 
             0,0,
 
@@ -76,6 +81,40 @@ namespace _999AD
         {
             elapsedEventsDuration = 0;
             happening = Events.none;
+            if (eventAlreadyHappened[(int)Events.keySpawns1_tutorial3] && !eventAlreadyHappened[(int)Events.key1Collected_tutorial3])
+            {
+                CollectablesManager.collectablesRoomManagers[(int)RoomsManager.Rooms.tutorial3].RemoveCollectablesFromMap();
+                eventAlreadyHappened[(int)Events.keySpawns1_tutorial3] = false;
+            }
+            else if (eventAlreadyHappened[(int)Events.keySpawns2_tutorial3] && !eventAlreadyHappened[(int)Events.key2Collected_tutorial3])
+            {
+                CollectablesManager.collectablesRoomManagers[(int)RoomsManager.Rooms.tutorial3].RemoveCollectablesFromMap();
+                eventAlreadyHappened[(int)Events.keySpawns2_tutorial3] = false;
+            }
+            else if (eventAlreadyHappened[(int)Events.keyAndPowerUpSpawn_midBoss] &&
+                !eventAlreadyHappened[(int)Events.pUpCollected_midBoss])
+            {
+                CollectablesManager.collectablesRoomManagers[(int)RoomsManager.Rooms.midBoss].AddCollectableToMap(
+                    new Collectable(new Point(280, 140), Collectable.ItemType.wallJump_powerup));
+            }
+            else if (eventAlreadyHappened[(int)Events.spawnKey_altar] &&
+                !eventAlreadyHappened[(int)Events.keyCollected_altar])
+            {
+                CollectablesManager.collectablesRoomManagers[(int)RoomsManager.Rooms.churchAltarRoom].AddCollectableToMap(
+                    new Collectable(new Point(230, 400), Collectable.ItemType.silverKey));
+            }
+            else if(FinalBoss.Dead)
+            {
+                List<int[]> tilesToRemove = new List<int[]>();
+                for (int col = 1; col < (MapsManager.maps[(int)RoomsManager.Rooms.finalBoss].roomWidthTiles + 1) / 2; col++)
+                {
+                    tilesToRemove.Add(new int[2] { 57, col });
+                    tilesToRemove.Add(new int[2] { 57, MapsManager.maps[(int)RoomsManager.Rooms.finalBoss].roomWidthTiles - col - 1 });
+                    tilesToRemove.Add(new int[2] { 56, col });
+                    tilesToRemove.Add(new int[2] { 56, MapsManager.maps[(int)RoomsManager.Rooms.finalBoss].roomWidthTiles - col - 1 });
+                }
+                MapsManager.maps[(int)RoomsManager.Rooms.finalBoss].RemoveGroupOfTiles(tilesToRemove, 0, 100);
+            }
             switch (RoomsManager.CurrentRoom)
             {
                 case RoomsManager.Rooms.finalBoss:
@@ -151,9 +190,15 @@ namespace _999AD
                     if (EnemyManager.enemyRoomManagers[(int)RoomsManager.CurrentRoom].enemiesType1[0].Dead &&
                         !eventAlreadyHappened[(int)Events.keySpawns1_tutorial3])
                         TriggerEvent(Events.keySpawns1_tutorial3);
+                    else if (eventAlreadyHappened[(int)Events.keySpawns1_tutorial3] && !eventAlreadyHappened[(int)Events.key1Collected_tutorial3] &&
+                        CollectablesManager.collectedItems.Count==1)
+                        TriggerEvent(Events.key1Collected_tutorial3);
                     else if (EnemyManager.enemyRoomManagers[(int)RoomsManager.CurrentRoom].enemiesType1[1].Dead &&
                         !eventAlreadyHappened[(int)Events.keySpawns2_tutorial3])
                         TriggerEvent(Events.keySpawns2_tutorial3);
+                    else if (eventAlreadyHappened[(int)Events.keySpawns2_tutorial3] && !eventAlreadyHappened[(int)Events.key2Collected_tutorial3] &&
+                        CollectablesManager.collectedItems.Count == 1)
+                        TriggerEvent(Events.key2Collected_tutorial3);
                     break;
                 case RoomsManager.Rooms.churchBellTower0:
                     if (Player.CollisionRectangle.Intersects(new Rectangle(196, 908, 96, 76)) &&
@@ -172,6 +217,20 @@ namespace _999AD
                 case RoomsManager.Rooms.midBoss:
                     if (MidBoss.Dead && !eventAlreadyHappened[(int)Events.keyAndPowerUpSpawn_midBoss])
                         TriggerEvent(Events.keyAndPowerUpSpawn_midBoss);
+                    else if (eventAlreadyHappened[(int)Events.keyAndPowerUpSpawn_midBoss] && CollectablesManager.collectedItems.Count > 0)
+                    {
+                        if (!eventAlreadyHappened[(int)Events.pUpCollected_midBoss])
+                        {
+                            foreach (Collectable collectable in CollectablesManager.collectedItems)
+                            {
+                                if (collectable.type == Collectable.ItemType.wallJump_powerup)
+                                { 
+                                    TriggerEvent(Events.pUpCollected_midBoss);
+                                    break;
+                                }
+                            }
+                        }
+                    }
                     break;
                 case RoomsManager.Rooms.churchGroundFloor0:
                     if (Player.position.X >= 88 - Player.width && Player.position.Y < 178)
@@ -194,6 +253,21 @@ namespace _999AD
                     }
                     else if (!eventAlreadyHappened[(int)Events.hide_InvisibleTiles_church1stFloor0])
                         TriggerEvent(Events.hide_InvisibleTiles_church1stFloor0);
+                    break;
+                case RoomsManager.Rooms.churchAltarRoom:
+                    if (TorchManager.AllTorchesUnlit() && !eventAlreadyHappened[(int)Events.spawnKey_altar])
+                        TriggerEvent(Events.spawnKey_altar);
+                    else if (eventAlreadyHappened[(int)Events.spawnKey_altar] && 
+                        !eventAlreadyHappened[(int)Events.keyCollected_altar] && 
+                        CollectablesManager.collectedItems.Count>0)
+                    {
+                        foreach (Collectable c in CollectablesManager.collectedItems)
+                            if (c.type == Collectable.ItemType.silverKey)
+                            { 
+                                TriggerEvent(Events.keyCollected_altar);
+                                break;
+                            }
+                    }
                     break;
                 case RoomsManager.Rooms.finalBoss:
                     if (Player.position.X <= 200 && !eventAlreadyHappened[(int)Events.terrainCollapseFinalBoss])
@@ -267,7 +341,9 @@ namespace _999AD
                         break;
                     case Events.finalCutscene:
                         Game1.currentGameState = Game1.GameStates.ending;
-                        happening = Events.finalMonologue;
+                        CutscenesManager.cutscenes[1].ChangeSentence
+                            (CutscenesManager.cutscenes[1].GetNUmOfSentences()-1, "Your Time: " + GameStats.GetTimeString());
+                        happening = Events.finalCutscene;
                         elapsedEventsDuration = 0;
                         break;
                 }
@@ -282,12 +358,19 @@ namespace _999AD
                         happening = Events.keySpawns1_tutorial3;
                         elapsedEventsDuration = 0;
                         break;
+                    case Events.key1Collected_tutorial3:
+                        eventAlreadyHappened[(int)Events.key1Collected_tutorial3] = true;
+                        break;
                     case Events.keySpawns2_tutorial3:
                         CollectablesManager.collectablesRoomManagers[(int)RoomsManager.CurrentRoom].AddCollectableToMap(
                             new Collectable(new Point(350, 46), Collectable.ItemType.silverKey));
                         happening = Events.keySpawns2_tutorial3;
                         elapsedEventsDuration = 0;
                         break;
+                    case Events.key2Collected_tutorial3:
+                        eventAlreadyHappened[(int)Events.key2Collected_tutorial3] = true;
+                        break;
+
                 }
             }
             else if (RoomsManager.CurrentRoom == RoomsManager.Rooms.churchBellTower0)
@@ -332,7 +415,9 @@ namespace _999AD
                         happening = Events.keyAndPowerUpSpawn_midBoss;
                         elapsedEventsDuration = 0;
                         break;
-
+                    case Events.pUpCollected_midBoss:
+                        eventAlreadyHappened[(int)Events.pUpCollected_midBoss] = true;
+                        break;
                 }
             }
             else if (RoomsManager.CurrentRoom == RoomsManager.Rooms.churchGroundFloor0)
@@ -391,6 +476,20 @@ namespace _999AD
                         happening = Events.hide_InvisibleTiles_church1stFloor0;
                         eventAlreadyHappened[(int)Events.showInvisibleTiles_church1stFloor0] = false;
                         elapsedEventsDuration = 0;
+                        break;
+                }
+            }
+            else if (RoomsManager.CurrentRoom == RoomsManager.Rooms.churchAltarRoom)
+            {
+                switch (_event)
+                {
+                    case Events.spawnKey_altar:
+                        CollectablesManager.collectablesRoomManagers[(int)RoomsManager.CurrentRoom].AddCollectableToMap(
+                            new Collectable(new Point(230, 400), Collectable.ItemType.silverKey));
+                        eventAlreadyHappened[(int)Events.spawnKey_altar] = true;
+                        break;
+                    case Events.keyCollected_altar:
+                        eventAlreadyHappened[(int)Events.keyCollected_altar] = true;
                         break;
                 }
             }
