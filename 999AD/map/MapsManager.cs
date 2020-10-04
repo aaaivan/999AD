@@ -29,7 +29,7 @@ namespace _999AD
                 string[] row;
                 try
                 {
-                    StreamReader inputStream = new StreamReader("mapRoom_" + (RoomsManager.Rooms)room + ".txt");
+                    StreamReader inputStream = new StreamReader("mapFiles\\mapRoom_" + (RoomsManager.Rooms)room + ".txt");
                     using (inputStream)
                     {
                         line = inputStream.ReadLine();

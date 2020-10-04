@@ -75,7 +75,7 @@ namespace _999AD
             int totalEruptions = (int)((MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomWidthtPx - 1 + 2 * distance) / (distance));
             for (int i = 0; i < totalEruptions; i++)
             {
-                lavaGeysers.Add(new LavaGeyser((i + 0.5f + offset) * distance, timeBeforeErupting));
+                lavaGeysers.Add(new LavaGeyser((i + 0.5f ) * distance + offset, timeBeforeErupting));
             }
         }
         public static void Update(float elapsedTime)

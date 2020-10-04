@@ -66,6 +66,8 @@ namespace _999AD
                         Player.position = new Vector2(152, 192);
                     else if (RoomsManager.PreviousRoom == RoomsManager.Rooms.tutorial1)
                         Player.position = new Vector2(903, 185);
+                    else
+                        Player.position= new Vector2(152, 150);
                     break;
                 case RoomsManager.Rooms.tutorial1:
                     if (RoomsManager.PreviousRoom == RoomsManager.Rooms.tutorial0)

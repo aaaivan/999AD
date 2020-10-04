@@ -65,7 +65,7 @@ namespace _999AD
                         new Monologue(new Rectangle(193, 923, 87, 55),
                             new string[]
                             {
-                                "Mmmh... Is seems like something would\n" +
+                                "Mmmh... It seems like something would\n" +
                                 "fit inside the two holes on this altar...",
                             }),
                     }),

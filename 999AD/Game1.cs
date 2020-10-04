@@ -91,7 +91,6 @@ namespace _999AD
             graphics.PreferredBackBufferWidth = viewportRectangle.Width;
             graphics.PreferredBackBufferHeight = viewportRectangle.Height;
             graphics.ApplyChanges();
-            graphics.IsFullScreen = true;
             previousKeyboard = Keyboard.GetState();
             previousGamePad = GamePad.GetState(PlayerIndex.One);
             previousMouseState = Mouse.GetState();

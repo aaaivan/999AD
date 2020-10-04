@@ -55,9 +55,9 @@ namespace _999AD
         }
         public void Update(float elapsedTime)
         {
-            if (elapsedTimeBeforeErupting==0 )
+            if (elapsedTimeBeforeErupting<=0.0001f )
             {
-                if (position.Y < MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomHeightPx - heigthBeforeErupting)
+                if (position.Y <= MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomHeightPx - heigthBeforeErupting)
                 {
                     position.Y = MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomHeightPx - heigthBeforeErupting;
                     elapsedTimeBeforeErupting += elapsedTime;

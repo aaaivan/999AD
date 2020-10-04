@@ -21,7 +21,7 @@ namespace _999AD
         public static void Inizialize()
         {
             currentRoom = Rooms.tutorial0;
-            previousRoom = Rooms.tutorial4;
+            previousRoom = Rooms.tutorial0;
             CameraManager.SwitchCamera(currentRoom);
         }
         #endregion
