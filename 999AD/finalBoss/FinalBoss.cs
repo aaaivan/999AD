@@ -49,7 +49,7 @@ namespace _999AD
         static WingTextures rightWingTexture;
         static WingTextures leftWingTexture;
         static Phases currentPhase;
-        static readonly int maxBossHp = 30;
+        static readonly int maxBossHp = 25;
         static readonly int maxWingHP = 2;
         static int bossHP;
         static int rightWingHP;
@@ -593,6 +593,7 @@ namespace _999AD
                         elapsedAttackAnimationTime = 0;
                         bossAnimation = BossAnimations.idle;
                         bossAnimations[(int)BossAnimations.idle].Reset();
+                        bossAnimations[(int)BossAnimations.endRecovering].Reset();
                         rightWingAnimations[(int)rightWingAnimation].Reset();
                         leftWingAnimations[(int)leftWingAnimation].Reset();
                     }
@@ -652,6 +653,7 @@ namespace _999AD
                                     else
                                         leftWingAnimation = WingAnimations.withdrawDead;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
+                                    bossAnimations[(int)BossAnimations.endRecovering].Reset();
                                     rightWingAnimations[(int)rightWingAnimation].Reset();
                                     leftWingAnimations[(int)leftWingAnimation].Reset();
                                     SoundEffects.FinalBossHurt.Play();
@@ -678,6 +680,7 @@ namespace _999AD
                                     else
                                         leftWingAnimation = WingAnimations.withdrawDead;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
+                                    bossAnimations[(int)BossAnimations.endRecovering].Reset();
                                     rightWingAnimations[(int)rightWingAnimation].Reset();
                                     leftWingAnimations[(int)leftWingAnimation].Reset();
                                     SoundEffects.FinalBossHurt.Play();
@@ -706,6 +709,7 @@ namespace _999AD
                                     else
                                         leftWingAnimation = WingAnimations.withdrawDead;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
+                                    bossAnimations[(int)BossAnimations.endRecovering].Reset();
                                     rightWingAnimations[(int)rightWingAnimation].Reset();
                                     leftWingAnimations[(int)leftWingAnimation].Reset();
                                     SoundEffects.FinalBossHurt.Play();
