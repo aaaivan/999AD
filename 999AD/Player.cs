@@ -10,7 +10,7 @@ namespace _999AD
     {
         enum AnimationTypes
         {
-            idle, walk, jump, attack, fall, die, total
+            idle, walk, jump, attack, fall, die, wall, total
         }
         #region DECLARATIONS
         static Texture2D spritesheet;
@@ -57,6 +57,7 @@ namespace _999AD
             animations.Add(new Animation( new Rectangle(0, 72, 112, 24), 16, 24, 7, 0.06f, false, false));
             animations.Add(new Animation( new Rectangle(0, 96, 64, 24), 16, 24, 4, 0.1f, true));
             animations.Add(new Animation( new Rectangle(0, 120, 160, 24), 16, 24, 10, 0.1f, false, true));
+            animations.Add(new Animation(new Rectangle(0, 144, 16, 24), 16, 24, 1, 0, false, true));
         }
         public static void Reset(Vector2 _position)
         {
@@ -106,6 +107,7 @@ namespace _999AD
         public static bool IsOnMovingPlatform
         {
             get { return isOnMovingPlatform; }
+            set { isOnMovingPlatform = value; }
         }
         #endregion
         #region METHODS
@@ -154,6 +156,10 @@ namespace _999AD
                     break;
                 case AnimationTypes.jump:
                     break;
+                case AnimationTypes.wall:
+                    if (!isOnTheWall)
+                        currentAnimation = AnimationTypes.jump;
+                    break;
                 case AnimationTypes.fall:
                     animations[(int)AnimationTypes.jump].Reset();
                     break;
@@ -168,9 +174,10 @@ namespace _999AD
         {
             if (elapsedShotTime > timeBetweenShots)
             {
-                //Space to Shoot / Controller - B to Shoot
-                if ((Game1.currentKeyboard.IsKeyDown(Keys.Space) && !Game1.previousKeyboard.IsKeyDown(Keys.Space))||
-                    (Game1.currentGamePad.Buttons.B==ButtonState.Pressed && Game1.previousGamePad.Buttons.B == ButtonState.Released))
+                //Space to Shoot / Controller - X to Shoot
+                if (((Game1.currentKeyboard.IsKeyDown(Keys.Space) && !Game1.previousKeyboard.IsKeyDown(Keys.Space))||
+                    (Game1.currentGamePad.Buttons.X==ButtonState.Pressed && Game1.previousGamePad.Buttons.X == ButtonState.Released)) &&
+                    !isOnTheWall)
                 {
                     ProjectilesManager.ShootPlayerProjectile(isFacingRight ? (position + new Vector2(width, 0)) : position, ProjectileInitialVelocity);
                     elapsedShotTime = 0;
@@ -185,11 +192,6 @@ namespace _999AD
         //check input for movement
         static void CheckMovementInput()
         {
-            //Get Thumbsticks controls
-            /*position.X += Game1.currentGamePad.ThumbSticks.Left.X * maxHorizontalMovementSpeed;
-            if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack)
-                currentAnimation = AnimationTypes.walk;*/
-
             //W to Jump / Controller - A to Jump
             if ((Game1.currentKeyboard.IsKeyDown(Keys.Up) && !Game1.previousKeyboard.IsKeyDown(Keys.Up)) ||
                 (Game1.currentKeyboard.IsKeyDown(Keys.W) && !Game1.previousKeyboard.IsKeyDown(Keys.W)) ||
@@ -230,7 +232,7 @@ namespace _999AD
                         jumpSpeed.X = -initialJumpSpeed.X;
                     isFacingRight = !isFacingRight;
                 }
-                else if (canDoubleJump && doubleJumpUnlocked)
+                else if (canDoubleJump && doubleJumpUnlocked && !isOnTheWall)
                 {
                     if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack)
                         currentAnimation = AnimationTypes.jump;
@@ -263,6 +265,10 @@ namespace _999AD
                 currentAnimation != AnimationTypes.die &&
                 currentAnimation != AnimationTypes.attack)
                 currentAnimation = AnimationTypes.idle;
+            else if (!isTouchingTheGround &&
+                isOnTheWall &&
+                currentAnimation != AnimationTypes.die)
+                currentAnimation = AnimationTypes.wall;
         }
         //move player based on his current velocity and check for collisions
         static void Move(float elapsedTime)
@@ -363,7 +369,7 @@ namespace _999AD
                 {
                     isTouchingTheGround = false;
                     isOnMovingPlatform = false;
-                    if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack)
+                    if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack && !isOnTheWall)
                         currentAnimation = AnimationTypes.fall;
                 }
                 totalSpeed.Y = jumpSpeed.Y;
@@ -531,10 +537,12 @@ namespace _999AD
                 return;
             healthPoints -= damage;
             SoundEffects.PlayerHurt.Play();
+            GameStats.hitsCount++;
             if (healthPoints<=0)
             {
                 currentAnimation = AnimationTypes.die;
                 healthPoints = 0;
+                GameStats.deathsCount++;
             }
             else
             {

@@ -20,7 +20,7 @@ namespace _999AD
         bool erupted;
         #endregion
         #region CONSTRUCTOR
-        public LavaGeyser(float xCenterPosition, float _timeBeforeErupting, int _initialYvelocity=-1400)
+        public LavaGeyser(float xCenterPosition, float _timeBeforeErupting, int _initialYvelocity=-1200)
         {
             yVelocity = 0;
             initialYVelocity = _initialYvelocity;
@@ -55,9 +55,9 @@ namespace _999AD
         }
         public void Update(float elapsedTime)
         {
-            if (elapsedTimeBeforeErupting==0 )
+            if (elapsedTimeBeforeErupting<=0.0001f )
             {
-                if (position.Y < MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomHeightPx - heigthBeforeErupting)
+                if (position.Y <= MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomHeightPx - heigthBeforeErupting)
                 {
                     position.Y = MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomHeightPx - heigthBeforeErupting;
                     elapsedTimeBeforeErupting += elapsedTime;

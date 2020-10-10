@@ -11,6 +11,7 @@ namespace _999AD
         #region CONSTRUCTOR
         public static void Inizialize(Texture2D spritesheet)
         {
+            Door.IDcounter = 0;
             Door.Inizialize(spritesheet);
             doorsRoomManagers = new DoorsRoomManager[(int)RoomsManager.Rooms.total]
                 {
@@ -65,7 +66,8 @@ namespace _999AD
                     ),
                     new DoorsRoomManager(new Door[] //churchAltarRoom
                     {
-                        new Door(new Point(96, 448), Door.TextureType.bronzeDoor, Collectable.ItemType.bronzeKey)
+                        new Door(new Point(96, 448), Door.TextureType.bronzeDoor, Collectable.ItemType.bronzeKey),
+                        new Door(new Point(312, 448), Door.TextureType.silverDoor, Collectable.ItemType.silverKey),
                     }
                     ),
                     new DoorsRoomManager(new Door[] //church1stFloor0

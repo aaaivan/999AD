@@ -8,7 +8,7 @@ namespace _999AD
     {
         #region DECLARATIONS
         public static CollectablesRoomManager[] collectablesRoomManagers;
-        static List<Collectable> collectedItems;
+        public static List<Collectable> collectedItems { get; private set; }
         static List<Collectable> itemsBeingUsed;
         static List<Vector2> targetPoints;
         static readonly float animationTime= 0.3f;
@@ -17,6 +17,7 @@ namespace _999AD
         #region CONSTRUCTOR
         public static void Inizialize(Texture2D spritesheet)
         {
+            Collectable.IDcounter = 0;
             elapsedAnimationTime = 0;
             Collectable.Inizialize(spritesheet);
             collectablesRoomManagers = new CollectablesRoomManager[(int)RoomsManager.Rooms.total]

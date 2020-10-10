@@ -94,7 +94,7 @@ namespace _999AD
             float[] radialVel = new float[numberOfInversions+1];
             for (int i=0; i<= numberOfInversions; i++)
             {
-                times[i] = maxTimeWithoutInverion*(float)rand.NextDouble();
+                times[i] = 1+(maxTimeWithoutInverion-1)*(float)rand.NextDouble();
                 angularVel[i] = sign * angularVelocity;
                 sign *= -1;
                 radialVel[i] = 0;

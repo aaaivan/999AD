@@ -10,6 +10,8 @@ namespace _999AD
         {
             brassDoor, goldDoor,bronzeDoor, silverDoor,  total
         }
+        static public int IDcounter;
+        public int ID { get; private set; }
         static Texture2D spritesheet;
         static Rectangle[] sourceRectangles;
         Point position;
@@ -20,6 +22,8 @@ namespace _999AD
         #region CONSTRUCTOR
         public Door (Point _position, TextureType _type, Collectable.ItemType _key)
         {
+            ID = IDcounter;
+            IDcounter++;
             position = _position;
             key = _key;
             textureType = _type;
@@ -83,20 +87,24 @@ namespace _999AD
             if (InteractionRectangle.Intersects(Player.CollisionRectangle) &&
                 CollectablesManager.TryRemoveFromInventory(key,new Vector2(DrawRectangle.Center.X, DrawRectangle.Center.Y)))
             {
-                closed = false;
-                int topRow = (int)position.Y / Tile.tileSize;
-                int btmRow = ((int)position.Y + sourceRectangles[(int)textureType].Height - 1) / Tile.tileSize;
-                int leftCol = (int)position.X / Tile.tileSize;
-                int rightCol = ((int)position.X + sourceRectangles[(int)textureType].Width - 1) / Tile.tileSize;
-                for (int row = topRow; row <= btmRow; row++)
-                {
-                    for (int col = leftCol; col <= rightCol; col++)
-                    {
-                        MapsManager.maps[(int)RoomsManager.CurrentRoom].array[row, col].tileType = Tile.TileType.empty;
-                    }
-                }
+                OpenDoor((int)RoomsManager.CurrentRoom);
                 AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.CurrentRoom].AddAnimatedSprite(
                     new AnimatedSprite(new Vector2(position.X, position.Y), AnimatedSprite.GetDoorAnimation(textureType)));
+            }
+        }
+        public void OpenDoor(int roomType)
+        {
+            closed = false;
+            int topRow = (int)position.Y / Tile.tileSize;
+            int btmRow = ((int)position.Y + sourceRectangles[(int)textureType].Height - 1) / Tile.tileSize;
+            int leftCol = (int)position.X / Tile.tileSize;
+            int rightCol = ((int)position.X + sourceRectangles[(int)textureType].Width - 1) / Tile.tileSize;
+            for (int row = topRow; row <= btmRow; row++)
+            {
+                for (int col = leftCol; col <= rightCol; col++)
+                {
+                    MapsManager.maps[roomType].array[row, col].tileType = Tile.TileType.empty;
+                }
             }
         }
         public void Draw(SpriteBatch spriteBatch)

@@ -376,6 +376,14 @@ namespace _999AD
                                             new Vector2(52, 36),
                                             new Vector2(52,60),
                                             0,24,true),
+                        new MovingPlatform(MovingPlatform.TextureType.marble24_8, 70,
+                                            new Vector2(238, 316),
+                                            Vector2.Zero,
+                                            MathHelper.Pi/4, 0,true, 180),
+                        new MovingPlatform(MovingPlatform.TextureType.marble24_8, 70,
+                                            new Vector2(238, 316),
+                                            Vector2.Zero,
+                                            MathHelper.Pi/4, 0, true,0),
                     }
                 ),
                 new PlatformsRoomManager //church1stFloor0

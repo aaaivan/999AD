@@ -43,6 +43,8 @@ namespace _999AD
         int enemyHP;
         bool dead = false;
         Color enemyColor = Color.White;
+        readonly float timeRedColor = 0.2f;
+        float elapsedRedColorTime;
         #endregion
 
         #region CONSTRUCTOR
@@ -50,6 +52,7 @@ namespace _999AD
         //Takes a spritesheet and a vector as parameters
         public Enemy1(Vector2 EnemyPoint, Vector2 EnemyPoint2)
         {
+            elapsedRedColorTime = timeRedColor;
             enemyPoint = EnemyPoint;
             enemyPoint2 = EnemyPoint2;
             if (enemyPoint.X > enemyPoint2.X)
@@ -117,7 +120,14 @@ namespace _999AD
             {
                 return;
             }
-
+            if (elapsedRedColorTime<timeRedColor)
+            {
+                elapsedRedColorTime += elapsedTime;
+                if (elapsedRedColorTime >= timeRedColor)
+                {
+                    enemyColor = Color.White;
+                }
+            }
             //Updating the animation of the enemy sprite
             enemyAnimations[(int)enemyState].Update(elapsedTime);
 
@@ -239,6 +249,7 @@ namespace _999AD
                 enemyHP--;
                 SoundEffects.EnemyHurt.Play();
                 enemyColor = Color.Red * 0.6f;
+                elapsedRedColorTime = 0;
                 return true;
             }
             return false;
@@ -297,6 +308,7 @@ namespace _999AD
                     SoundEffects.EnemyHurt.Play();
                     Player.Rebound(0.75f);
                     enemyColor = Color.Red * 0.6f;
+                    elapsedRedColorTime = 0;
                 }
             }
         }

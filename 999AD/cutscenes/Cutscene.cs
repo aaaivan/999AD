@@ -77,6 +77,14 @@ namespace _999AD
                 }
             }
         }
+        public void ChangeSentence(int index, string newMessage)
+        {
+            sentences[index] = newMessage;
+        }
+        public int GetNUmOfSentences()
+        {
+            return sentences.Length;
+        }
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(animationSpritesheet, animationPosition, animation.Frame, Color.White);

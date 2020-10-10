@@ -49,13 +49,13 @@ namespace _999AD
         static WingTextures rightWingTexture;
         static WingTextures leftWingTexture;
         static Phases currentPhase;
-        static readonly int maxBossHp = 20;
+        static readonly int maxBossHp = 25;
         static readonly int maxWingHP = 2;
         static int bossHP;
         static int rightWingHP;
         static int leftWingHP;
         static readonly Random rand = new Random();
-        static bool dead = false;
+        static bool dead;
         static Color bossColor;
         static readonly int framesOfDifferentColor = 5;
         static int frameCount;
@@ -63,6 +63,7 @@ namespace _999AD
         #region CONSTRUCTOR
         public static void Inizialize(Texture2D _bossSpritesheet, Texture2D[] _wingSpritesheets)
         {
+            dead = false;
             Reset();
             bossSpritesheet = _bossSpritesheet;
             wingSpritesheets = _wingSpritesheets;
@@ -229,6 +230,7 @@ namespace _999AD
         public static bool Dead
         {
             get { return dead; }
+            set { dead = value; }
         }
         #endregion
         #region METHODS
@@ -283,14 +285,6 @@ namespace _999AD
                     leftWingAnimations[(int)leftWingAnimation].Reset();
                 }
             }
-            /*//debug only
-            if (Game1.currentKeyboard.IsKeyDown(Keys.Down) && !Game1.previousKeyboard.IsKeyDown(Keys.Down))
-                bossHP--;
-            if (Game1.currentKeyboard.IsKeyDown(Keys.Left) && !Game1.previousKeyboard.IsKeyDown(Keys.Left))
-                DamageWing(false);
-            if (Game1.currentKeyboard.IsKeyDown(Keys.Right) && !Game1.previousKeyboard.IsKeyDown(Keys.Right))
-                DamageWing(true);
-            //end debug only*/
             switch (bossAnimation)
             {
                 case BossAnimations.stone:
@@ -338,7 +332,7 @@ namespace _999AD
                                 }
                                 else if (attack == 2)
                                 {
-                                    int num = (int)MathHelper.Lerp(1, 3, 1 - (float)bossHP / maxBossHp);
+                                    int num = (int)MathHelper.Lerp(2, 4, 1 - (float)bossHP / maxBossHp);
                                     int[] platforms = new int[num];
                                     for (int i = 0; i < num; i++)
                                     {
@@ -349,8 +343,8 @@ namespace _999AD
                                         }
                                         platforms[i] = nextPlatform;
                                     }
-                                    FireBallsManager.TargetPlatform(platforms, (int)MathHelper.Lerp(1, 6, 1 - (float)bossHP / maxBossHp), 2);
-                                    FireBallsManager.AddGhostFireball(9);
+                                    FireBallsManager.TargetPlatform(platforms, 6, 2);
+                                    FireBallsManager.AddGhostFireball(7);
                                     bossAnimation = BossAnimations.attack;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
                                     rightWingAnimations[(int)rightWingAnimation].Reset();
@@ -386,47 +380,36 @@ namespace _999AD
                                 int attack = rand.Next(3);
                                 if (attack == 0)
                                 {
-                                    attack = rand.Next(3);
+                                    attack = rand.Next(2);
                                     if (attack == 0)
                                     {
                                         FireBallsManager.ThrowAtPlayer((int)MathHelper.Lerp(4, 9, 1 - (float)bossHP / maxBossHp), (float)(3 + rand.NextDouble()), 1f);
-                                        bossAnimation = BossAnimations.attack;
-                                        bossAnimations[(int)BossAnimations.attack].Reset();
-                                        rightWingAnimations[(int)rightWingAnimation].Reset();
-                                        leftWingAnimations[(int)leftWingAnimation].Reset();
-                                    }
-                                    else if (attack == 1)
-                                    {
-                                        FireBallsManager.ThrowInAllDirections(6, FireBall.radialShootingVelocity, (float)(1 + rand.NextDouble()));
-                                        bossAnimation = BossAnimations.attack;
-                                        bossAnimations[(int)BossAnimations.attack].Reset();
-                                        rightWingAnimations[(int)rightWingAnimation].Reset();
-                                        leftWingAnimations[(int)leftWingAnimation].Reset();
                                     }
                                     else
                                     {
-                                        int num = (int)MathHelper.Lerp(2, 4, 1 - (float)bossHP / maxBossHp);
-                                        int[] platforms = new int[num];
-                                        for (int i = 0; i < num; i++)
-                                        {
-                                            int nextPlatform = rand.Next(PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length-1);
-                                            while (platforms.Contains(nextPlatform))
-                                            {
-                                                nextPlatform = (nextPlatform + 1) % (PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length-1);
-                                            }
-                                            platforms[i] = nextPlatform;
-                                        }
-                                        FireBallsManager.TargetPlatform(platforms, 6, 2);
-                                        FireBallsManager.AddGhostFireball(7);
-                                        bossAnimation = BossAnimations.attack;
-                                        bossAnimations[(int)BossAnimations.attack].Reset();
-                                        rightWingAnimations[(int)rightWingAnimation].Reset();
-                                        leftWingAnimations[(int)leftWingAnimation].Reset();
+                                        FireBallsManager.ThrowInAllDirections(6, FireBall.radialShootingVelocity, (float)(1 + rand.NextDouble()));
                                     }
+                                    int num = (int)MathHelper.Lerp(2, 4, 1 - (float)bossHP / maxBossHp);
+                                    int[] platforms = new int[num];
+                                    for (int i = 0; i < num; i++)
+                                    {
+                                        int nextPlatform = rand.Next(PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length-1);
+                                        while (platforms.Contains(nextPlatform))
+                                        {
+                                            nextPlatform = (nextPlatform + 1) % (PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length-1);
+                                        }
+                                        platforms[i] = nextPlatform;
+                                    }
+                                    FireBallsManager.TargetPlatform(platforms, 6, 2);
+                                    FireBallsManager.AddGhostFireball(7);
+                                    bossAnimation = BossAnimations.attack;
+                                    bossAnimations[(int)BossAnimations.attack].Reset();
+                                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                                    leftWingAnimations[(int)leftWingAnimation].Reset();
                                 }
                                 else if (attack == 1)
                                 {
-                                    float angle = MathHelper.Lerp(60, 120, 1 - (float)bossHP / maxBossHp);
+                                    float angle = MathHelper.Lerp(90, 180, 1 - (float)bossHP / maxBossHp);
                                     FireBallsManager.TrowWithinCircularSector(
                                         (int)(angle / 6),
                                         FireBall.radialShootingVelocity * 0.8f,
@@ -439,7 +422,7 @@ namespace _999AD
                                 }
                                 else
                                 {
-                                    FireBallsManager.RandomSweep((float)(0.8f + 0.2*rand.NextDouble()), 2, 4);
+                                    FireBallsManager.RandomSweep((float)(1.0f + 0.2*rand.NextDouble()), 2, 4);
                                     bossAnimation = BossAnimations.attack;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
                                     rightWingAnimations[(int)rightWingAnimation].Reset();
@@ -470,29 +453,36 @@ namespace _999AD
                                     attack = rand.Next(2);
                                     if (attack == 0)
                                     {
-                                        float angle = MathHelper.Lerp(120, 240, 1 - (float)bossHP / maxBossHp);
-                                        FireBallsManager.TrowWithinCircularSector(
-                                            (int)(angle / 6),
-                                            FireBall.radialShootingVelocity * 0.8f,
-                                            (float)(0.4 + 0.2*rand.NextDouble()),
-                                            angle);
-                                        bossAnimation = BossAnimations.attack;
-                                        bossAnimations[(int)BossAnimations.attack].Reset();
-                                        rightWingAnimations[(int)rightWingAnimation].Reset();
-                                        leftWingAnimations[(int)leftWingAnimation].Reset();
+                                        int num = 2;
+                                        int[] platforms = new int[num];
+                                        for (int i = 0; i < num; i++)
+                                        {
+                                            int nextPlatform = rand.Next(PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length - 1);
+                                            while (platforms.Contains(nextPlatform))
+                                            {
+                                                nextPlatform = (nextPlatform + 1) % (PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length - 1);
+                                            }
+                                            platforms[i] = nextPlatform;
+                                        }
+                                        FireBallsManager.TargetPlatform(platforms, 6, 2);
+                                        FireBallsManager.AddGhostFireball(7);
                                     }
                                     else
                                     {
-                                        FireBallsManager.RandomSweep((float)(1+0.5*rand.NextDouble()), 4, 5);
-                                        bossAnimation = BossAnimations.attack;
-                                        bossAnimations[(int)BossAnimations.attack].Reset();
-                                        rightWingAnimations[(int)rightWingAnimation].Reset();
-                                        leftWingAnimations[(int)leftWingAnimation].Reset();
+                                        FireBallsManager.ThrowAtPlayer(4, (float)(3 + rand.NextDouble()), 1f);
                                     }
+                                    LavaGeyserManager.ShootGeyser(
+                                                    new float[] { rand.Next((int)fireballsCenter.X - 200, (int)fireballsCenter.X + 200),
+                                                        rand.Next((int)fireballsCenter.X - 200, (int)fireballsCenter.X + 200),},
+                                                    3);
+                                    bossAnimation = BossAnimations.attack;
+                                    bossAnimations[(int)BossAnimations.attack].Reset();
+                                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                                    leftWingAnimations[(int)leftWingAnimation].Reset();
                                 }
                                 else if (attack == 1)
                                 {
-                                    int num = 2;
+                                    int num = 3;
                                     int[] platforms = new int[num];
                                     for (int i = 0; i < num; i++)
                                     {
@@ -504,35 +494,15 @@ namespace _999AD
                                         platforms[i] = nextPlatform;
                                     }
                                     FireBallsManager.TargetPlatform(platforms, 6, 5);
-                                    attack = rand.Next(3);
-                                    if (attack == 0)
-                                    {
-                                        FireBallsManager.ThrowAtPlayer(6, (float)(1 + rand.NextDouble()), 0.5f);
-                                        bossAnimation = BossAnimations.attack;
-                                        bossAnimations[(int)BossAnimations.attack].Reset();
-                                        rightWingAnimations[(int)rightWingAnimation].Reset();
-                                        leftWingAnimations[(int)leftWingAnimation].Reset();
-                                    }
-                                    else if (attack == 1)
-                                    {
-                                        FireBallsManager.ThrowInAllDirections(6, FireBall.radialShootingVelocity, (float)(0.5 + rand.NextDouble()));
-                                        bossAnimation = BossAnimations.attack;
-                                        bossAnimations[(int)BossAnimations.attack].Reset();
-                                        rightWingAnimations[(int)rightWingAnimation].Reset();
-                                        leftWingAnimations[(int)leftWingAnimation].Reset();
-                                    }
-                                    else
-                                    {
-                                        FireBallsManager.TrowWithinCircularSector(
+                                    FireBallsManager.TrowWithinCircularSector(
                                             20,
                                             FireBall.radialShootingVelocity * 0.8f,
                                             (float)(0.5 + 0.1*rand.NextDouble()),
                                             120);
-                                        bossAnimation = BossAnimations.attack;
-                                        bossAnimations[(int)BossAnimations.attack].Reset();
-                                        rightWingAnimations[(int)rightWingAnimation].Reset();
-                                        leftWingAnimations[(int)leftWingAnimation].Reset();
-                                    }
+                                    bossAnimation = BossAnimations.attack;
+                                    bossAnimations[(int)BossAnimations.attack].Reset();
+                                    rightWingAnimations[(int)rightWingAnimation].Reset();
+                                    leftWingAnimations[(int)leftWingAnimation].Reset();
                                 }
                                 else if (attack == 2)
                                 {
@@ -544,12 +514,7 @@ namespace _999AD
                                 }
                                 else
                                 {
-                                    if ((float)bossHP / maxBossHp < 0.3f)
-                                        LavaGeyserManager.EquallySpaced(LavaGeyser.size * 7, 2, 0);
-                                    else
-                                        LavaGeyserManager.ShootGeyser(
-                                        new float[] { rand.Next((int)fireballsCenter.X - 350, (int)fireballsCenter.X + 350) },
-                                        3);
+                                    LavaGeyserManager.EquallySpaced(LavaGeyser.size * 7, 2, 0);
                                     bossAnimation = BossAnimations.attack;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
                                     rightWingAnimations[(int)rightWingAnimation].Reset();
@@ -574,9 +539,10 @@ namespace _999AD
                                 }
                                 if (FireBallsManager.NumberOfActiveFireballs > 0 || LavaGeyserManager.ActiveLavaGeysers > 0)
                                     break;
-                                int attack = rand.Next(5);
+                                int attack = rand.Next(3);
                                 if (attack == 0)
                                 {
+                                    FireBallsManager.Sweep((float)(0.4 + 0.2 * rand.NextDouble()), 10);
                                     LavaGeyserManager.SweepAcross(
                                         1,
                                         0.5f,
@@ -591,26 +557,12 @@ namespace _999AD
                                 }
                                 else if (attack == 1)
                                 {
+                                    FireBallsManager.TrowWithinCircularSector(
+                                        (int)(20),
+                                        FireBall.radialShootingVelocity * 0.8f,
+                                        (float)(0.25 + 0.5 * rand.NextDouble()),
+                                        120);
                                     LavaGeyserManager.EquallySpaced(LavaGeyser.size *6, 2, LavaGeyser.size * 6 * (float)rand.NextDouble());
-                                    bossAnimation = BossAnimations.attack;
-                                    bossAnimations[(int)BossAnimations.attack].Reset();
-                                    rightWingAnimations[(int)rightWingAnimation].Reset();
-                                    leftWingAnimations[(int)leftWingAnimation].Reset();
-                                }
-                                else if (attack == 2)
-                                {
-                                    int[] platforms = new int[2];
-                                    for (int i = 0; i < 2; i++)
-                                    {
-                                        int nextPlatform = rand.Next(PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length-1);
-                                        while (platforms.Contains(nextPlatform))
-                                        {
-                                            nextPlatform = (nextPlatform + 1) % (PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length-1);
-                                        }
-                                        platforms[i] = nextPlatform;
-                                    }
-                                    FireBallsManager.TargetPlatform(platforms, 6, 5);
-                                    FireBallsManager.Spiral(30, 20, 0.3f, FireBall.radialShootingVelocity * 0.4f);
                                     bossAnimation = BossAnimations.attack;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
                                     rightWingAnimations[(int)rightWingAnimation].Reset();
@@ -618,31 +570,17 @@ namespace _999AD
                                 }
                                 else
                                 {
-                                    attack = rand.Next(3);
-                                    LavaGeyserManager.ShootGeyser(new float[] { rand.Next(300, 700) }, 3);
-                                    if (attack == 0)
-                                    {
-                                        FireBallsManager.ThrowAtPlayer(
-                                            (int)MathHelper.Lerp(3, 7, 1 - (float)bossHP / maxBossHp),
-                                            1.5f,
-                                            1);
-                                    }
-                                    else if (attack == 2)
-                                    {
-                                        FireBallsManager.ThrowInAllDirections(
-                                            (int)MathHelper.Lerp(3, 7, 1 - (float)bossHP / maxBossHp),
-                                            FireBall.radialShootingVelocity,
-                                            1);
-                                    }
-                                    else
-                                    {
-                                        FireBallsManager.Sweep(0.5f, 5);
-                                    }
+                                    LavaGeyserManager.ShootGeyser(
+                                                    new float[] { rand.Next((int)fireballsCenter.X - 200, (int)fireballsCenter.X + 200),
+                                                        rand.Next((int)fireballsCenter.X - 200, (int)fireballsCenter.X + 200),},
+                                                    3);
+                                    FireBallsManager.Spiral(30, 20, 0.3f, FireBall.radialShootingVelocity * 0.4f);
                                     bossAnimation = BossAnimations.attack;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
                                     rightWingAnimations[(int)rightWingAnimation].Reset();
                                     leftWingAnimations[(int)leftWingAnimation].Reset();
                                 }
+
                                 SoundEffects.FinalBossAttack.Play();
                                 break;
                             }
@@ -654,6 +592,7 @@ namespace _999AD
                     {
                         elapsedAttackAnimationTime = 0;
                         bossAnimation = BossAnimations.idle;
+                        bossAnimations[(int)BossAnimations.idle].Reset();
                         bossAnimations[(int)BossAnimations.endRecovering].Reset();
                         rightWingAnimations[(int)rightWingAnimation].Reset();
                         leftWingAnimations[(int)leftWingAnimation].Reset();
@@ -714,6 +653,7 @@ namespace _999AD
                                     else
                                         leftWingAnimation = WingAnimations.withdrawDead;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
+                                    bossAnimations[(int)BossAnimations.endRecovering].Reset();
                                     rightWingAnimations[(int)rightWingAnimation].Reset();
                                     leftWingAnimations[(int)leftWingAnimation].Reset();
                                     SoundEffects.FinalBossHurt.Play();
@@ -740,10 +680,13 @@ namespace _999AD
                                     else
                                         leftWingAnimation = WingAnimations.withdrawDead;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
+                                    bossAnimations[(int)BossAnimations.endRecovering].Reset();
                                     rightWingAnimations[(int)rightWingAnimation].Reset();
                                     leftWingAnimations[(int)leftWingAnimation].Reset();
                                     SoundEffects.FinalBossHurt.Play();
                                     FireBallsManager.ThrowAtPlayer(20,2,0.1f);
+                                    CollectablesManager.collectablesRoomManagers[(int)RoomsManager.CurrentRoom].AddCollectableToMap(
+                                        new Collectable(new Point(374, 475), Collectable.ItemType.heart));
                                 }
                                 break;
                             case Phases.three:
@@ -766,12 +709,13 @@ namespace _999AD
                                     else
                                         leftWingAnimation = WingAnimations.withdrawDead;
                                     bossAnimations[(int)BossAnimations.attack].Reset();
+                                    bossAnimations[(int)BossAnimations.endRecovering].Reset();
                                     rightWingAnimations[(int)rightWingAnimation].Reset();
                                     leftWingAnimations[(int)leftWingAnimation].Reset();
                                     SoundEffects.FinalBossHurt.Play();
                                     LavaGeyserManager.SweepAcross(1,0f, 100, 159, 609, true);
                                     CollectablesManager.collectablesRoomManagers[(int)RoomsManager.CurrentRoom].AddCollectableToMap(
-                                        new Collectable(new Point(376, 475), Collectable.ItemType.heart));
+                                        new Collectable(new Point(378, 475), Collectable.ItemType.heart));
                                 }
                                 break;
                             case Phases.four:
@@ -809,6 +753,7 @@ namespace _999AD
                         if (BossDrawRectangle.Y>MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomHeightPx)
                         {
                             dead = true;
+                            LoadSaveManager.SaveGameProgress();
                             MediaPlayer.Stop();
                         }
                         break;

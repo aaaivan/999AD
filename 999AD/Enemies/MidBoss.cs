@@ -43,8 +43,11 @@ namespace _999AD
         static readonly int maxHP = 10;
         static int bossHP;
         static Random random = new Random();
-        static bool dead = false;
+        static bool dead;
         static Color bossColor = Color.White;
+        static readonly float timeRedColor = 0.2f;
+        static float elapsedRedColorTime;
+
         #endregion
 
         #region CONSTRUCTOR
@@ -52,6 +55,7 @@ namespace _999AD
         //Takes a spritesheet as a parameter
         public static void Initialise(Texture2D BossSheet)
         {
+            dead = false;
             bossSheet = BossSheet;
             bossAnimations = new Animation[(int)BossState.total]
             {
@@ -101,6 +105,7 @@ namespace _999AD
         public static bool Dead
         {
             get { return dead; }
+            set { dead = value; }
         }
 
         #endregion
@@ -112,6 +117,14 @@ namespace _999AD
             if (dead)
             {
                 return;
+            }
+            if (elapsedRedColorTime < timeRedColor)
+            {
+                elapsedRedColorTime += elapsedTime;
+                if (elapsedRedColorTime >= timeRedColor)
+                {
+                    bossColor = Color.White;
+                }
             }
 
             //Updating the animation of the boss sprite
@@ -240,6 +253,7 @@ namespace _999AD
                 bossHP -= 1;
                 SoundEffects.MidbossHurt.Play();
                 bossColor = Color.Red * 0.8f;
+                elapsedRedColorTime = 0;
                 return true;
             }
             return false;
@@ -300,6 +314,7 @@ namespace _999AD
             else if (!bossAnimations[(int)bossState].Active)
             {
                 dead = true;
+                LoadSaveManager.SaveGameProgress();
                 bossPoint = new Vector2(-bossWidth, -bossHeight);
             }
         }

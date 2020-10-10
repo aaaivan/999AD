@@ -10,7 +10,7 @@ namespace _999AD
         public readonly int roomHeightTiles; //room width in tiles
         public readonly int roomWidthTiles; //room height in tiles
         public Tile[,] array; //array of all the tiles forming the room
-        static bool removeRowSFX;
+        bool removeRowSFX;
         static float timeBoforeRemovingNextTile;
         static float timer;
         static List<int[]> tilesToRemove;

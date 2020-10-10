@@ -21,7 +21,7 @@ namespace _999AD
         public static void Inizialize()
         {
             currentRoom = Rooms.tutorial0;
-            previousRoom = Rooms.tutorial4;
+            previousRoom = Rooms.tutorial0;
             CameraManager.SwitchCamera(currentRoom);
         }
         #endregion
@@ -39,7 +39,7 @@ namespace _999AD
         #endregion
         #region METHODS
         //state machine managing the movement between rooms
-        static void switchRoom()
+        static bool switchRoom()
         {
             switch (currentRoom)
             {
@@ -53,6 +53,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.Y > MapsManager.maps[(int)currentRoom].RoomHeightPx)
                     {//move to tutorial4
@@ -63,6 +64,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     break;
                 case Rooms.tutorial1:
@@ -75,6 +77,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.X + Player.width < 0)
                     {//move to tutorial0
@@ -85,6 +88,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.X > MapsManager.maps[(int)currentRoom].RoomWidthtPx)
                     {//move to tutorial3
@@ -95,6 +99,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     break;
                 case Rooms.tutorial2:
@@ -110,6 +115,7 @@ namespace _999AD
                             FireBallsManager.Reset();
                             LavaGeyserManager.Reset();
                             ProjectilesManager.Reset();
+                            return true;
                         }
                         else
                         {//move to tutorial1
@@ -120,6 +126,7 @@ namespace _999AD
                             FireBallsManager.Reset();
                             LavaGeyserManager.Reset();
                             ProjectilesManager.Reset();
+                            return true;
                         }
                     }
                     else if (Player.position.X+Player.width<0)
@@ -131,6 +138,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     break;
                 case Rooms.tutorial3:
@@ -144,6 +152,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.X<0)
                     {//move to tutorial1
@@ -154,6 +163,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.X> MapsManager.maps[(int)currentRoom].RoomWidthtPx)
                     {//move to churchBellTower0
@@ -165,6 +175,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     break;
                 case Rooms.tutorial4:
@@ -177,6 +188,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.Y+Player.height<0)
                     {//move to tutorial0
@@ -187,6 +199,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.Y> MapsManager.maps[(int)currentRoom].RoomHeightPx)
                     {//move to escape2
@@ -197,6 +210,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     break;
                 case Rooms.churchBellTower0:
@@ -210,6 +224,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.Y+Player.height<0)
                     {//move up to churchBellTower1
@@ -220,6 +235,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.X> MapsManager.maps[(int)currentRoom].RoomWidthtPx)
                     {
@@ -233,6 +249,7 @@ namespace _999AD
                             FireBallsManager.Reset();
                             LavaGeyserManager.Reset();
                             ProjectilesManager.Reset();
+                            return true;
                         }
                         else if (Player.position.Y>248)
                         {//church1stFloor0
@@ -244,6 +261,7 @@ namespace _999AD
                             FireBallsManager.Reset();
                             LavaGeyserManager.Reset();
                             ProjectilesManager.Reset();
+                            return true;
                         }
                         else
                         {//church2ndFloor0
@@ -258,6 +276,7 @@ namespace _999AD
                             FireBallsManager.Reset();
                             LavaGeyserManager.Reset();
                             ProjectilesManager.Reset();
+                            return true;
                         }
 
                     }
@@ -272,6 +291,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.Y + Player.height < 0)
                     {//move up to chirchBellTower2
@@ -282,6 +302,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     break;
                 case Rooms.churchBellTower2:
@@ -294,6 +315,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.Y + Player.height < 0)
                     {//move up to midBoss
@@ -304,6 +326,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     break;
                 case Rooms.midBoss:
@@ -316,6 +339,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     break;
                 case Rooms.churchGroundFloor0:
@@ -329,6 +353,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.X> MapsManager.maps[(int)currentRoom].RoomWidthtPx)
                     {//move to churchAltarRoom
@@ -339,6 +364,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     break;
                 case Rooms.churchAltarRoom:
@@ -351,6 +377,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.Y+Player.height<0)
                     {//move to church1stFloor0
@@ -362,6 +389,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.Y> MapsManager.maps[(int)currentRoom].RoomHeightPx)
                     {//move to descent
@@ -372,6 +400,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     break;
                 case Rooms.church1stFloor0:
@@ -385,6 +414,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.Y +Player.height <0)
                     {//move to church2ndFloor0
@@ -395,6 +425,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.X+Player.width<0)
                     {//move to churchBellTower0
@@ -408,6 +439,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     break;
                 case Rooms.church2ndFloor0:
@@ -424,6 +456,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.Y> MapsManager.maps[(int)currentRoom].RoomHeightPx)
                     {//move to church1stFloor0
@@ -434,6 +467,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     break;
                 case Rooms.descent:
@@ -446,6 +480,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.Y> MapsManager.maps[(int)currentRoom].RoomHeightPx)
                     {//move to finalBoss
@@ -458,6 +493,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     break;
                 case Rooms.finalBoss:
@@ -471,6 +507,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if(Player.position.Y+Player.height<0) 
                     {//move to descent
@@ -483,6 +520,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.Y> MapsManager.maps[(int)currentRoom].RoomHeightPx)
                     {
@@ -500,6 +538,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.X + Player.width<0)
                     {//move to escape1
@@ -511,6 +550,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.Y > MapsManager.maps[(int)currentRoom].RoomHeightPx + 24)
                     {
@@ -528,6 +568,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.X+Player.width<0)
                     {//move to escape2
@@ -538,6 +579,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.Y > MapsManager.maps[(int)currentRoom].RoomHeightPx + 24)
                     {
@@ -554,6 +596,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if(Player.position.Y+Player.height<0)
                     {//move to tutorial4
@@ -564,6 +607,7 @@ namespace _999AD
                         FireBallsManager.Reset();
                         LavaGeyserManager.Reset();
                         ProjectilesManager.Reset();
+                        return true;
                     }
                     else if (Player.position.Y > MapsManager.maps[(int)currentRoom].RoomHeightPx + 24)
                     {
@@ -571,10 +615,12 @@ namespace _999AD
                     }
                     break;
             }
+            return false;
         }
         public static void Update(float elapsedTime)
         {
-            switchRoom();
+            if (switchRoom())
+                LoadSaveManager.SaveGameProgress();
             CameraManager.Update(elapsedTime);
             MapsManager.maps[(int)currentRoom].Update(elapsedTime);
             if (currentRoom== Rooms.finalBoss)
@@ -593,10 +639,12 @@ namespace _999AD
             MonologuesManager.monologuesRoomManagers[(int)currentRoom].Update(elapsedTime);
             DoorsManager.doorsRoomManagers[(int)currentRoom].Update();
             AnimatedSpritesManager.animatedSpritesRoomManagers[(int)currentRoom].Update(elapsedTime);
+            TorchManager.Update(elapsedTime);
         }
         public static void Draw(SpriteBatch spriteBatch)
         {
             AnimatedSpritesManager.animatedSpritesRoomManagers[(int)currentRoom].DrawOnTheBack(spriteBatch);
+            TorchManager.Draw(spriteBatch);
             PlatformsManager.platformsRoomManagers[(int)currentRoom].Draw(spriteBatch);
             if (currentRoom == Rooms.finalBoss)
             {

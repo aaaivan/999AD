@@ -43,6 +43,8 @@ namespace _999AD
         int enemyHP;
         bool dead = false;
         Color enemyColor = Color.White;
+        readonly float timeRedColor = 0.2f;
+        float elapsedRedColorTime;
 
         public readonly float timeUntilShot = 3.5f;
         float elapsedShotTime;
@@ -62,6 +64,7 @@ namespace _999AD
         //Takes a spritesheet and a vector as parameters
         public Enemy2(Vector2 EnemyPoint, Vector2 EnemyPoint2)
         {
+            elapsedRedColorTime = timeRedColor;
             enemyPoint = EnemyPoint;
             enemyPoint2 = EnemyPoint2;
 
@@ -131,7 +134,14 @@ namespace _999AD
             {
                 return;
             }
-
+            if (elapsedRedColorTime < timeRedColor)
+            {
+                elapsedRedColorTime += elapsedTime;
+                if (elapsedRedColorTime >= timeRedColor)
+                {
+                    enemyColor = Color.White;
+                }
+            }
             //updating the animation of the enemy sprite
             enemyAnimations[(int)enemyState].Update(elapsedTime);
 
@@ -288,6 +298,7 @@ namespace _999AD
                 enemyHP--;
                 SoundEffects.EnemyHurt.Play();
                 enemyColor = Color.Red * 0.6f;
+                elapsedRedColorTime = 0;
                 return true;
             }
             return false;
@@ -410,6 +421,7 @@ namespace _999AD
                     SoundEffects.EnemyHurt.Play();
                     enemyHP--;
                     enemyColor = Color.Red * 0.6f;
+                    elapsedRedColorTime = 0;
                 }
                 else
                 {
