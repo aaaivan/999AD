@@ -80,16 +80,17 @@ namespace _999AD
 
 #else
             scale = MathHelper.Min(GraphicsDevice.DisplayMode.Width / gameWidth, GraphicsDevice.DisplayMode.Height / gameHeight);
-            //scale = 1;
             renderTarget_zoom1 = new RenderTarget2D(GraphicsDevice, gameWidth, gameHeight);
             renderTarger_zoom0dot5 = new RenderTarget2D(GraphicsDevice, gameWidth*2, gameHeight*2);
+            //center the viewport on the screen
             viewportRectangle = new Rectangle(
-                0,
-                0,
+                (GraphicsDevice.DisplayMode.Width - gameWidth * scale) / 2,
+                (GraphicsDevice.DisplayMode.Height - gameHeight * scale) / 2,
                 gameWidth * scale,
                 gameHeight * scale);
-            graphics.PreferredBackBufferWidth = viewportRectangle.Width;
-            graphics.PreferredBackBufferHeight = viewportRectangle.Height;
+            graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;// viewportRectangle.Width+100;
+            graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;// viewportRectangle.Height;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
             previousKeyboard = Keyboard.GetState();
             previousGamePad = GamePad.GetState(PlayerIndex.One);

@@ -38,7 +38,7 @@ namespace _999AD
                 new MonologuesRoomManager(  //tutorial1
                     new Monologue[]
                     {
-                        new Monologue(new Rectangle(592, 194, 16, 16),
+                        new Monologue(new Rectangle(567, 199, 16, 16),
                             new string[]
                             {
                                 "\"Only after facing your demise, you shall\n"+
