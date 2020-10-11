@@ -47,7 +47,10 @@ namespace _999AD
             {
                 for (int i=0; i<totalNumberOfOptions; i++)
                 {
-                    if (positionOnScreen_options[i].Contains(new Point(Game1.currentMouseState.X/Game1.scale, Game1.currentMouseState.Y / Game1.scale)))
+                    if (positionOnScreen_options[i].Contains(
+                        new Point(
+                            (Game1.currentMouseState.X-Game1.viewportRectangle.X)/Game1.scale, 
+                            (Game1.currentMouseState.Y - Game1.viewportRectangle.Y) / Game1.scale)))
                         currentOption = i;
                 }
             }
@@ -60,7 +63,10 @@ namespace _999AD
             }
             else if (Game1.currentMouseState.LeftButton == ButtonState.Pressed && Game1.previousMouseState.LeftButton == ButtonState.Released)
             {
-                if (positionOnScreen_options[currentOption].Contains(new Point(Game1.currentMouseState.X/Game1.scale, Game1.currentMouseState.Y / Game1.scale)))
+                if (positionOnScreen_options[currentOption].Contains(
+                        new Point(
+                            (Game1.currentMouseState.X - Game1.viewportRectangle.X) / Game1.scale,
+                            (Game1.currentMouseState.Y - Game1.viewportRectangle.Y) / Game1.scale)))
                 {
                     Game1.currentGameState = followingGameState[currentOption];
                     currentOption = 0;
