@@ -6,7 +6,7 @@ namespace _999AD
     static class MonologuesManager
     {
         #region DECLARATIONS
-        public static MonologuesRoomManager[] monologuesRoomManagers;
+        public static MonologuesRoomManager[] monologuesRoomManagers; //list of all monologues
         #endregion
         #region CONSTRUCTOR
         public static void Inizialize(Texture2D spritesheet, SpriteFont spriteFont)

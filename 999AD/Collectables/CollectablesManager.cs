@@ -8,8 +8,8 @@ namespace _999AD
     {
         #region DECLARATIONS
         public static CollectablesRoomManager[] collectablesRoomManagers;
-        public static List<Collectable> collectedItems { get; private set; }
-        static List<Collectable> itemsBeingUsed;
+        public static List<Collectable> collectedItems { get; private set; } //list of collected items
+        static List<Collectable> itemsBeingUsed; //list of items that are being used
         static List<Vector2> targetPoints;
         static readonly float animationTime= 0.3f;
         static float elapsedAnimationTime;
@@ -105,6 +105,8 @@ namespace _999AD
         {
             collectedItems.Add(collectable);
         }
+
+        //if is in the inventory, remove collectable of specified type
         public static bool TryRemoveFromInventory(Collectable.ItemType itemType, Vector2 _targetPoint)
         {
             for (int i=collectedItems.Count-1;i>=0; i-- )
@@ -117,6 +119,7 @@ namespace _999AD
                 }
             return false;
         }
+
         public static void ResetHearts()
         {
             foreach (CollectablesRoomManager collectablesRoomManager in collectablesRoomManagers)
@@ -124,8 +127,10 @@ namespace _999AD
                 collectablesRoomManager.ResetHearts();
             }
         }
+
         public static void Update(float elapsedTime)
         {
+            //play animation for the first item being used
             if (itemsBeingUsed.Count>0)
             {
                 elapsedAnimationTime += elapsedTime;
@@ -137,10 +142,11 @@ namespace _999AD
                 }
             }
         }
+
         public static void Draw(SpriteBatch spriteBatch)
         {
             int padding = 2;
-            int distanceFromScreenLeft = Game1.min_gameWidth-padding;
+            int distanceFromScreenLeft = Game1.minViewportWidth-padding;
             for (int i = collectedItems.Count - 1; i >= 0; i--)
             {
                 distanceFromScreenLeft -= collectedItems[i].rectangle.Width;
@@ -149,6 +155,7 @@ namespace _999AD
             }
             if (itemsBeingUsed.Count>0)
             {
+                //draw animation for the first item being used
                 float scale = MathHelper.Lerp(3, 0, elapsedAnimationTime / animationTime);
                 Rectangle drawRectangle = new Rectangle
                     ((int)(MathHelper.Lerp(Camera.Rectangle.Center.X, targetPoints[0].X, elapsedAnimationTime / animationTime) - itemsBeingUsed[0].rectangle.Width * scale / 2),

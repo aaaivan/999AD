@@ -15,9 +15,9 @@ namespace _999AD
         static Vector2 stringPosition;
         static Rectangle arrowRectangle;
         static readonly float timeBetweenChars = 0.05f;
-        public readonly Rectangle interactionRectangle;
+        public readonly Rectangle interactionRectangle; //rectangle that will trigger the monologue when crossed
         float elapsedTimeBetweenChars;
-        string[] sentences;
+        string[] sentences; //list of sentences. Each sentence is displayed on a new dialogue box
         string stringDisplayed;
         int currentSentence;
         int currentLength;
@@ -42,7 +42,7 @@ namespace _999AD
             spriteFont = _spriteFont;
             sourceRectangle_dialogueBox = new Rectangle(24, 173, 360, 48);
             sourceRectangle_arrow = new Rectangle(384, 173, 8, 8);
-            boxRectangle= new Rectangle((Game1.min_gameWidth - sourceRectangle_dialogueBox.Width) / 2, 10, sourceRectangle_dialogueBox.Width, sourceRectangle_dialogueBox.Height);
+            boxRectangle= new Rectangle((Game1.minViewportWidth - sourceRectangle_dialogueBox.Width) / 2, 10, sourceRectangle_dialogueBox.Width, sourceRectangle_dialogueBox.Height);
             stringPosition = new Vector2(boxRectangle.X + 50, boxRectangle.Y + 4);
             arrowRectangle = new Rectangle(boxRectangle.Right-4- sourceRectangle_arrow.Width, boxRectangle.Bottom - 4 - sourceRectangle_arrow.Height, sourceRectangle_arrow.Width, sourceRectangle_arrow.Height);
         }
@@ -52,12 +52,15 @@ namespace _999AD
         {
             if (!active)
                 return;
+            //if all sentences have been played, set ative to false
             if (currentSentence == sentences.Length)
             {
                 active = false;
                 currentSentence = 0;
                 return;
             }
+            //if a whole sentence has appeared on the screen, whait for user input
+            //to start showing the next sentence
             if (endOfSentence)
             {
                 if (Game1.currentKeyboard.IsKeyDown(Keys.Enter) && !Game1.previousKeyboard.IsKeyDown(Keys.Enter) ||
@@ -72,7 +75,7 @@ namespace _999AD
             {
                 if ((Game1.currentKeyboard.IsKeyDown(Keys.Enter) && !Game1.previousKeyboard.IsKeyDown(Keys.Enter)) ||
                 (Game1.currentGamePad.Buttons.A == ButtonState.Pressed && Game1.previousGamePad.Buttons.A == ButtonState.Released))
-                {
+                {//if player press enter, display the whole sentence immediately
                     currentLength = sentences[currentSentence].Length;
                     stringDisplayed = sentences[currentSentence].Substring(0, currentLength);
                     elapsedTimeBetweenChars = 0;
@@ -81,7 +84,7 @@ namespace _999AD
                 }
                 elapsedTimeBetweenChars += elapsedTime;
                 if (elapsedTimeBetweenChars >= timeBetweenChars)
-                {
+                {//if enough time has passed, add a new letter to the screen
                     currentLength++;
                     stringDisplayed = sentences[currentSentence].Substring(0, currentLength);
                     elapsedTimeBetweenChars = 0;

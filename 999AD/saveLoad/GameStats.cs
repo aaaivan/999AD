@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace _999AD
+﻿namespace _999AD
 {
     static class GameStats
     {
@@ -27,7 +21,7 @@ namespace _999AD
             gameTime += elapsedTime;
         }
         static public string  GetTimeString()
-        {
+        {//return a string with the time in the form hh:mm:ss
             int hh = (int)gameTime / 3600;
             int mm = ((int)gameTime / 60) % 60;
             int ss = (int)gameTime % 60;

@@ -6,8 +6,8 @@ namespace _999AD
     class CollectablesRoomManager
     {
         #region DECLARATIONS
-        public List<Collectable> collectables { get; private set; }
-        List<Collectable> heartsBackUp;
+        public List<Collectable> collectables { get; private set; } //collectables in the current room
+        List<Collectable> heartsBackUp; //copies of all the hearts collectables
         #endregion
         #region CONSTRUCTOR
         public CollectablesRoomManager(Collectable[] _collectables)
@@ -36,10 +36,12 @@ namespace _999AD
                     collectables[i].Update(elapsedTime);
             }
         }
+
         public void AddCollectableToMap(Collectable collectable)
         {
             collectables.Add(collectable);
         }
+
         public void RemoveCollectablesFromMap()
         {
             for (int i=0; i<collectables.Count;)
@@ -52,6 +54,8 @@ namespace _999AD
                 collectables.RemoveAt(i);
             }
         }
+
+        //restore all the hearts in the current room
         public void ResetHearts()
         {
             for (int i=collectables.Count-1; i>=0; i--)
@@ -64,6 +68,7 @@ namespace _999AD
                 collectables.Add(heart.DeepCopy());
             }
         }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             for (int i = collectables.Count - 1; i >= 0; i--)

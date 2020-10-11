@@ -13,12 +13,12 @@ namespace _999AD
     {
         #region DECLARATIONS
         static Texture2D spritesheet;
-        static Animation litAnim;
-        static Animation unlitAnim;
-        Animation animation;
+        static Animation litAnim; //animation for the lit toarch
+        static Animation unlitAnim; //animation for the lit toarch
+        Animation animation; //current animation playing
         Vector2 position;
         public bool isLit { get; private set; }
-        float timeStaysUnlit;
+        float timeStaysUnlit; //the toraches light up again when this time elapses
         float elapsedTimeUnlit;
         #endregion
         #region CONSTRUCTOR

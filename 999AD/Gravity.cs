@@ -13,6 +13,7 @@ namespace _999AD
         public static void MoveDestructableObject(ref Vector2 velocity, ref Vector2 position, int width, int height, ref bool active, float elapsedTime)
         {
             #region MOVE HORIZONTALLY
+            //move horizontally
             position.X += velocity.X * elapsedTime;
             int topRow = (int)MathHelper.Clamp(position.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
             int btmRow = (int)MathHelper.Clamp((position.Y + height - 1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
@@ -46,6 +47,7 @@ namespace _999AD
             }
             #endregion
             #region MOVE VERTICALLY
+            //move vertically
             velocity.Y += (gravityAcceleration - velocity.Y * airFrictionCoeff) * elapsedTime;
             position.Y += velocity.Y * elapsedTime;
             topRow = (int)MathHelper.Clamp(position.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
@@ -80,6 +82,7 @@ namespace _999AD
             }
             #endregion
             #region COLLISION WITH MOVING PLATFORMS
+            //coliisions with moving platforms
             for (int i = 0; i < PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length; i++)
             {
                 MovingPlatform p = PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms[i];

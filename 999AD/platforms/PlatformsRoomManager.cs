@@ -6,7 +6,7 @@ namespace _999AD
     {
         #region DECLARATIONS
         public MovingPlatform[] movingPlatforms; //moving platforms in a certain room
-        MovingPlatform[] backUpMovingPlatforms;
+        MovingPlatform[] backUpMovingPlatforms; //copy of all platforms used to reset them
         #endregion
         #region CONSTRUCTOR
         public PlatformsRoomManager(MovingPlatform[] _movingPlatforms)

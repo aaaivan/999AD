@@ -1,10 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace _999AD
 {
@@ -19,12 +15,12 @@ namespace _999AD
         public int previousRoom { get; private set; }
         public int health { get; private set; }
         public float[] playerPosition { get; private set; }
-        public List<int> itemsOnMap { get; private set; }
-        public List<int> itemsInInventory { get; private set; }
-        public List<int> closedDoor { get; private set; }
+        public List<int> itemsOnMap { get; private set; } //id of collectable not yet collected
+        public List<int> itemsInInventory { get; private set; } //typr of collectables in the inventory
+        public List<int> closedDoor { get; private set; } //doors that have not been opened yet
         public bool midBossDead { get; private set; }
         public bool finalBossDead { get; private set; }
-        public bool[] eventAlreadyHappened { get; private set; }
+        public bool[] eventAlreadyHappened { get; private set; } //store the events that have already been triggered (true=triggered, false= not triggered)
         #endregion
         #region CONSTRUCTOR
         public GameSaveData(float _time, int _deaths, int _hits, int _currRoom, int _prevRoom, int _health, float[] _position, List<int> _itemsOnMap,
@@ -52,23 +48,23 @@ namespace _999AD
             FinalBoss.Dead = finalBossDead;
             MidBoss.Dead = midBossDead;
             RoomsManager.CurrentRoom = (RoomsManager.Rooms)currentRoom;
-            RoomsManager.PreviousRoom = (RoomsManager.Rooms)previousRoom;
+            RoomsManager.PreviousRoom =(RoomsManager.Rooms)previousRoom;
             Player.healthPoints = health;
             Player.position = new Vector2 (playerPosition[0], playerPosition[1]);
             if (eventAlreadyHappened[(int)GameEvents.Events.unlockDoubleJump])
-            {
+            {//enable double jump if it was already unlocked
                 Player.doubleJumpUnlocked = true;
-                AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.Rooms.churchBellTower0].AddAnimatedSprite(
-                    new AnimatedSprite(new Vector2(211, 926), AnimatedSprite.SpriteType.displayDoubleJumpRelic, false));
+                AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.Rooms.churchBellTower0].AddTempAnimatedSprite(
+                    new AnimatedSprite(new Vector2(211, 926), AnimatedSprite.AnimationType.displayDoubleJumpRelic, false));
             }
             if (eventAlreadyHappened[(int)GameEvents.Events.unlockWallJump])
-            {
+            {//enable wall jump if it was already unlocked
                 Player.wallJumpUnlocked = true;
-                AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.Rooms.churchBellTower0].AddAnimatedSprite(
-                    new AnimatedSprite(new Vector2(239, 926), AnimatedSprite.SpriteType.displayWallJumpRelic, false));
+                AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.Rooms.churchBellTower0].AddTempAnimatedSprite(
+                    new AnimatedSprite(new Vector2(239, 926), AnimatedSprite.AnimationType.displayWallJumpRelic, false));
             }
             foreach (CollectablesRoomManager r in CollectablesManager.collectablesRoomManagers)
-            {
+            {//remove collectables already collected
                 for (int i=0; i< r.collectables.Count;i++)
                 {
                     bool delete = true;
@@ -89,12 +85,12 @@ namespace _999AD
             }
             CollectablesManager.collectedItems.Clear();
             foreach (int i in itemsInInventory)
-            {
+            {//place items in inventory
                 CollectablesManager.AddToInventory(new Collectable(Point.Zero, (Collectable.ItemType)i));
             }
             int room = 0;
             foreach (DoorsRoomManager r in DoorsManager.doorsRoomManagers)
-            {
+            {//remove doors that have been opend already
                 for (int i = 0; i < r.doors.Count; i++)
                 {
                     bool delete = true;

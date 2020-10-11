@@ -47,7 +47,7 @@ namespace _999AD
         {
             Reset(_position);
             spritesheet = _spritesheet;
-            doubleJumpUnlocked =false;
+            doubleJumpUnlocked = false;
             wallJumpUnlocked = false;
             //fill following statements with sprite info
             animations = new List<Animation>();
@@ -121,7 +121,7 @@ namespace _999AD
             Move(elapsedTime);
             AnimationStateMachine(elapsedTime);
             if (invulnerable)
-            {
+            {//if invulnerable start invulnerability cowntdown
                 elapsedInvulnerabilityTime += elapsedTime;
                 alphaValue = (alphaValue + 0.1f) - (int)(alphaValue + 0.1f);
                 if (elapsedInvulnerabilityTime > invulnerabilityTime)
@@ -169,6 +169,7 @@ namespace _999AD
             }
             animations[(int)currentAnimation].Update(elapsedTime);
         }
+
         //check input for shooting
         static void CheckAttackInput(float elapsedTime)
         {
@@ -189,6 +190,7 @@ namespace _999AD
             else
                 elapsedShotTime += elapsedTime;
         }
+
         //check input for movement
         static void CheckMovementInput()
         {
@@ -198,7 +200,7 @@ namespace _999AD
                 (Game1.currentGamePad.Buttons.A == ButtonState.Pressed && Game1.previousGamePad.Buttons.A == ButtonState.Released))
             {
                 if (isTouchingTheGround)
-                {
+                {//if the player is on the ground, jump
                     if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack)
                         currentAnimation = AnimationTypes.jump;
                     jumpSpeed.Y = initialJumpSpeed.Y;
@@ -218,7 +220,7 @@ namespace _999AD
                     return;
                 }
                 else if (isOnTheWall && wallJumpUnlocked)
-                {
+                {//if the player is sliding down a wall, wall jump (if allowed)
                     if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack)
                         currentAnimation = AnimationTypes.jump;
                     jumpSpeed.Y = initialJumpSpeed.Y;
@@ -233,7 +235,7 @@ namespace _999AD
                     isFacingRight = !isFacingRight;
                 }
                 else if (canDoubleJump && doubleJumpUnlocked && !isOnTheWall)
-                {
+                {//if player is in the air , double jump (if allowed)
                     if (currentAnimation != AnimationTypes.die && currentAnimation != AnimationTypes.attack)
                         currentAnimation = AnimationTypes.jump;
                     jumpSpeed.Y = initialJumpSpeed.Y;
@@ -242,6 +244,7 @@ namespace _999AD
                     return;
                 }
             }
+            //left-right movement input
             if ((Game1.currentKeyboard.IsKeyDown(Keys.Right)) ||
                 (Game1.currentKeyboard.IsKeyDown(Keys.D))||
                 (Game1.currentGamePad.DPad.Right==ButtonState.Pressed)||
@@ -270,11 +273,13 @@ namespace _999AD
                 currentAnimation != AnimationTypes.die)
                 currentAnimation = AnimationTypes.wall;
         }
-        //move player based on his current velocity and check for collisions
+
+        //move player based on his current velocity and check for collisions with solid tiles
         static void Move(float elapsedTime)
         {
             Vector2 totalSpeed = new Vector2();
             #region CHECK IF IS STILL ON THE WALL
+            //CHECK IF IS STILL ON THE WALL
             int topRow = (int)MathHelper.Clamp(position.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
             int btmRow = (int)MathHelper.Clamp((position.Y + height - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
             int leftCol = (int)MathHelper.Clamp((position.X-1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
@@ -301,6 +306,8 @@ namespace _999AD
             }
             #endregion
             #region CALCULATE VELOCITIES
+            //CALCULATE X VELOCITIES
+            //total speed is a ocnbination of jumpSpeed and movement speed
             if (isWallJumping)
             {
                 if (Math.Abs(jumpSpeed.X)> maxHorizontalMovementSpeed)
@@ -351,6 +358,7 @@ namespace _999AD
                 isFacingRight = true;
             else if (totalSpeed.X < 0)
                 isFacingRight = false;
+            //CALCULATE Y VELOCITIES
             if (!isOnMovingPlatform)
             {
                 if (isOnTheWall)
@@ -381,6 +389,7 @@ namespace _999AD
             #endregion
             position.X += totalSpeed.X * elapsedTime;
             #region CHECK COLLISION WITH SOLID TILES
+            //check collisions with solid tiles
             topRow = (int)MathHelper.Clamp(position.Y / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
             btmRow = (int)MathHelper.Clamp((position.Y + height - 0.001f) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomHeightTiles - 1);
             leftCol = (int)MathHelper.Clamp((position.X-1) / Tile.tileSize, 0, MapsManager.maps[(int)RoomsManager.CurrentRoom].roomWidthTiles - 1);
@@ -400,7 +409,8 @@ namespace _999AD
                             {
                                 jumpSpeed.Y = 0;
                             }
-                            isOnTheWall = true;
+                            if (jumpSpeed.Y > initialJumpSpeed.Y * 0.2f)
+                                isOnTheWall = true;
                             jumpSpeed.X = 0;
                         }
                         break;
@@ -408,7 +418,7 @@ namespace _999AD
                 }
             }
             //check left-hand side
-            else if (totalSpeed.X <= 0)
+            if (totalSpeed.X <= 0)
             {
                 for (int row = topRow; row <= btmRow; row++)
                 {
@@ -422,7 +432,8 @@ namespace _999AD
                             {
                                 jumpSpeed.Y = 0;
                             }
-                            isOnTheWall = true;
+                            if (jumpSpeed.Y > initialJumpSpeed.Y * 0.2f)
+                                isOnTheWall = true;
                             jumpSpeed.X = 0;
                         }
                         break;
@@ -478,6 +489,7 @@ namespace _999AD
             }
             #endregion
             #region CHECK COLLISION WITH MOVING PLATFORM
+            //check collisions with moving platforms
             if (!isOnMovingPlatform)
             {
                 for (int i = 0; i < PlatformsManager.platformsRoomManagers[(int)RoomsManager.CurrentRoom].movingPlatforms.Length; i++)

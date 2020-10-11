@@ -8,13 +8,16 @@ namespace _999AD
         #region DECLARATIONS
         static Texture2D[] backgrounds;
         public static readonly int maxOffsetY = 2; //amplitude of the rumble
-        static bool shaking;
+        static bool shaking; //true if the camera is shaking
         static int offsetY; //current offset
         static readonly float timeBetweenOffsets = 0.1f; //tells how ofter the offset is changed in sign (smaller time->faster rumble)
         static float offsetElapsedTime; //time elapsed since the last change in offsetY
         static float shakingTime; //tells for how many second the framing will shake
         static float elapsedShakingTime; //time elapsed since when the camera started shaking
-        static float playerPositionWeight;
+        
+        //the following variables are used to move the camera between 2 points
+        //namely the player position and another point called pointLocked
+        static float playerPositionWeight; //0->camera centered on pointLocked, 1->camera centered on Player
         static float transientPlayerPositionWeight;
         public static Vector2 pointLocked;
         static float cameraTransitionProgression;
@@ -59,6 +62,8 @@ namespace _999AD
         {
             if (cameraTransitionProgression<1)
             {
+                //move camera smoothly towards the final point, where:
+                //final point = Player.Center * playerPositionWeight + pointLocked * (1 - playerPositionWeight)
                 cameraTransitionProgression += elapsedTime / transitionDuration;
                 if (cameraTransitionProgression >= 1)
                     cameraTransitionProgression = 1;
@@ -67,6 +72,7 @@ namespace _999AD
             Camera.Update(shaking, Player.Center*transientPlayerPositionWeight+pointLocked*(1-transientPlayerPositionWeight));
             if (shaking)
             {
+                //apply displacement of the camera along y axis
                 Camera.position.Y += offsetY;
                 elapsedShakingTime += elapsedTime;
                 if (elapsedShakingTime >= shakingTime)
@@ -82,6 +88,9 @@ namespace _999AD
                 }
             }
         }
+
+        //set a new final point for the camera, where:
+        //final point = Player.Center * playerPositionWeight + pointLocked * (1 - playerPositionWeight)
         public static void MoveCamera(float _playerPositionWeight, Vector2 _pointLocked, float _transitionDuration)
         {
             playerPositionWeight = _playerPositionWeight;

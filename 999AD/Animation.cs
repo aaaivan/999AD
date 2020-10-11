@@ -80,7 +80,7 @@ namespace _999AD
             previousFrame = currentFrame;
             elapsedFrameTime += elapsedTime;
             if (elapsedFrameTime >= timePerFrame)
-            {
+            {//if the time between two frames has elapsed, change frame
                 elapsedFrameTime = 0f;
                 currentFrame = (currentFrame + 1) % totalFrames;
                 if (!loop && currentFrame == 0)

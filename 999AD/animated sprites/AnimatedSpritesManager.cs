@@ -20,7 +20,7 @@ namespace _999AD
                 }),
                 new AnimatedSpritesRoomManager(new AnimatedSprite[] //tutorial1
                 {
-                    new AnimatedSprite(new Vector2(567, 200), AnimatedSprite.SpriteType.sign_tutorial1, false, false),
+                    new AnimatedSprite(new Vector2(567, 200), AnimatedSprite.AnimationType.sign_tutorial1, false, false),
                 }),
                 new AnimatedSpritesRoomManager(new AnimatedSprite[] //tutorial2
                 {

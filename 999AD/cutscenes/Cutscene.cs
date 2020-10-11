@@ -8,10 +8,10 @@ namespace _999AD
     {
         #region DECLARATIONS
         static SpriteFont spriteFont;
-        Animation animation;
+        Animation animation; //animated sprite above the text
         Texture2D animationSpritesheet;
         Vector2 animationPosition;
-        string[] sentences;
+        string[] sentences; //list of sentences, each sentence appear on a new screen
         Vector2 stringPosition;
         static readonly float timeBetweenChars = 0.02f;
         float elapsedTimeBetweenChars;
@@ -48,12 +48,15 @@ namespace _999AD
             if (!active)
                 return;
             animation.Update(elapsedTime);
+            //if all sentences have been played, set ative to false
             if (currentSentence == sentences.Length)
             {
                 active = false;
                 currentSentence = 0;
                 return;
             }
+            //if a whole sentence has appeared on the screen, whait for user input
+            //to start showing the next sentence
             if (endOfSentence)
             {
                 if ((Game1.currentKeyboard.IsKeyDown(Keys.Enter) && !Game1.previousKeyboard.IsKeyDown(Keys.Enter)) ||
@@ -67,6 +70,7 @@ namespace _999AD
             else
             {
                 elapsedTimeBetweenChars += elapsedTime;
+                //if enough time has passed, add a new letter to the screen
                 if (elapsedTimeBetweenChars >= timeBetweenChars)
                 {
                     currentLength++;

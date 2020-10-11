@@ -14,10 +14,10 @@ namespace _999AD
         #region DECLARATIONS
         static SpriteFont spriteFont8;
         static SpriteFont spriteFont12;
-        static public bool gameCompleted;
-        static public bool noDeath;
-        static public bool noHits;
-        static public float bestTime;
+        static public bool gameCompleted; //indicated whether the game has been ever completed
+        static public bool noDeath; //indicates whether the player has not died
+        static public bool noHits; //indicates whether the player has taken no hits
+        static public float bestTime; //store the best game time
         #endregion
         #region CONSTRUCTOR
         static public void Initialize(SpriteFont _spriteFont8, SpriteFont _spriteFont12)
@@ -36,7 +36,7 @@ namespace _999AD
         #endregion
         #region METHODS
         static public void Draw(SpriteBatch spriteBatch)
-        {
+        {//draw achievements data in the achievements menu
             int hh = (int)bestTime / 3600;
             int mm = ((int)bestTime / 60) % 60;
             int ss = (int)bestTime % 60;

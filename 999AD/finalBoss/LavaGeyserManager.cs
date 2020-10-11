@@ -29,6 +29,7 @@ namespace _999AD
         }
         #endregion
         #region METHODS
+        //shoot geyser at specified position
         public static void ShootGeyser(float[] xPositions, float timeBeforeErupting, int initialYVelocity=-1200 )
         {
             foreach (float f in xPositions)
@@ -36,6 +37,8 @@ namespace _999AD
                 lavaGeysers.Add(new LavaGeyser(f, timeBeforeErupting, initialYVelocity));
             }
         }
+
+        //shoot geysers sequentially across the whole screen, escept in the safe area
         public static void SweepAcross(float delay, float timeBetweenEruptions, int safeAreas, float safeAreaMinX, float safeAreaMaxX, bool leftToRight)
         {
             int totalEruptions = (MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomWidthtPx - 1 + LavaGeyser.size) / LavaGeyser.size;
@@ -70,6 +73,8 @@ namespace _999AD
                 }
             }
         }
+
+        //shoot eaqually spaced geysers at specified distance from each other
         public static void EquallySpaced(float distance, float timeBeforeErupting, float offset)
         {
             int totalEruptions = (int)((MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomWidthtPx - 1 + 2 * distance) / (distance));

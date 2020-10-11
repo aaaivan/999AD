@@ -40,14 +40,14 @@ namespace _999AD
         static public readonly int wingHeight = 8;
         static public readonly Vector2 fireballsCenter = new Vector2(384, 338);
         static Vector2 bossInitialMidPoint;
-        static public Vector2 bossMidPoint;
+        static public Vector2 bossMidPoint; //the boss will ascillate up and down around this point
         static public readonly int wingsRelativeYPosition = -2;
         static float YSpeed;
-        static BossAnimations bossAnimation;
-        static WingAnimations rightWingAnimation;
-        static WingAnimations leftWingAnimation;
-        static WingTextures rightWingTexture;
-        static WingTextures leftWingTexture;
+        static BossAnimations bossAnimation; //current abimation playing for the body
+        static WingAnimations rightWingAnimation; //current abimation playing for right wing
+        static WingAnimations leftWingAnimation; //current abimation playing for the left wing
+        static WingTextures rightWingTexture; //current texture for the body
+        static WingTextures leftWingTexture; //current texture for the body
         static Phases currentPhase;
         static readonly int maxBossHp = 25;
         static readonly int maxWingHP = 2;
@@ -56,8 +56,8 @@ namespace _999AD
         static int leftWingHP;
         static readonly Random rand = new Random();
         static bool dead;
-        static Color bossColor;
-        static readonly int framesOfDifferentColor = 5;
+        static Color bossColor; //white normally, red when boss is hit
+        static readonly int framesOfDifferentColor = 5; //when the boss is hit, apply a red overlay for framesOfDifferentColor frames
         static int frameCount;
         #endregion
         #region CONSTRUCTOR
@@ -113,6 +113,8 @@ namespace _999AD
                                                     }, 0.2f, false, true),
                 };
         }
+        
+        //reset all variables to what they are before the boss fight
         public static void Reset()
         {
             elapsedRecoveryTime = 0;
@@ -234,6 +236,8 @@ namespace _999AD
         }
         #endregion
         #region METHODS
+
+        //wake up boss
         public static void WakeUp()
         {
             bossAnimation = BossAnimations.stoneToIdle;
@@ -245,22 +249,24 @@ namespace _999AD
             MediaPlayer.Play(SoundEffects.FinaBossSoundTrack);
             MediaPlayer.IsRepeating = true;
         }
+
         public static void Update(float elapsedTime)
         {
             if (dead||bossAnimation==BossAnimations.stone)
-                return;
+                return; //do not update if boss is dead
             if (bossAnimation!=BossAnimations.stone &&
                 bossAnimation != BossAnimations.stoneToIdle
                 && bossAnimation != BossAnimations.falling)
-            {
-                bossMidPoint.Y += YSpeed;
+            { //oscillatory motion
+                bossMidPoint.Y += YSpeed; 
                 YSpeed += (bossInitialMidPoint.Y - bossMidPoint.Y)*0.2f*elapsedTime;
             }
             bossAnimations[(int)bossAnimation].Update(elapsedTime);
             rightWingAnimations[(int)rightWingAnimation].Update(elapsedTime);
             leftWingAnimations[(int)leftWingAnimation].Update(elapsedTime);
             if (!bossAnimations[(int)bossAnimation].Active)
-            {
+            {//if an animation has stopped playing because the last frame was reached
+             //decide what animation should be played next
                 if (bossAnimation == BossAnimations.startRecovering)
                 {
                     bossAnimation = BossAnimations.recovering;
@@ -285,13 +291,16 @@ namespace _999AD
                     leftWingAnimations[(int)leftWingAnimation].Reset();
                 }
             }
+            //finate state machine determing the boss AI
             switch (bossAnimation)
             {
                 case BossAnimations.stone:
                     break;
                 case BossAnimations.stoneToIdle:
                     break;
-                case BossAnimations.idle:
+                case BossAnimations.idle: //if the boss is in th eidle state, then it is ready to attack
+                                          //the attacks available depend on the phace of the battle
+                                          //the battle progresses to the next phase each time a wing is hit
                     if (!bossAnimations[(int)bossAnimation].IsLastFrame())
                         break;
                     switch (currentPhase)
@@ -586,7 +595,7 @@ namespace _999AD
                             }
                     }
                     break;
-                case BossAnimations.attack:
+                case BossAnimations.attack: //the boss is attacking
                     elapsedAttackAnimationTime += elapsedTime;
                     if (elapsedAttackAnimationTime>= attackAnimationTime)
                     {
@@ -600,7 +609,7 @@ namespace _999AD
                     break;
                 case BossAnimations.startRecovering:
                     break;
-                case BossAnimations.recovering:
+                case BossAnimations.recovering: //the boss is recovering and its wings can be hit
                     {
                         if (bossAnimations[(int)bossAnimation].FrameIndex == 0
                             && bossAnimations[(int)bossAnimation].FreviousFrameIndex != 0)
@@ -746,7 +755,7 @@ namespace _999AD
                     }
                 case BossAnimations.endRecovering:
                     break;
-                case BossAnimations.falling:
+                case BossAnimations.falling: //when the boss dies, it falls out of the screen
                     {
                         bossMidPoint.Y += YSpeed * elapsedTime;
                         YSpeed += Gravity.gravityAcceleration*elapsedTime;
@@ -760,6 +769,8 @@ namespace _999AD
                     }
             }
         }
+
+        //take off one HP from wing and swap its texture (texture depends on health of a wing)
         public static bool DamageWing(bool rightWing)
         {
             if (rightWing)
@@ -788,6 +799,8 @@ namespace _999AD
             }
             return false;
         }
+        
+        //Check whether a wing is hit from above by the specified rectangle
         public static bool WingHitByReactangle(Rectangle collisionRect, float yVelocity, float elapsedTime)
         {
             if (yVelocity <= 0)
@@ -813,6 +826,8 @@ namespace _999AD
             }
             return false;
         }
+
+        //Check whether the boss is hit by the specified rectangle
         public static bool BossHitByRectangle(Rectangle collisionRect)
         {
             if (bossAnimation == BossAnimations.idle || bossAnimation == BossAnimations.attack)

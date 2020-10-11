@@ -37,7 +37,7 @@ namespace _999AD
             finalMonologue, finalCutscene,
             total
         }
-        public static readonly float[] eventsDuration = new float[(int)Events.total]
+        public static readonly float[] eventsDuration = new float[(int)Events.total] //duration of each event in seconds
         {
             0,//none
 
@@ -67,7 +67,7 @@ namespace _999AD
             0,0
         };
         public static float elapsedEventsDuration;
-        public static bool[] eventAlreadyHappened;
+        public static bool[] eventAlreadyHappened; //indicates whther the n-th event has already happened (true) or not (false)
         public static Events happening;
         public static void Inizialize()
         {
@@ -77,6 +77,8 @@ namespace _999AD
                 eventAlreadyHappened[i] = false;
             happening = Events.none;
         }
+
+        //reset some events upon player death
         public static void Reset()
         {
             elapsedEventsDuration = 0;
@@ -157,6 +159,8 @@ namespace _999AD
                     break;
             }
         }
+
+
         public static void Update(float elapsedTime)
         {
             if (happening == Events.none)
@@ -166,13 +170,15 @@ namespace _999AD
             }
             elapsedEventsDuration += elapsedTime;
             if (elapsedEventsDuration >= eventsDuration[(int)happening])
-            {
+            {//when an event happens, start cowntdown based on its duration
+             //at the end of the countdown set th eevent that is happening to none
                 eventAlreadyHappened[(int)happening] = true;
                 elapsedEventsDuration = 0;
                 happening = Events.none;
             }
         }
-        //this function trigger events when a centain set of conditions is true
+
+        //this function check some condition to determine whether an event should be triggered
         static void eventHandler(float elapsedTime)
         {
             switch (RoomsManager.CurrentRoom)
@@ -323,6 +329,8 @@ namespace _999AD
                     break;
             }
         }
+        
+        //trigger the specified event
         public static void TriggerEvent(Events _event)
         {
             if (RoomsManager.CurrentRoom == RoomsManager.Rooms.tutorial0)
@@ -342,7 +350,8 @@ namespace _999AD
                     case Events.finalCutscene:
                         Game1.currentGameState = Game1.GameStates.ending;
                         CutscenesManager.cutscenes[1].ChangeSentence
-                            (CutscenesManager.cutscenes[1].GetNUmOfSentences()-1, "Your Time: " + GameStats.GetTimeString());
+                            (CutscenesManager.cutscenes[1].GetNUmOfSentences()-1, "Your Time: " + GameStats.GetTimeString()+
+                            "                                                                                            ");
                         happening = Events.finalCutscene;
                         elapsedEventsDuration = 0;
                         break;
@@ -379,8 +388,8 @@ namespace _999AD
                 {
                     case Events.unlockDoubleJump:
                         Player.doubleJumpUnlocked = true;
-                        AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.CurrentRoom].AddAnimatedSprite(
-                            new AnimatedSprite(new Vector2(211, 926), AnimatedSprite.SpriteType.displayDoubleJumpRelic, false));
+                        AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.CurrentRoom].AddTempAnimatedSprite(
+                            new AnimatedSprite(new Vector2(211, 926), AnimatedSprite.AnimationType.displayDoubleJumpRelic, false));
                         happening = Events.unlockDoubleJump;
                         elapsedEventsDuration = 0;
                         break;
@@ -391,8 +400,8 @@ namespace _999AD
                         break;
                     case Events.unlockWallJump:
                         Player.wallJumpUnlocked = true;
-                        AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.CurrentRoom].AddAnimatedSprite(
-                            new AnimatedSprite(new Vector2(239, 926), AnimatedSprite.SpriteType.displayWallJumpRelic, false));
+                        AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.CurrentRoom].AddTempAnimatedSprite(
+                            new AnimatedSprite(new Vector2(239, 926), AnimatedSprite.AnimationType.displayWallJumpRelic, false));
                         happening = Events.unlockWallJump;
                         elapsedEventsDuration = 0;
                         break;
@@ -455,11 +464,11 @@ namespace _999AD
                                 if (MapsManager.maps[(int)RoomsManager.CurrentRoom].array[row, col].tileType == Tile.TileType.solidEmpty)
                                 {
                                     animatedSprites.Add(new AnimatedSprite(new Vector2(col * Tile.tileSize, row * Tile.tileSize),
-                                        AnimatedSprite.SpriteType.invisibleTile));
+                                        AnimatedSprite.AnimationType.invisibleTile));
                                 }
                             }
                         }
-                        AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.CurrentRoom].AddTemporaryAnimatedSprites(animatedSprites);
+                        AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.CurrentRoom].AddAnimatedSprites(animatedSprites);
                         if (Player.position.X < 1032 && Player.position.X >= 1000)
                             CameraManager.MoveCamera(0, new Vector2(856, MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomHeightPx), 8);
                         else if (Player.position.X < 684 && Player.position.X >= 664)
@@ -471,7 +480,7 @@ namespace _999AD
                         elapsedEventsDuration = 0;
                         break;
                     case Events.hide_InvisibleTiles_church1stFloor0:
-                        AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.CurrentRoom].ClearTemporaryAnimatedSprites();
+                        AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.CurrentRoom].ClearAnimatedSprites();
                         CameraManager.MoveCamera(1, CameraManager.pointLocked, 8);
                         happening = Events.hide_InvisibleTiles_church1stFloor0;
                         eventAlreadyHappened[(int)Events.showInvisibleTiles_church1stFloor0] = false;

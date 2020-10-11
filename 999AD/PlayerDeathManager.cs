@@ -10,7 +10,7 @@ namespace _999AD
         #region DECLARATIONS
         static Texture2D background;
         static Texture2D spritesheet;
-        static Rectangle sourceRectangle_Continue;
+        static Rectangle sourceRectangle_Continue; //continue button
         static Vector2 position_Continue;
         static float alphaValue;
         static readonly float timeBeforeResuming= 4;
@@ -22,7 +22,7 @@ namespace _999AD
             background = _background;
             spritesheet = _spritesheetOptions;
             sourceRectangle_Continue = new Rectangle(0, 96, 160, 24);
-            position_Continue = new Vector2((Game1.min_gameWidth - sourceRectangle_Continue.Width) / 2, 150);
+            position_Continue = new Vector2((Game1.minViewportWidth - sourceRectangle_Continue.Width) / 2, 150);
             alphaValue = 0;
             elapsedTimeBeforeResuming = 0;
         }
@@ -46,7 +46,7 @@ namespace _999AD
             }
         }
         public static void ResetVariables()
-        {
+        {//reposition the player and reset some classes to their intial state
             Player.IsOnMovingPlatform = false;
             elapsedTimeBeforeResuming = 0;
             Game1.currentGameState = Game1.GameStates.playing;

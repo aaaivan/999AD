@@ -130,8 +130,8 @@
     <Compile Include="map\Tile.cs" />
     <Compile Include="saveLoad\GameSaveData.cs" />
     <Compile Include="SoundEffects.cs" />
-    <Compile Include="Torch.cs" />
-    <Compile Include="TorchManager.cs" />
+    <Compile Include="toarches\Torch.cs" />
+    <Compile Include="toarches\TorchManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

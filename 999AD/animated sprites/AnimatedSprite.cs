@@ -6,7 +6,7 @@ namespace _999AD
     class AnimatedSprite
     {
         #region DECLARATIONS
-        public enum SpriteType
+        public enum AnimationType
         {
             sign_tutorial1,
             invisibleTile,
@@ -17,12 +17,12 @@ namespace _999AD
         static Texture2D spritesheet;
         static Animation[] animations;
         Vector2 position;
-        Animation animation;
+        Animation animation; //animation assigned based on Animation Type
         bool removeWhenInactive;
         bool drawInFront;
         #endregion
         #region CONSTRUCTORS
-        public AnimatedSprite(Vector2 _position, SpriteType _spriteType, bool _removeWhenInactive=true, bool _drawInfront=false)
+        public AnimatedSprite(Vector2 _position, AnimationType _spriteType, bool _removeWhenInactive=true, bool _drawInfront=false)
         {
             position = _position;
             removeWhenInactive = _removeWhenInactive;
@@ -32,7 +32,8 @@ namespace _999AD
         public static void Inizialize(Texture2D _spritesheet)
         {
             spritesheet = _spritesheet;
-            animations = new Animation[(int)SpriteType.total]
+            //defina an animation for each Animation Type
+            animations = new Animation[(int)AnimationType.total]
             {
                 new Animation(new Rectangle[]{ new Rectangle(336, 68, 16,16) }, 0, false),
                 new Animation(new Rectangle(336,40,64, 8),8,8,8, 0.1f, true),
@@ -64,20 +65,23 @@ namespace _999AD
         {
             animation.Update(elapsedTime);
         }
-        public static SpriteType GetDoorAnimation(Door.TextureType doorType)
+
+        //associated the correct Animation Type to the corresponding door type
+        //e.g. brass door --> open brass door animation
+        public static AnimationType GetDoorAnimation(Door.TextureType doorType)
         {
             switch (doorType)
             {
                 case Door.TextureType.brassDoor:
-                    return SpriteType.openBrassDoor;
+                    return AnimationType.openBrassDoor;
                 case Door.TextureType.goldDoor:
-                    return SpriteType.openGoldDoor;
+                    return AnimationType.openGoldDoor;
                 case Door.TextureType.silverDoor:
-                    return SpriteType.openSilverDoor;
+                    return AnimationType.openSilverDoor;
                 case Door.TextureType.bronzeDoor:
-                    return SpriteType.openBronzeDoor;
+                    return AnimationType.openBronzeDoor;
                 default:
-                    return SpriteType.openBrassDoor;
+                    return AnimationType.openBrassDoor;
             }
         }
         public void Draw(SpriteBatch spriteBatch)

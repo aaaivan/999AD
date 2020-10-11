@@ -6,7 +6,7 @@ namespace _999AD
     class DoorsRoomManager
     {
         #region DECLARATIONS
-        public List<Door> doors;
+        public List<Door> doors; //list of doors in the current room
         #endregion
         #region CONSTRUCTOR
         public DoorsRoomManager(Door[] _doors)

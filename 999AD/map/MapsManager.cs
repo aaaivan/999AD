@@ -70,6 +70,7 @@ namespace _999AD
                 }
             }
         }
+        //fill the list "maps" with the maps read from the corresponding text files
         public static void resetMap(RoomsManager.Rooms roomName)
         {
             string line = "";

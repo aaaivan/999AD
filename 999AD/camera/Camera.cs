@@ -29,6 +29,7 @@ namespace _999AD
         }
         #endregion
         #region METHODS
+
         //convert a rectangle from game world to screen coordinates for drawing
         public static Rectangle RelativeRectangle(Vector2 _worldPosition, int _width, int _height)
         {
@@ -37,6 +38,7 @@ namespace _999AD
                                  (int)(_width),
                                  (int)(_height));
         }
+        //convert a rectangle from game world to screen coordinates for drawing
         public static Rectangle RelativeRectangle(Rectangle rect)
         {
             return new Rectangle((int)((rect.X - position.X)),
@@ -44,10 +46,14 @@ namespace _999AD
                                  (int)(rect.Width),
                                  (int)(rect.Height));
         }
+
+        //convert world coordinates into screen cordinates
         public static Vector2 RelativePoint(Vector2 point)
         {
             return new Vector2(point.X - position.X, point.Y - position.Y);
         }
+
+        //update camera position so that pointLocked is centered
         public static void Update(bool shaking, Vector2 pointLocked)
         {
             pointLocked.X = MathHelper.Clamp(pointLocked.X,
@@ -60,6 +66,8 @@ namespace _999AD
             position.X = (pointLocked.X - Game1.gameWidth / (2f ));
             position.Y = (pointLocked.Y - Game1.gameHeight / (2f ));
         }
+
+        //Draw background
         public static void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(background, screenRectangle, Rectangle, Color.White);

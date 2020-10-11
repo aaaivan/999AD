@@ -49,11 +49,15 @@ namespace _999AD
         }
         #endregion
         #region FIREBALL PATTERNS
+
+        //target player with the number of fireballs specified
         public static void ThrowAtPlayer(int amount, float angularVelocity, float timeBtweenShots)
         {
             for (int i =0; i<amount; i++)
             fireballs.Add(new FireBall(360f/amount*i, new float[] { 20,0, 0, FireBall.radialShootingVelocity }, new float[] { angularVelocity, angularVelocity, angularVelocity,0 }, new float[] { 2,2+timeBtweenShots*i,5,4 }, true));
         }
+
+        //throw the number of fireball specified in all direction
         public static void ThrowInAllDirections(int amount, float shotVelocity, float angularVelocity)
         {
             float time = 2 + 2 * (float)rand.NextDouble();
@@ -64,6 +68,8 @@ namespace _999AD
                     new float[] { 2, time , 5 }
                     ));
         }
+
+        //throw the number of fireballs specified within the angle apliitude specified
         public static void TrowWithinCircularSector(int amount, float shotVelocity, float angularVelocity, float amplitudeDegrees)
         {
             float time = 3 + 2 * (float)rand.NextDouble();
@@ -75,6 +81,8 @@ namespace _999AD
                     new float[] { 2, time, 5 }
                     ));
         }
+
+        //create a line of fireballs rotating around the center at constant speed
         public static void Sweep(float angularVelocity, float lifetime)
         {
             int angle = rand.Next(0, 360);
@@ -85,6 +93,8 @@ namespace _999AD
                     new float[] { 0,0, sign*angularVelocity}, 
                     new float[] { 0.2f*i,3-0.2f*i, lifetime }));
         }
+
+        //create a line of fireballs rotating around the center at changing speed
         public static void RandomSweep(float angularVelocity, float maxTimeWithoutInverion, int numberOfInversions)
         {
             int angle = rand.Next(0, 360);
@@ -106,6 +116,8 @@ namespace _999AD
                     new float[] { 0.2f * i, 3 - 0.2f * i}.Concat(times).ToArray()
                     ));
         }
+
+        //throw fireballs in a spiral
         public static void Spiral(int amount, float angleOffset, float timeBetweenShots, float shotVelocity)
         {
             for (int i = 0; i < amount; i++)
@@ -115,6 +127,8 @@ namespace _999AD
                     new float[] { timeBetweenShots*i, 4 }
                     ));
         }
+
+        //add fireballs to the surface of the specified platforms
         public static void TargetPlatform(int[] platformIndexes, int _fireballsPerPlatform, float lifetime)
         {
             if (targetedPlatforms.Count != 0)
@@ -148,6 +162,8 @@ namespace _999AD
                 }
             }
         }
+
+        //add fireball outside of the screen
         public static void AddGhostFireball(float lifetime)
         {
             fireballs.Add(new FireBall(0, 

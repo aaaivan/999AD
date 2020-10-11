@@ -36,10 +36,10 @@ namespace _999AD
         float elapsedRestingTime;
         public bool active; //if false the platform does not move
         bool moveOnce;
-        bool disappearing;
+        bool disappearing; //if true the platform appear and disappears at regular intervals
         bool transparent = false;
-        float maxTransparentTime;
-        float maxSolidTime;
+        float maxTransparentTime; //time of the platform disappearing
+        float maxSolidTime; //time of the platform being walkable
         float elapsedTransparencyTime;
         static readonly float minAlpha = 0.15f;
         static readonly float alphaChangeSpeed = 3;//seconds^(-1)
@@ -132,19 +132,21 @@ namespace _999AD
         }
         #endregion
         #region METHODS
+
+        //update position of the platform
         public void Update(float elapsedTime)
         {
             if(active)
             {
                 platformMidpointPreviousPosition = platformMidpointPosition;
                 if (elapsedRestingTime < centerRestingTime)
-                {
+                {//if the platform is meant to stop at each end of its path, wait for the time specified
                     elapsedRestingTime += elapsedTime;
                     return;
                 }
                 normalizedLinearProgression += linearSpeed * elapsedTime;
                 if (normalizedLinearProgression > 1)
-                {
+                {//if the platforms passes the final point of the path, invert the movement direction
                     normalizedLinearProgression = 1;
                     linearSpeed *= -1;
                     elapsedRestingTime = 0;
@@ -152,13 +154,14 @@ namespace _999AD
                         active = false;
                 }
                 else if (normalizedLinearProgression < 0)
-                {
+                {//if the platforms passes the initial point of the path, invert the movement direction
                     normalizedLinearProgression = 0;
                     linearSpeed *= -1;
                     elapsedRestingTime = 0;
                     if (moveOnce)
                         active = false;
                 }
+                //rotate platform about the rotation center
                 rotationCenter = Vector2.Lerp(centerStartingPoint, centerEndingPoint, (float)normalizedLinearProgression);
                 angleRadiants += angularSpeed * elapsedTime;
                 if (angleRadiants >= MathHelper.Pi * 2)
@@ -180,7 +183,7 @@ namespace _999AD
                             alphaValue = minAlpha;
                     }
                     if (elapsedTransparencyTime >= maxTransparentTime)
-                    {
+                    {//wait for the specified time before making platform walkable
                         elapsedTransparencyTime = 0;
                         transparent = false;
                     }
@@ -195,8 +198,8 @@ namespace _999AD
                             alphaValue = 1;
                     }
                     if (elapsedTransparencyTime >= maxSolidTime)
-                    {
-                            elapsedTransparencyTime = 0;
+                    {//wait for the specified time before making platform transparent
+                        elapsedTransparencyTime = 0;
                             transparent = true;
                     }
                 }

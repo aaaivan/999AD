@@ -1,4 +1,5 @@
-﻿//#define LEVEL_EDITOR
+﻿//Uncomment line below to start level editor mode
+//#define LEVEL_EDITOR
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -18,15 +19,15 @@ namespace _999AD
         }
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        public static readonly int min_gameWidth = 1920 / 5; //pixels on the x axis
-        public static readonly int min_gameHeight = 1080 / 5; //pixels on the y axis
-        public static  int gameWidth; //pixels on the x axis
-        public static int gameHeight; //pixels on the y axis
-        public static Rectangle viewportRectangle;
+        public static readonly int minViewportWidth = 1920 / 5; //width of the unscaled viewport
+        public static readonly int minViewportHeight = 1080 / 5; //height of the unscaled viewport
+        public static  int gameWidth; //width of the camera frame
+        public static int gameHeight; //width of the camera frame
+        public static Rectangle viewportRectangle; //rectangle of the viewport in screen coordinates
         static RenderTarget2D nativeRenderTarget;
         static RenderTarget2D renderTarget_zoom1;
-        static RenderTarget2D renderTarger_zoom0dot5;
-        public static int scale;
+        static RenderTarget2D renderTarger_zoom0dot5; //twice as big as the renderTarget_zoom1
+        public static int scale; //number of times by which the minViewport size is scaled up. Depends on screen resolution.
         public static MouseState currentMouseState;
         public static MouseState previousMouseState;
         public static KeyboardState previousKeyboard;
@@ -63,8 +64,8 @@ namespace _999AD
         {
             // TODO: Add your initialization logic here
             this.IsMouseVisible = true;
-            gameWidth = min_gameWidth;
-            gameHeight = min_gameHeight;
+            gameWidth = minViewportWidth;
+            gameHeight = minViewportHeight;
 #if LEVEL_EDITOR
             currentMouseState = Mouse.GetState();
             previousMouseState = currentMouseState;
@@ -79,6 +80,7 @@ namespace _999AD
             previousKeyboard = Keyboard.GetState();
 
 #else
+            //scale is the biggest integer that allows the viewport to still fit in the current screen.
             scale = MathHelper.Min(GraphicsDevice.DisplayMode.Width / gameWidth, GraphicsDevice.DisplayMode.Height / gameHeight);
             renderTarget_zoom1 = new RenderTarget2D(GraphicsDevice, gameWidth, gameHeight);
             renderTarger_zoom0dot5 = new RenderTarget2D(GraphicsDevice, gameWidth*2, gameHeight*2);
@@ -88,8 +90,9 @@ namespace _999AD
                 (GraphicsDevice.DisplayMode.Height - gameHeight * scale) / 2,
                 gameWidth * scale,
                 gameHeight * scale);
-            graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;// viewportRectangle.Width+100;
-            graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;// viewportRectangle.Height;
+            //the preferred backbuffer will fill the screen
+            graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+            graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
             graphics.IsFullScreen = true;
             graphics.ApplyChanges();
             previousKeyboard = Keyboard.GetState();
@@ -106,8 +109,6 @@ namespace _999AD
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
 
 #if LEVEL_EDITOR
             MapsManager.Inizialize(Content.Load<Texture2D>("tiles"));
@@ -141,6 +142,7 @@ namespace _999AD
                                           Content.Load<SpriteFont>(@"fonts\arial14"),
                                           Content.Load<Texture2D>("whiteTile"));
 #else
+            //load the game assets here
             currentGameState = GameStates.titleScreen;
             LoadSaveManager.Inizialize();
             GameStats.Inizialize();
@@ -245,17 +247,23 @@ namespace _999AD
         {
             // TODO: Unload any non ContentManager content here
         }
+
+        //Double the size of the portion of game world framed in the camera.
+        //Equivalent to zooming out.
         public static void Zoom0Dot5()
         {
-            gameWidth = min_gameWidth * 2;
-            gameHeight = min_gameHeight * 2;
+            gameWidth = minViewportWidth * 2;
+            gameHeight = minViewportHeight * 2;
             nativeRenderTarget = renderTarger_zoom0dot5;
             CameraManager.SwitchCamera(RoomsManager.CurrentRoom);
         }
+
+        //Half the size of the portion of game world framed in the camera.
+        //Equivalent to zooming in.
         public static void Zoom1()
         {
-            gameWidth = min_gameWidth;
-            gameHeight = min_gameHeight;
+            gameWidth = minViewportWidth;
+            gameHeight = minViewportHeight;
             nativeRenderTarget = renderTarget_zoom1;
             CameraManager.SwitchCamera(RoomsManager.CurrentRoom);
         }
@@ -274,12 +282,13 @@ namespace _999AD
             currentMouseState = Mouse.GetState();
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             
-            // TODO: Add your update logic here
+            //update logic here
 #if LEVEL_EDITOR
             levelEditor.Update(currentMouseState, previousMouseState, tilesPerRow, infoBoxHeightPx);
             CameraManager.Update(elapsedTime);
             PlatformsManager.platformsRoomManagers[levelEditor.currentRoomNumber].Update(elapsedTime);
 #else
+            //update only relevant classes depending on the state of the game
             switch(currentGameState)
             {
                 case GameStates.titleScreen:
@@ -383,7 +392,7 @@ namespace _999AD
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            // TODO: Add your drawing code here
+            //drawing code here
 #if LEVEL_EDITOR
             GraphicsDevice.SetRenderTarget(nativeRenderTarget);
             GraphicsDevice.Clear(Color.Black);
@@ -400,6 +409,7 @@ namespace _999AD
 
             spriteBatch.End();
 #else
+            //draw only relevant classes depending on the state of the game
             spriteBatch.Begin();
             switch(currentGameState)
             {
@@ -474,14 +484,6 @@ namespace _999AD
                     MenusManager.menus[(int)MenusManager.MenuType.wallJump].Draw(spriteBatch);
                     break;
             }
-
-            //<debug>
-            //spriteBatch.Draw(white, Camera.RelativeRectangle(Player.CollisionRectangle), Color.Green);
-            //MouseState mouseState = Mouse.GetState();
-            //spriteBatch.DrawString(spriteFont, (currentMouseState.X / 5 + (int)Camera.position.X) + "," + (currentMouseState.Y / 5 + (int)Camera.position.Y), new Vector2(10, 10), Color.Blue);
-            //spriteBatch.DrawString(spriteFont, Player.position.X + "," + Player.position.Y, new Vector2(10, 20), Color.Blue);
-            //spriteBatch.DrawString(spriteFont, Player.healthPoints+"", new Vector2(10, 10), Color.Blue);
-            //</debug>
 
             spriteBatch.End();
 

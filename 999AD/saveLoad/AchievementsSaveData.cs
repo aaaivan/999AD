@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace _999AD
 {
@@ -10,10 +6,10 @@ namespace _999AD
     class AchievementsSaveData
     {
         #region DECLARATIONS
-        public bool gameCompleted;
-        public bool noDeath;
-        public bool noHits;
-        public float bestTime;
+        public bool gameCompleted; //indicated whether the game has been ever completed
+        public bool noDeath; //indicates whether the player has not died
+        public bool noHits; //indicates whether the player has taken no hits
+        public float bestTime; //store the best game time
         #endregion
         #region CONSTRUCTOR
         public AchievementsSaveData()

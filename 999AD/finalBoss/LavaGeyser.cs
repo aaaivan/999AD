@@ -12,8 +12,8 @@ namespace _999AD
         static public readonly int heigthBeforeErupting = 40;
         float initialYVelocity;
         float yVelocity;
-        Rectangle geyserTop;
-        Rectangle geyserBody;
+        static Rectangle geyserTop; //source rect on sritesheet
+        static Rectangle geyserBody; //source rect on sritesheet
         Vector2 position;
         float timeBeforeErupting;
         float elapsedTimeBeforeErupting;
@@ -55,12 +55,14 @@ namespace _999AD
         }
         public void Update(float elapsedTime)
         {
+            //if cowntown to eruption has not started,
+            //slowly move geyser up until it reaches heightBeforeErupting
             if (elapsedTimeBeforeErupting<=0.0001f )
             {
                 if (position.Y <= MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomHeightPx - heigthBeforeErupting)
                 {
                     position.Y = MapsManager.maps[(int)RoomsManager.CurrentRoom].RoomHeightPx - heigthBeforeErupting;
-                    elapsedTimeBeforeErupting += elapsedTime;
+                    elapsedTimeBeforeErupting += elapsedTime;//start cowntdown
                 }
                 else
                     position.Y -= 2f;
@@ -71,7 +73,7 @@ namespace _999AD
                 {
                     if (elapsedTimeBeforeErupting > timeBeforeErupting)
                     {
-                        yVelocity = initialYVelocity;
+                        yVelocity = initialYVelocity;//shoot geyser
                         erupted = true;
                     }
                     else
@@ -79,6 +81,7 @@ namespace _999AD
                 }
                 else
                 {
+                    //let gravity act on geyser
                     position.Y += yVelocity*elapsedTime;
                     yVelocity += Gravity.gravityAcceleration * elapsedTime;
                 }

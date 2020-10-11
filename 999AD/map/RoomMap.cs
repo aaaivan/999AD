@@ -69,6 +69,8 @@ namespace _999AD
                 }
             }
         }
+
+        //change the specified tiles to empty tiles sequentially
         public void RemoveGroupOfTiles(List<int[]> _tilesToRemove, float _timeBeforeRemovingNextTile, int _removeTogether, float delay=0)
         {
             if (!removeRowSFX)
@@ -80,6 +82,8 @@ namespace _999AD
                 timer = -delay;
             }
         }
+
+        //check whether an harmful tile intersects the specifies rectangle
         public bool HarmfulTileIntersectsRectangle(Rectangle collisionRect)
         {
             int topRow = MathHelper.Clamp(collisionRect.Y / Tile.tileSize, 0, roomHeightTiles - 1);

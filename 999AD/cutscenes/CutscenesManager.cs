@@ -10,7 +10,7 @@ namespace _999AD
         {
             intro, ending, total
         }
-        public static Cutscene[] cutscenes;
+        public static Cutscene[] cutscenes; //list of all cutscenes
         #endregion
         #region CONSTRUCTOR
         public static void Initialize(Texture2D enemySpritesheet, Texture2D playerSpritesheet, SpriteFont spriteFont)

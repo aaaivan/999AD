@@ -12,7 +12,7 @@ namespace _999AD
     static class TorchManager
     {
         #region DECLARATIONS
-        public static List<Torch> torches;
+        public static List<Torch> torches; //list of all toarches in the churchAltarRoom
         #endregion
         #region CONSTRUCTOR
         static public void Initialize(Texture2D spritesheet)
@@ -43,6 +43,8 @@ namespace _999AD
             foreach (Torch t in torches)
                 t.Update(elapsedTime);
         }
+
+        //check whether all toarches are unlit
         static public bool AllTorchesUnlit()
         {
             foreach (Torch t in torches)
@@ -50,6 +52,7 @@ namespace _999AD
                     return false;
             return true;
         }
+
         static public void Draw(SpriteBatch spriteBatch)
         {
             if (RoomsManager.CurrentRoom != RoomsManager.Rooms.churchAltarRoom)

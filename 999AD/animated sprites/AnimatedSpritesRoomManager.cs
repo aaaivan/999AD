@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace _999AD
@@ -6,61 +7,62 @@ namespace _999AD
     class AnimatedSpritesRoomManager
     {
         #region DECLARATIONS
-        List<AnimatedSprite> animatedSprites;
-        List<AnimatedSprite> temporaryAnimaterSprites;
+        List<AnimatedSprite> tempAnimatedSprites; //animated sprites destroyed at the end of the animation
+        List<AnimatedSprite> animaterSprites; //animated sprites added and destroyed manually
         #endregion
         #region CONSTRUCTOR
         public AnimatedSpritesRoomManager(AnimatedSprite[] _animatedSprites)
         {
-            animatedSprites = new List<AnimatedSprite>(_animatedSprites);
-            temporaryAnimaterSprites= new List<AnimatedSprite>(_animatedSprites);
+            tempAnimatedSprites = new List<AnimatedSprite>(_animatedSprites);
+            animaterSprites= new List<AnimatedSprite>(_animatedSprites);
         }
         #endregion
         #region METHODS
         public void Update(float elapsedTime)
         {
-            for (int i = animatedSprites.Count - 1; i >= 0; i--)
+            for (int i = tempAnimatedSprites.Count - 1; i >= 0; i--)
             {
-                if (animatedSprites[i].Active)
-                    animatedSprites[i].Update(elapsedTime);
+                if (tempAnimatedSprites[i].Active)
+                    tempAnimatedSprites[i].Update(elapsedTime);
                 else
-                    animatedSprites.RemoveAt(i);
+                    tempAnimatedSprites.RemoveAt(i);
             }
-            for (int i =0; i< temporaryAnimaterSprites.Count; i++)
+            for (int i =0; i< animaterSprites.Count; i++)
             {
-                    temporaryAnimaterSprites[i].Update(elapsedTime);
+                    animaterSprites[i].Update(elapsedTime);
             }
+        }
+        public void AddTempAnimatedSprite(AnimatedSprite animatedSprite)
+        {
+            tempAnimatedSprites.Add(animatedSprite);
+        }
+        public void ClearAnimatedSprites()
+        {
+            animaterSprites.Clear();
+        }
+        public void AddAnimatedSprites(List<AnimatedSprite> animatedSprites)
+        {
+            animaterSprites = animatedSprites;
+        }
 
-        }
-        public void AddAnimatedSprite(AnimatedSprite animatedSprite)
-        {
-            animatedSprites.Add(animatedSprite);
-        }
-        public void ClearTemporaryAnimatedSprites()
-        {
-            temporaryAnimaterSprites.Clear();
-        }
-        public void AddTemporaryAnimatedSprites(List<AnimatedSprite> animatedSprites)
-        {
-            if (temporaryAnimaterSprites.Count > 0)
-                return;
-            temporaryAnimaterSprites = animatedSprites;
-        }
+        //Draw in front of the character
         public void DrawInFront(SpriteBatch spriteBatch)
         {
-            foreach (AnimatedSprite animatedSprite in animatedSprites)
+            foreach (AnimatedSprite animatedSprite in tempAnimatedSprites)
                 if (animatedSprite.DrawInFront)
                     animatedSprite.Draw(spriteBatch);
-            foreach (AnimatedSprite animatedSprite in temporaryAnimaterSprites)
+            foreach (AnimatedSprite animatedSprite in animaterSprites)
                 if (animatedSprite.DrawInFront)
                     animatedSprite.Draw(spriteBatch);
         }
+
+        //draw behind the character
         public void DrawOnTheBack(SpriteBatch spriteBatch)
         {
-            foreach (AnimatedSprite animatedSprite in animatedSprites)
+            foreach (AnimatedSprite animatedSprite in tempAnimatedSprites)
                 if (!animatedSprite.DrawInFront)
                     animatedSprite.Draw(spriteBatch);
-            foreach (AnimatedSprite animatedSprite in temporaryAnimaterSprites)
+            foreach (AnimatedSprite animatedSprite in animaterSprites)
                 if (!animatedSprite.DrawInFront)
                     animatedSprite.Draw(spriteBatch);
         }

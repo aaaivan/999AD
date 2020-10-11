@@ -13,11 +13,11 @@ namespace _999AD
         public static readonly float shotLifeTime = 3;
         Vector2 rotationCenter;
         Animation animation;
-        float radialDistance;
+        float radialDistance; //distace from center
         float angleRadiants;
-        public float[] radialVelocities;
-        public float[] angularVelocities;
-        float[] lifeTimes; //seconds
+        public float[] radialVelocities; //radial velocity for each phase
+        public float[] angularVelocities; //angutar velocity for each phase
+        float[] lifeTimes; //duration of each phase
         int phaseIndex;
         float elapsedLifeTime;
         bool targetPlayer;
@@ -48,7 +48,7 @@ namespace _999AD
             spritesheet = _spritesheet;
         }
         #endregion
-        #region PRPERTIES
+        #region PROPERTIES
         public bool Active
         {
             get { return active; }
@@ -67,7 +67,7 @@ namespace _999AD
         {
             animation.Update(elapsedTime);
             if (elapsedLifeTime > lifeTimes[phaseIndex])
-            {
+            {//switch to next phase
                     elapsedLifeTime = 0;
                     phaseIndex++;
                     if (phaseIndex== lifeTimes.Length)
@@ -75,7 +75,7 @@ namespace _999AD
                     return;
             }
             else
-            {
+            {//update fireball position
                 elapsedLifeTime += elapsedTime;
                 radialDistance += radialVelocities[phaseIndex] * elapsedTime;
                 angleRadiants += angularVelocities[phaseIndex] * elapsedTime;
@@ -83,6 +83,8 @@ namespace _999AD
                     angleRadiants -= MathHelper.Pi * 2;
                 else if (angleRadiants < 0)
                     angleRadiants += MathHelper.Pi * 2;
+                //if the fireball is meant to target the player
+                //shoot if the shooting direction is close enough to the player position
                 if (targetPlayer && phaseIndex== lifeTimes.Length-2 &&
                     checkPlayerAngle())
                 {
@@ -97,6 +99,8 @@ namespace _999AD
 
             }
         }
+
+        //check whether the angle player-center-fireball is less than 5 degrees
         bool checkPlayerAngle()
         {
             Vector2 v = Player.Center-rotationCenter;

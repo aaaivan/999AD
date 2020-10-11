@@ -12,8 +12,8 @@ namespace _999AD
             heart,  total
         }
         #region DECLARIONS
-        public static int IDcounter;
-        public int ID { get; private set; }
+        public static int IDcounter; 
+        public int ID { get; private set; } //id used to keep track of collected items
         static Texture2D spritesheet;
         static Animation[] animations;
         Animation animation;
@@ -67,6 +67,8 @@ namespace _999AD
             animation.Update(elapsedTime);
             if (rectangle.Intersects(Player.CollisionRectangle))
             {
+                //if player rectangle intersets collectable rectangle
+                //set collected to true
                 SoundEffects.PickUpItem.Play();
                 collected = true;
                 animation.Reset();

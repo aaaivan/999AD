@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.CodeDom;
 
 namespace _999AD
 {
@@ -11,7 +12,7 @@ namespace _999AD
             brassDoor, goldDoor,bronzeDoor, silverDoor,  total
         }
         static public int IDcounter;
-        public int ID { get; private set; }
+        public int ID { get; private set; } //used to keep track of doors that have beeen opened
         static Texture2D spritesheet;
         static Rectangle[] sourceRectangles;
         Point position;
@@ -70,6 +71,7 @@ namespace _999AD
         #region METHODS
         public void LockDoor(RoomsManager.Rooms room)
         {
+            //add non traversabe tiles on top of the door
             int topRow = (int)position.Y / Tile.tileSize;
             int btmRow = ((int)position.Y + sourceRectangles[(int)textureType].Height - 1) / Tile.tileSize;
             int leftCol = (int)position.X / Tile.tileSize;
@@ -84,14 +86,18 @@ namespace _999AD
         }
         public void Update()
         {
+            //if the player is within the interaction rectangle of the door
+            //and they have the proper key, then open the door
             if (InteractionRectangle.Intersects(Player.CollisionRectangle) &&
                 CollectablesManager.TryRemoveFromInventory(key,new Vector2(DrawRectangle.Center.X, DrawRectangle.Center.Y)))
             {
                 OpenDoor((int)RoomsManager.CurrentRoom);
-                AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.CurrentRoom].AddAnimatedSprite(
+                AnimatedSpritesManager.animatedSpritesRoomManagers[(int)RoomsManager.CurrentRoom].AddTempAnimatedSprite(
                     new AnimatedSprite(new Vector2(position.X, position.Y), AnimatedSprite.GetDoorAnimation(textureType)));
             }
         }
+
+        //remove door
         public void OpenDoor(int roomType)
         {
             closed = false;
@@ -107,6 +113,7 @@ namespace _999AD
                 }
             }
         }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(spritesheet, Camera.RelativeRectangle(DrawRectangle), sourceRectangles[(int)textureType], Color.White);
